@@ -1,5 +1,6 @@
 import data
 import theater
+
 def manage_menu():
     while True:
         print("[관리자 모드] 실행할 메뉴를 선택하세요.")
