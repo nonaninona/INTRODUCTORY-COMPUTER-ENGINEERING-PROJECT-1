@@ -1,13 +1,11 @@
-import os
 import data
 import theater
-
-def manageMenu():
+def manage_menu():
     while True:
         print("[관리자 모드] 실행할 메뉴를 선택하세요.")
         menu = input("1. 영화 관리\n2. 상영관 관리\n3. 상영스케줄 관리\n4. 종료\n입력 : ")
         if menu == "1":
-            movieManageMenu()
+            manage_menu()
         elif menu == "2":
             theater.manage_cinema()
         elif menu == "3":
@@ -20,16 +18,16 @@ def manageMenu():
             print("화면에 출력된 숫자 내에서 입력해주세요.")
 
 
-def movieManageMenu():
+def manage_menu():
     while True:
         print("[관리자 모드] 실행할 메뉴를 선택하세요.")
         menu = input("1. 영화 추가\n2. 영화 수정\n3. 영화 삭제\n4. 종료\n입력 : ")
         if menu == "1":
-            movieAddMenu()
+            movie_add_menu()
         elif menu == "2":
-            movieChangeMenu()
+            movie_change_menu()
         elif menu == "3":
-            movieDeleteMenu()
+            movie_delete_menu()
         elif menu == "4":
             print("관리자모드를 종료합니다.")
             break
@@ -37,7 +35,7 @@ def movieManageMenu():
             print("1~4 사이 숫자 내에서 입력해주세요.")
 
 
-def movieAddMenu():
+def movie_add_menu():
     print("추가할 영화명, 러닝타임을 입력해주세요.\n형식: <영화명><\"/\"><러닝타임>\n뒤로 가시려면 q를 입력해주세요.")
     while True:
         menu = input("입력 : ")
@@ -46,7 +44,7 @@ def movieAddMenu():
         # 뒤로가기
         else:
             flag = True
-            movieTable = readMovie()
+            movieTable = read_movie()
             # 예외처리 - 프롬프트 부분에 존재하지 않아요!
             try:
                 movie, time = menu.strip().split("/")
@@ -63,7 +61,7 @@ def movieAddMenu():
                 if time.isdigit():
                     time = int(time)
                     if 50 <= time <= 240:
-                        writeMovie(len(movieTable), movie, time)
+                        write_movie(len(movieTable), movie, time)
                         print("성공적으로 영화가 추가되었습니다.")
                         break
                     else:
@@ -71,11 +69,10 @@ def movieAddMenu():
                 else:
                     print("러닝타임은 50 이상 240 이하의 정수입니다. 다시 입력해주세요.")
 
-
 # 반복문 수정 필요
-def movieChangeMenu():
+def movie_change_menu():
     print("수정할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
-    movieTable = readMovie()
+    movieTable = read_movie()
     for i, m, t in movieTable:
         print(m, "     ", t, "     ", i)
     while True:
@@ -107,7 +104,7 @@ def movieChangeMenu():
                                         flag1 = False
                                         break
                                 if flag1:
-                                    editMovie1(id, changeMovie)
+                                    edit_movie_title(id, changeMovie)
                                     print("영화명이 성공적으로 수정되었습니다.")
                                     #break
                                     return
@@ -128,7 +125,7 @@ def movieChangeMenu():
                                 if flag2:
                                     if (50 <= int(changeTime) and int(changeTime) <= 240 and changeTime.isdigit()):
                                         # 프롬프트에서 문구 변경해야 해요!
-                                        editMovie2(id, changeTime)
+                                        edit_movie_time(id, changeTime)
                                         print("러닝타임이 성공적으로 수정되었습니다.")
                                         #break
                                         return
@@ -145,10 +142,9 @@ def movieChangeMenu():
                 # 프롬프트에서 문구 변경 필요해요!
                 print("0과 정수로만 이루어진 길이가 3인 숫자입니다. 다시 입력해주세요.")
 
-
-def movieDeleteMenu():
+def movie_delete_menu():
     print("삭제할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
-    movieTable = readMovie()
+    movieTable = read_movie()
     for i, m, t in movieTable:
         print(m, "     ", t, "     ", i)
     while True:
@@ -163,7 +159,7 @@ def movieDeleteMenu():
 
             if flag:
                 # 프롬프트에서 문구 변경 필요해요!
-                deleteMovie(id)
+                delete_movie(id)
                 print("영화가 삭제되었습니다.")
                 break
             else:
@@ -174,7 +170,7 @@ def movieDeleteMenu():
             # 프롬프트에서 문구 변경 필요해요!
             print("0과 정수로만 이루어진 길이가 3인 숫자입니다. 다시 입력해주세요.")
 
-def readMovie():
+def read_movie():
     return data.get_movie_list()
 
     # movieTable = []
@@ -185,7 +181,7 @@ def readMovie():
     # return movieTable
 
 
-def writeMovie(id, movie, time):
+def write_movie(id, movie, time):
     if (id < 10):
         newID = "0" + "0" + f"{id + 1}"
     elif (10 <= id < 100):
@@ -197,8 +193,8 @@ def writeMovie(id, movie, time):
     # with open("movie.txt", "a", encoding="utf-8") as f:
     #     f.write(f"{newID}/{movie}/{time}\n")
 
-def editMovie1(id, movie):
-    movieTable = readMovie()  # 기존 영화 목록을 읽어옴
+def edit_movie_title(id, movie):
+    movieTable = read_movie()  # 기존 영화 목록을 읽어옴
 
     # 영화명을 수정할 대상의 인덱스를 찾음
     for a, (i, m, t) in enumerate(movieTable):
@@ -211,8 +207,8 @@ def editMovie1(id, movie):
             f.write(f"{i}/{m}/{t}\n")
 
 
-def editMovie2(id, time):
-    movieTable = readMovie()  # 기존 영화 목록을 읽어옴
+def edit_movie_time(id, time):
+    movieTable = read_movie()  # 기존 영화 목록을 읽어옴
 
     # 러닝타임을 수정할 대상의 인덱스를 찾음
     for a, (i, m, t) in enumerate(movieTable):
@@ -225,8 +221,8 @@ def editMovie2(id, time):
             f.write(f"{i}/{m}/{t}\n")
 
 
-def deleteMovie(id):
-    movieTable = readMovie()  # 기존 영화 목록을 읽어옴
+def delete_movie(id):
+    movieTable = read_movie()  # 기존 영화 목록을 읽어옴
 
     # 삭제할 영화를 찾아서 제외함
     movieTable = [movie for movie in movieTable if movie[0] != id]
