@@ -4,7 +4,7 @@ theater_list = []  # 상영관 정보
 theater_dict = {}  # 상영관 행렬 정보
 
 def write_theater():
-    with open("theater.txt", "w", encoding="utf-8") as file:
+    with open("data/" + "theater.txt", "w", encoding="utf-8") as file:
         for item in theater_list:
          file.write(str(item) + "/" + str(item) + "\n")
 
@@ -20,7 +20,7 @@ def update_seat(theater_id, new_rows, new_cols):
 
     # 파일을 읽어서 기존 내용을 temp_lines에 저장하고, 수정할 상영관 ID를 찾아 해당 내용만 업데이트
     try:
-        with open("seat.txt", "r", encoding="utf-8") as file:
+        with open("data/" + "seat.txt", "r", encoding="utf-8") as file:
             lines = file.readlines()
             for line in lines:
                 parts = line.strip().split('/')
@@ -49,7 +49,7 @@ def update_seat(theater_id, new_rows, new_cols):
 
     # 수정된 내용을 파일에 다시 쓰기
     try:
-        with open("seat.txt", "w", encoding="utf-8") as file:
+        with open("data/" + "seat.txt", "w", encoding="utf-8") as file:
             file.writelines(temp_lines)
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
@@ -58,9 +58,9 @@ def update_seat(theater_id, new_rows, new_cols):
 def delete_theater(theater_id):
     # seat.txt에서 해당 theater_id 줄 삭제
     try:
-        with open("seat.txt", "r", encoding="utf-8") as file:
+        with open("data/" +"seat.txt", "r", encoding="utf-8") as file:
             lines = file.readlines()
-        with open("seat.txt", "w", encoding="utf-8") as file:
+        with open("data/" + "seat.txt", "w", encoding="utf-8") as file:
             for line in lines:
                 if int(line.split('/')[1]) != theater_id:
                     file.write(line)
@@ -69,9 +69,9 @@ def delete_theater(theater_id):
     
     # theater.txt에서 해당 theater_id 줄 삭제
     try:
-        with open("theater.txt", "r", encoding="utf-8") as file:
+        with open("data/" +"theater.txt", "r", encoding="utf-8") as file:
             lines = file.readlines()
-        with open("theater.txt", "w", encoding="utf-8") as file:
+        with open("data/" + "theater.txt", "w", encoding="utf-8") as file:
             for line in lines:
                 if int(line.split('/')[0]) != theater_id:
                     file.write(line)
@@ -81,7 +81,7 @@ def delete_theater(theater_id):
 # theater.txt 파일 읽어오기
 def readTheater():
     TheaterTable = []
-    with open("theater.txt", "r", encoding="utf-8") as f:
+    with open("data/"+ "theater.txt", "r", encoding="utf-8") as f:
         for line in f:
             id_str, movie = line.strip().split("/")
             id = int(id_str)  # 첫 번째 요소를 정수형으로 변환
@@ -91,7 +91,7 @@ def readTheater():
 # schedule.txt 파일 읽어오기
 def read_theater_ids_from_schedule():
     theater_ids = set()  # 중복을 제거하기 위해 set 사용
-    with open("schedule.txt", "r", encoding="utf-8") as f:
+    with open("data/" + "schedule.txt", "r", encoding="utf-8") as f:
         for line in f:
             parts = line.strip().split("/")  
             
@@ -105,7 +105,7 @@ scheduled_cinemas = read_theater_ids_from_schedule()
 # 좌석정보 읽어오는 함수
 def read_seat():
     theater_dict = {}
-    with open("seat.txt", "r", encoding="utf-8") as f:
+    with open("data/" + "seat.txt", "r", encoding="utf-8") as f:
         for line in f:
             id_str, theater, theater_seat = line.strip().split("/")
             theater_id = int(theater)  # 문자열을 정수형으로 변환

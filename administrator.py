@@ -1,5 +1,6 @@
 import os
 import data
+import theater
 
 def manageMenu():
     while True:
@@ -8,8 +9,7 @@ def manageMenu():
         if menu == "1":
             movieManageMenu()
         elif menu == "2":
-            print("")
-            # theaterManageMenu()
+            theater.manage_cinema()
         elif menu == "3":
             print("")
             # scheduleManageMenu()
