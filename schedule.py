@@ -89,7 +89,7 @@ def schedule_edit_menu():
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  #문법 규칙에 부합하지 않는 경우
-            print("시간표 아이디는 1이상의 정수입니다.")
+            print("시간표아이디는 1이상의 정수입니다.")
             continue
         else:
             if not check_schedule_id(user_input, schedule_table):  #의미규칙 1번에 부합하지 않는 경우
@@ -143,7 +143,7 @@ def schedule_delete_menu():
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  # 문법 규칙에 부합하지 않는 경우
-            print("시간표 아이디는 1이상의 정수입니다.")
+            print("시간표아이디는 1이상의 정수입니다.")
             continue
         else:
             if not check_schedule_id(user_input, schedule_table):  # 의미규칙 1번에 부합하지 않는 경우
