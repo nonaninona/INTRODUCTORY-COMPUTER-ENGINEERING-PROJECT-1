@@ -1,6 +1,19 @@
 import sys
 import data
 
+"""
+
+구조
+
+print_reserve_menu : 메뉴 출력 기능, 최상위 반복문
+- reserve : 예매하기 기능
+- print_check_reserveation_menu : 예매조회 기능
+    - print_cancel_reservation_menu : 예매취소 기능
+
+
+"""
+
+# 메뉴 출력
 def print_reserve_menu(user_id):
     while True:
         print("[메인 메뉴] 실행할 메뉴를 선택하세요.")
@@ -25,6 +38,8 @@ def print_reserve_menu(user_id):
         else: # 비정상 입력
             print("화면에 출력된 숫자 내에서 입력해주세요")
 
+
+# 예매 기능
 def reserve(user_id):
     # 상영 스케쥴 출력
     schedule_list = data.get_schedule_list()
@@ -85,6 +100,7 @@ def reserve(user_id):
     print("예매가 완료되었습니다")
 
 
+# 예매 조회 기능
 def print_check_reservation_menu(user_id):    
     reservation_list = data.get_reservation_list()
     ticket_list = data.get_ticket_list()
@@ -111,6 +127,7 @@ def print_check_reservation_menu(user_id):
         # 왜 비정상 입력에 대한 게 없지
 
 
+# 예매 취소 기능
 def print_cancel_reservation_menu(user_id):
     reservation_list = data.get_reservation_list()
     ticket_list = data.get_ticket_list()
@@ -133,6 +150,40 @@ def print_cancel_reservation_menu(user_id):
     print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
 
 
+
+
+
+
+
+
+
+
+
+
+##### 여기서부턴 짜잘이 함수들 #####
+
+
+
+
+
+
+### reserve 짜잘이 함수들 ###
+
+def sort_schedule(schedule_list, date, time):
+    schedule_list = sorted(schedule_list,key=lambda x:x[3]+x[4])
+    print(schedule_list)
+    idx = -1
+    length = len(schedule_list)
+    for i in range(length):
+        date1 = schedule_list[i][3]
+        time1 = schedule_list[i][4]
+        if date+time < date1+time1:
+            idx = i
+            break
+    if idx == -1:
+        return []
+    else:
+        return schedule_list[idx:length]
 
 # 테이블 긁어오기
 def get_lists():
@@ -208,52 +259,126 @@ def print_schedule_list(table):
     # 시간표아이디 영화제목  날짜/상영시간     예약인원/최대예약인원   상영관
     #     1      파묘   04.04/08-10        25 / 25명       1관
 
-
-
-
-
-
-
-def validate_cancel_input(choice):
+def validate_input(choice):
+    # 문법적 형식 검증
+    if len(choice) < 1 or not choice.isdigit():
+        #print("validate_date_syntax error")
+        return False
     return True
 
+def is_id_exist(table, id):
+    for schedule in table:
+        if schedule[0] == id:
+            return True
+    return False
 
-def cancel_reservation(user_id, choice):
+def if_seat_full(table, id):
+    for schedule in table:
+        if schedule[0] == id:
+            if int(schedule[5]) >= int(schedule[6]):
+                return True
+    return False
+
+def get_schedule(schedule_id, schedule_list):
+    for schedule in schedule_list:
+        if schedule[0] == schedule_id:
+            return schedule
+
+# 해당 스케쥴의 좌석 목록과 좌석 예약 상태 불러오기
+def get_tickets(schedule, seat_list, ticket_list):
+    (id, theater_id, movie_id, date, time) = schedule
+    
+    tickets = []
+    for ticket in ticket_list:
+        if ticket[3] == id:
+            tickets.append(ticket)
+
+    tickets = sort_tickets(tickets, seat_list)
+    return tickets
+
+def sort_tickets(tickets, seat_list):
+    map = []
+    for ticket in tickets:
+        for seat in seat_list:
+            if ticket[2] == seat[0]:
+                temp = ticket + [seat[2]]
+                map.append(temp)
+    sorted_map = sorted(map, key=lambda x:x[4])
+    ret = []
+    for t in sorted_map:
+        ret.append(t)
+
+    return ret
+
+def get_ticket_reservation_map(tickets, reservation_list):
+    ret = []
+    for i in range(len(tickets)):
+        ret.append(tickets[i] + ['O'])
+
+    for i in range(len(tickets)):
+        ticket = tickets[i]
+        for reservation in reservation_list:
+            if ticket[1] == reservation[0]:
+                if reservation[3] == 'X':
+                    ret[i][5] = 'X'
+
+    return ret
+
+
+def print_seats(seats):
+    alphabet = ['A', 'B', 'C', 'D', 'E']
+
+    print("좌석 입력")
+    print("  | 0 1 2 3 4")
+    print("  -----------")
+
+    j = 0
+    str = ""
+    for i in range(len(seats)):
+        if i % 5 == 0:
+            str = ""
+            str = str + alphabet[j] + " |"
+            j = j+1
+        str = str + " " + seats[i][5]
+        if i % 5 == 4:
+            str = str + "\n"
+            print(str)
+    # 좌석 입력
+    # 좌석 출력
+    #   | 0 1 2 3 4
+    #   -----------
+    # A | X O X O X
+    # B | X O X O X 
+
+def validate_seat_choice(choice):
+    if not choice.isdigit():
+        return False
+    if (int(choice) < 1 or int(choice) > 5) or len(choice) != 1:
+        return False
     return True
 
+def check_maximum_inline(choice, seats):
+    max = 0
+    cur = 0
+    local_max = 0
+    for i in range(len(seats)):
+        if seats[i][5] == 'O':
+            cur = cur + 1
+        else:
+            if local_max < cur:
+                local_max = cur
+            cur = 0
+        
+        if i%5 == 4:
+            if local_max < cur:
+                local_max = cur
+            cur = 0
 
-
-
-
-
-
-
-
-
-
-
-def get_user_reseration_list(user_id, reservation_list, ticket_list):
-    return []
-
-def print_reservation_table():
-    # 예매내역
-    # 예매아이디  영화제목   날짜/상영시간     상영관  예약인원수 시작좌석 시간표아이디
-    #    1       파묘   04.04/08-10      1관     2       A3      1
-    print()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            if max < local_max:
+                max = local_max
+            local_max = 0
+            
+    return int(choice) <= max
 
 def validate_seat_number(choice):
     row = choice[0]
@@ -330,159 +455,35 @@ def edit_ticket_reservation(ticket_id_list, reservation_id):
 
 
 
-def print_seats(seats):
-    alphabet = ['A', 'B', 'C', 'D', 'E']
-
-    print("좌석 입력")
-    print("  | 0 1 2 3 4")
-    print("  -----------")
-
-    j = 0
-    str = ""
-    for i in range(len(seats)):
-        if i % 5 == 0:
-            str = ""
-            str = str + alphabet[j] + " |"
-            j = j+1
-        str = str + " " + seats[i][5]
-        if i % 5 == 4:
-            str = str + "\n"
-            print(str)
-    # 좌석 입력
-    # 좌석 출력
-    #   | 0 1 2 3 4
-    #   -----------
-    # A | X O X O X
-    # B | X O X O X 
 
 
-# 해당 스케쥴의 좌석 목록과 좌석 예약 상태 불러오기
-def get_tickets(schedule, seat_list, ticket_list):
-    (id, theater_id, movie_id, date, time) = schedule
-    
-    tickets = []
-    for ticket in ticket_list:
-        if ticket[3] == id:
-            tickets.append(ticket)
 
-    tickets = sort_tickets(tickets, seat_list)
-    return tickets
+### reserve 짜잘이 함수들 ###
 
-
-def get_ticket_reservation_map(tickets, reservation_list):
-    ret = []
-    for i in range(len(tickets)):
-        ret.append(tickets[i] + ['O'])
-
-    for i in range(len(tickets)):
-        ticket = tickets[i]
-        for reservation in reservation_list:
-            if ticket[1] == reservation[0]:
-                if reservation[3] == 'X':
-                    ret[i][5] = 'X'
-
-    return ret
-
-def sort_tickets(tickets, seat_list):
-    map = []
-    for ticket in tickets:
-        for seat in seat_list:
-            if ticket[2] == seat[0]:
-                temp = ticket + [seat[2]]
-                map.append(temp)
-    sorted_map = sorted(map, key=lambda x:x[4])
-    ret = []
-    for t in sorted_map:
-        ret.append(t)
-
-    return ret
-
-def get_schedule(schedule_id, schedule_list):
-    for schedule in schedule_list:
-        if schedule[0] == schedule_id:
-            return schedule
-    
-
-def validate_seat_choice(choice):
-    if not choice.isdigit():
-        return False
-    if (int(choice) < 1 or int(choice) > 5) or len(choice) != 1:
-        return False
+def validate_cancel_input(choice):
     return True
 
-def check_maximum_inline(choice, seats):
-    max = 0
-    cur = 0
-    local_max = 0
-    for i in range(len(seats)):
-        if seats[i][5] == 'O':
-            cur = cur + 1
-        else:
-            if local_max < cur:
-                local_max = cur
-            cur = 0
-        
-        if i%5 == 4:
-            if local_max < cur:
-                local_max = cur
-            cur = 0
 
-            if max < local_max:
-                max = local_max
-            local_max = 0
-            
-    return int(choice) <= max
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def validate_input(choice):
-    # 문법적 형식 검증
-    if len(choice) < 1 or not choice.isdigit():
-        #print("validate_date_syntax error")
-        return False
+def cancel_reservation(user_id, choice):
     return True
 
-def is_id_exist(table, id):
-    for schedule in table:
-        if schedule[0] == id:
-            return True
-    return False
-
-def if_seat_full(table, id):
-    for schedule in table:
-        if schedule[0] == id:
-            if int(schedule[5]) >= int(schedule[6]):
-                return True
-    return False
 
 
 
-def sort_schedule(schedule_list, date, time):
-    schedule_list = sorted(schedule_list,key=lambda x:x[3]+x[4])
-    print(schedule_list)
-    idx = -1
-    length = len(schedule_list)
-    for i in range(length):
-        date1 = schedule_list[i][3]
-        time1 = schedule_list[i][4]
-        if date+time < date1+time1:
-            idx = i
-            break
-    if idx == -1:
-        return []
-    else:
-        return schedule_list[idx:length]
+
+
+
+
+
+
+
+### reserve 짜잘이 함수들 ###
+
+def get_user_reseration_list(user_id, reservation_list, ticket_list):
+    return []
+
+def print_reservation_table():
+    # 예매내역
+    # 예매아이디  영화제목   날짜/상영시간     상영관  예약인원수 시작좌석 시간표아이디
+    #    1       파묘   04.04/08-10      1관     2       A3      1
+    print()
