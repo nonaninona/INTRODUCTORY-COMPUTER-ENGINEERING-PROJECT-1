@@ -84,7 +84,7 @@ def delete_theater(theater_id):
 
 
 # theater.txt 파일 읽어오기
-def readTheater():
+def read_theater():
     TheaterTable = []
     with open("data/" + "theater.txt", "r", encoding="utf-8") as f:
         for line in f:
@@ -129,13 +129,13 @@ def parse_coordinates(coord):
     return row, ord(column) - ord('a') + 1
 
 
-theater_list = readTheater()
+theater_list = read_theater()
 theater_dict = read_seat()
 
 
 def add_cinema():
     while True:
-        print("[상영관 추가] 추가할 상영관아이디와 좌석수(행,열)를 입력해주세요")
+        print("[상영관 추가] 추가할 상영관아이디와 좌석수(행,열)를 입력해주세요.")
         user_input = input("입력 : ")
 
         # theater_list = get_Theater_list()
@@ -149,7 +149,7 @@ def add_cinema():
 
             # 좌석수 검증
             if not (1 <= rows <= 5) or not (1 <= cols <= 5):
-                print("좌석 행과 열의 개수는 1~5중 하나입니다.")
+                print("좌석 행과 열의 개수는 1~5 중 하나입니다.")
                 continue
 
             # 이미 등록된 상영관 ID 검증
@@ -171,7 +171,7 @@ def add_cinema():
 
 def update_cinema():
     while True:
-        print("[상영관 수정] 수정할 상영관아이디와 좌석수(행,열)를 입력해주세요")
+        print("[상영관 수정] 수정할 상영관아이디와 좌석수(행,열)를 입력해주세요.")
 
         user_input = input("입력 : ")
 
@@ -180,7 +180,7 @@ def update_cinema():
 
             # 좌석수 검증
             if not (1 <= rows <= 5) or not (1 <= cols <= 5):
-                print("좌석 행과 열의 개수는 1~5중 하나입니다.")
+                print("좌석 행과 열의 개수는 1~5 중 하나입니다.")
                 continue
 
             # 상영 스케줄이 잡힌 상영관 검증
@@ -207,7 +207,7 @@ def update_cinema():
 
 def delete_cinema():
     while True:
-        print("[상영관 삭제] 삭제할 상영관아이디를 입력해주세요")
+        print("[상영관 삭제] 삭제할 상영관아이디를 입력해주세요.")
         print("현재 상영관 목록 :", ",".join(map(str, theater_dict.keys())))
         user_input = input("입력 : ")
 
@@ -216,12 +216,12 @@ def delete_cinema():
 
             # 존재하지 않는 상영관 검증
             if cinema_id not in theater_list:
-                print("해당 상영관이 존재하지 않습니다 다시 입력해주세요")
+                print("해당 상영관이 존재하지 않습니다. 다시 입력해주세요.")
                 continue
 
             # 상영 스케줄이 있는 상영관 검증
             if cinema_id in scheduled_cinemas:
-                print("해당 상영관에 상영스케줄이 있습니다. 상영스케줄을 모두 제거 후 상영관을 삭제해주세요")
+                print("해당 상영관에 상영스케줄이 있습니다. 상영스케줄을 모두 제거 후 상영관을 삭제해주세요.")
                 continue
 
             # 상영관 삭제
@@ -238,7 +238,7 @@ def delete_cinema():
 
 def manage_cinema():
     while True:
-        print("\n[관리자 모드] 실행할 메뉴를 선택하세요")
+        print("\n[관리자 모드] 실행할 메뉴를 선택하세요.")
         print("1. 상영관 추가\n2. 상영관 수정\n3. 상영관 삭제\n4. 종료")
         choice = input("입력: ").strip()
 
