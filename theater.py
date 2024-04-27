@@ -238,7 +238,7 @@ def delete_cinema():
 
 def manage_cinema():
     while True:
-        print("\n[관리자 모드] 실행할 메뉴를 선택하세요.")
+        print("[관리자 모드] 실행할 메뉴를 선택하세요.")
         print("1. 상영관 추가\n2. 상영관 수정\n3. 상영관 삭제\n4. 종료")
         choice = input("입력: ").strip()
 
