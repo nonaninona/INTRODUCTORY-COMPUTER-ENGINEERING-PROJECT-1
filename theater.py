@@ -101,7 +101,7 @@ def read_theater_ids_from_schedule():
         for line in f:
             parts = line.strip().split("/")
 
-            theater_id = parts[1]
+            theater_id = parts[2]
             #theater_ids.add(int(theater_id))
     return list(theater_ids)
 
