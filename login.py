@@ -36,11 +36,11 @@ def input_date_time():
     
 
 def movie_theater_menu():
-    print("[건국 영화관]")
-    print("1. 로그인")
-    print("2. 관리자모드")
-    print("3. 종료")
     while True:
+        print("[건국 영화관]")
+        print("1. 로그인")
+        print("2. 관리자모드")
+        print("3. 종료")
         choice = int(input("메뉴 입력: "))
         if choice == 1:
             print("로그인을 시작합니다.")
