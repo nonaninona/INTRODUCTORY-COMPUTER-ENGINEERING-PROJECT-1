@@ -49,7 +49,7 @@ def movie_theater_menu():
         elif choice == 2:
             print("관리자 모드를 시작합니다.")
             # todo : 관리자 모드 실행 함수
-            administrator.manageMenu()
+            administrator.manage_menu()
         elif choice == 3:
             print("프로그램을 종료합니다.")
             sys.exit(0)
