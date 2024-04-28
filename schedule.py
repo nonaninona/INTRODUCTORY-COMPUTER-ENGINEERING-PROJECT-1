@@ -28,7 +28,7 @@ def schedule_add_menu():
         theater_list.append(theater_id)
 
     while True:
-        print("[상영스케줄 추가] 추가할 영화아이디, 상영관, 상영날짜, 상영시작시작을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
+        print("[상영스케줄 추가] 추가할 영화아이디, 상영관, 상영날짜, 상영시작시작을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
         for i, m, t in movie_table:
             print(m, "     ", t, "     ", i)
         print("현재 상영관 목록 : " + ", ".join(theater_list))
@@ -85,7 +85,7 @@ def schedule_edit_menu():
     while True:
         print("[상영스케줄 수정] 시간표아이디를 선택해주세요.\n시간표아이디     영화명     상영관     날짜     시간")
         for id, movie, theater, date, time in schedule_table:
-            print(id + '     ' + movie + '     ' + theater + '상영관     ' + date + '     ' + time)
+            print('     ' + id + '         ' + movie + '     ' + theater + '상영관     ' + date + '     ' + time)
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  #문법 규칙에 부합하지 않는 경우
@@ -109,7 +109,7 @@ def schedule_edit():
         theater_list.append(theater_id)
 
     while True:
-        print("[상영스케줄 수정] 수정할 영화아이디, 상영관, 상영날짜, 상영시작시작을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
+        print("[상영스케줄 수정] 수정할 영화아이디, 상영관, 상영날짜, 상영시작시작을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
         for i, m, t in movie_table:
             print(m, "     ", t, "     ", i)
         print("현재 상영관 목록 : " + ", ".join(theater_list))
@@ -139,7 +139,7 @@ def schedule_delete_menu():
     while True:
         print("[상영스케줄 삭제] 삭제할 시간표아이디를 선택해주세요.\n시간표아이디     영화명     상영관     날짜     시간")
         for id, movie, theater, date, time in schedule_table:
-            print(id + '     ' + movie + '     ' + theater + '상영관     ' + date + '     ' + time)
+            print('     ' + id + '         ' + movie + '     ' + theater + '상영관     ' + date + '     ' + time)
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  # 문법 규칙에 부합하지 않는 경우
@@ -150,8 +150,8 @@ def schedule_delete_menu():
                 continue
             if not check_schedule_reservation_empty(user_input):
                 continue
-
-            delete_schedule(user_input)  # 실제 스케줄 상영하는 부분
+        delete_schedule(user_input)  # 실제 스케줄 상영하는 부분
+        break
 
 
 def delete_schedule(delete_id):
@@ -162,6 +162,8 @@ def delete_schedule(delete_id):
     with open("data/" + "schedule.txt", 'w', encoding='utf-8') as f:
         for id, movie, theater, date, time in schedule_table:
             f.write(f"{id}/{movie}/{theater}/{date}/{time}\n")
+
+    print("상영스케줄이 삭제되었습니다.")
 
 
 def check_schedule_id(user_input, schedule_table):
