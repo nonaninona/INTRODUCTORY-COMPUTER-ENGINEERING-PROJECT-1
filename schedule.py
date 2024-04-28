@@ -84,6 +84,9 @@ def schedule_add_menu():
 
         try:
             movie_id, theater_id, date, time = user_input.strip().split()
+            if not (moviesystem.validate_date_semantics(date) or moviesystem.validate_date_syntax(date) or moviesystem.validate_time_semantics(time) or moviesystem.validate_time_syntax(time)):
+                print("[오류] 올바른 형식으로 입력해주세요.")
+                continue
         except ValueError:
             print("[오류] 올바른 형식으로 입력해주세요.")
             continue
@@ -92,8 +95,8 @@ def schedule_add_menu():
             continue
         if not check_theater_id(theater_id, theater_list):  # 상영관 입력 검사 함수
             continue
-        if not check_start_time(time):  # 시작시간 입력 검사 함수
-            continue
+        # if not check_start_time(time):  # 시작시간 입력 검사 함수
+        #     continue
         if not check_time_overlap(0, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
@@ -142,6 +145,9 @@ def schedule_edit_menu2(timetable_id):
 
         try:
             movie_id, theater_id, date, time = user_input.strip().split()
+            if not (moviesystem.validate_date_semantics(date) or moviesystem.validate_date_syntax(date) or moviesystem.validate_time_semantics(time) or moviesystem.validate_time_syntax(time)):
+                print("[오류] 올바른 형식으로 입력해주세요.")
+                continue
         except ValueError:
             print("[오류] 올바른 형식으로 입력해주세요.")
             continue
@@ -150,8 +156,8 @@ def schedule_edit_menu2(timetable_id):
             continue
         if not check_theater_id(theater_id, theater_list):  # 상영관 입력 검사 함수
             continue
-        if not check_start_time(time):  # 시작시간 입력 검사 함수
-            continue
+        # if not check_start_time(time):  # 시작시간 입력 검사 함수
+        #     continue
         if not check_time_overlap(timetable_id, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
@@ -233,15 +239,15 @@ def check_theater_id(theater_id, theater_list):
         return True
 
 
-def check_start_time(new_start_time):
-    # 추가하고자하는 스케줄의 시작시간이 유효한지 검사하는 함수
-    if not moviesystem.validate_time_syntax(new_start_time):
-        print("상영시작시간의 문법적 형식이 올바르지 않습니다.")
-        return False
-    if not moviesystem.validate_time_semantics(new_start_time):
-        print("상영시작시간은 00:00 ~ 24:00 입니다. 다시 입력해주세요.")
-        return False
-    return True
+# def check_start_time(new_start_time):
+#     # 추가하고자하는 스케줄의 시작시간이 유효한지 검사하는 함수
+#     if not moviesystem.validate_time_syntax(new_start_time):
+#         print("상영시작시간의 문법적 형식이 올바르지 않습니다.")
+#         return False
+#     if not moviesystem.validate_time_semantics(new_start_time):
+#         print("상영시작시간은 00:00 ~ 24:00 입니다. 다시 입력해주세요.")
+#         return False
+#     return True
 
 
 def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 경우 0 / edit인 경우 1이상 정수 중 하나
@@ -294,7 +300,7 @@ def check_schedule_id(user_input, schedule_table):
 
 
 def check_schedule_reservation_empty(timetable_id):
-    #해당 스케줄에 예약자가 있는지 검사하는 함수
+    # 해당 스케줄에 예약자가 있는지 검사하는 함수
     ticket_list = data.get_ticket_list()  # 티켓아이디 예매아이디 좌석아이디 시간표아이디
     reservation_list = data.get_reservation_list()  # 예매아이디 예약자아이디 예약인원수 예약취소여부
 
@@ -302,6 +308,6 @@ def check_schedule_reservation_empty(timetable_id):
         if timetable_id == time_id:
             for id, _, _, cancel in reservation_list:
                 if reserv_id == id and cancel == "X":
-                    print("이미 예약한 인원이 있어 수정이 불가능합니다. 다시 입력해주세요.")
+                    print("이미 예약한 인원이 있어 수정, 삭제가 불가능합니다. 다시 입력해주세요.")
                     return False
     return True
