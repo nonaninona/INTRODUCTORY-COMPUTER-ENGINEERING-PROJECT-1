@@ -1,19 +1,35 @@
 import sys
 import data
+import reserve
 
-def print_reserve_menu(reserver_id):
-    print("[메인 메뉴] 실행할 메뉴를 선택하세요.")
-    print("1. 영화예매하기")
-    print("2. 영화조회하기")
-    print("3. 로그아웃")
-    print("4. 종료하기")
+"""
+
+구조
+
+print_reserve_menu : 메뉴 출력 기능, 최상위 반복문
+- reserve.reserve : 예매하기 기능
+- print_check_reservation_menu : 예매조회 기능
+    - print_cancel_reservation_menu : 예매취소 기능
+
+
+"""
+
+# 메뉴 출력
+def print_reserve_menu(user_id):
     while True:
+        print("[메인 메뉴] 실행할 메뉴를 선택하세요.")
+        print("1. 영화예매하기")
+        print("2. 영화조회하기")
+        print("3. 로그아웃")
+        print("4. 종료하기")
         choice = int(input("입력: "))
+        #validation 필요##################
         if choice == 1:
             print("영화 예매")
+            reserve.reserve(user_id)
         elif choice == 2:
             print("영화 조회")
-            print_check_reservation_menu()
+            print_check_reservation_menu(user_id)
         elif choice == 3:
             print("로그아웃이 완료되었습니다.")
             break
@@ -23,79 +39,24 @@ def print_reserve_menu(reserver_id):
         else: # 비정상 입력
             print("화면에 출력된 숫자 내에서 입력해주세요")
 
-def reserve():
-    # 상영 스케쥴 출력
+
+# 예매 조회 기능
+def print_check_reservation_menu(user_id):    
+    reservation_list = data.get_reservation_list()
+    ticket_list = data.get_ticket_list()
+    movie_list = data.get_movie_list()
+    theater_list = data.get_theater_list()
+    seat_list = data.get_seat_list()
     schedule_list = data.get_schedule_list()
-    print(schedule_list)
-    # 영화목록
-    # 시간표아이디 영화제목  날짜/상영시간     예약인원/최대예약인원   상영관
-    #     1      파묘   04.04/08-10        25 / 25명       1관
-    # 예매할 영화 번호 입력
-    while True:
-        print("예매할 시간표 아이디를 입력해주세요")
-        choice = int(input("시간표아이디 입력 : "))
-        if choice: # 가능한 시간표 아이디 범위 내이면
-            if True: # 여석이 모자르면(매진이면)
-                print("여석이 없습니다")
-            else: # 정상 입력 + 여석 존재면
-                break
-            # 좌석 출력
-        elif choice: # 그 밖의 범위이면
-            print("영화가 존재하지 않습니다")
-        else: # 문법적으로 올바르지 않을 때
-            print("시간표아이디는 숫자로 이루어진 길이가 1 이상인 문자열입니다.")
-    
-    # 인원 입력
-    # 좌석 출력
-    #   | 0 1 2 3 4
-    #   -----------
-    # A | X O X O X
-    # B | X O X O X
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
 
-    while True:
-        print("예약인원수를 입력해주세요")
-        choice = int(input("예약인원수 입력: "))
-        if choice < 1 or choice > 5:
-            print("예약인원수는 1~5 사이 숫자로 이루어진 길이가 1인 문자열입니다.")
-        else: # 문법이 맞은 경우
-            if True: # 예약인원수를 만족하는 연속으로 배치된 좌석이 부족
-                print("예약인원수를 만족하는 연속으로 배치된 좌석이 부족합니다.")
-            else:
-                break
-
-    
-    # 좌석 입력
-    # 좌석 출력
-    #   | 0 1 2 3 4
-    #   -----------
-    # A | X O X O X
-    # B | X O X O X
-
-    while True:
-        print("예매할 좌석번호를 입력해주세요")
-        print("(좌석번호를 기준으로 오른쪽 방향으로 예약인원수 만큼 예매를 진행합니다.)")
-        choice = int(input("좌석번호 입력: "))
-        if True: # 문법 규칙에 부합하지 않는 경우
-            print("올바른 좌석번호를 입력해 주시기 바랍니다.")
-        else: # 문법이 맞은 경우
-            if True: # 오른쪽으로 예약인원수만큼 부족하거나 이미 예약된 좌석인 경우
-                print("예약이 불가능한 좌석입니다.")
-            else:
-                break
-    
-    print("예매가 완료되었습니다")
-
-def print_check_reservation_menu():    
-    if False: # 예매한 영화가 없는 경우
+    if not reservation_table: # 예매한 영화가 없는 경우
         print("예매한 영화가 없습니다")
         return
     
-    # 예매내역
-    # 예매아이디  영화제목   날짜/상영시간     상영관  예약인원수 시작좌석 시간표아이디
-    #    1       파묘   04.04/08-10      1관     2       A3      1
+    print_reservation_table(reservation_table)
 
-
-    while True:    
+    while True:
         print("※(예매 취소를 원할 시 '1', 이전 화면으로 돌아가려면 '2'를 눌러주세요)")
         print("1. 영화 예매 취소")
         print("2. 돌아가기")
@@ -103,26 +64,166 @@ def print_check_reservation_menu():
 
         if choice == 1:
             print("예매 취소")
-            print_cancel_reservation_menu()
+            print_cancel_reservation_menu(user_id)
         elif choice == 2:
             print("메인메뉴로 돌아갑니다.")
-            return
+            break
         # 왜 비정상 입력에 대한 게 없지
 
-def print_cancel_reservation_menu():
 
+# 예매 취소 기능
+def print_cancel_reservation_menu(user_id):
+    reservation_list = data.get_reservation_list()
+    ticket_list = data.get_ticket_list()
+    movie_list = data.get_movie_list()
+    theater_list = data.get_theater_list()
+    seat_list = data.get_seat_list()
+    schedule_list = data.get_schedule_list()
+
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
+
+    # 예매내역 출력
+    print_reservation_table(reservation_table)
+
+    while True:
+        print("예매취소할 예매아이디를 입력해주세요")
+        choice = input("예매아이디 입력: ")
+
+        if not validate_cancel_input(choice): # 문법 규칙 위배
+            print("올바른 예매아이디를 입력해 주시기 바랍니다.")
+        else: # 의미 규칙 위배(없는 아이디)
+            print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
+        
+    cancel_reservation(user_id, int(choice), ticket_list)
+    print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
+
+
+
+
+
+
+
+
+
+
+
+
+##### 여기서부턴 짜잘이 함수들 #####
+
+
+
+
+
+
+### print_check_reservation_menu 짜잘이 함수들 ###
+
+def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list):
+    
+    # join의 경우 reserve.get_schedule_table() 참고
+    sorted_ticket = []
+    result = []
+    # reservation_list에서 user_id에 해당하는 reservation id list 만들기
+    reservation_id_list = get_reservation_id_list(reservation_list, user_id)
+
+    # reservation id list의 reservation id 각각에 대한 ticket_list 가져오기(join)
+    for id in reservation_id_list:
+        sorted_ticket.extend(find_ticket(ticket_list, id))  
+    
+    # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
+    for ticket in sorted_ticket:
+        schedule = find_schedule(schedule_list, ticket[3])
+        movie = find_movie(movie_list, schedule[1])
+        theater = find_theater(theater_list, schedule[2])
+        seat = find_seat(seat_list, ticket[2])
+        start_time = schedule[4].split("-")[0].strip()
+        end_time = schedule[4].split("-")[1].strip()
+        # 인원수 찾기 위함
+        reserve_num = find_reserve_num(reservation_list, ticket[1])
+        result.append([ticket[1], movie[1], schedule[3], start_time, end_time, theater[1], reserve_num, seat[2], ticket[3]])
+
+    # 정보 모두 종합해서 2차원 배열로 리턴
+    return result
+
+
+def get_reservation_id_list(reservation_list, id):
+    reservation_id = []
+    for reservation in reservation_list:
+        if reservation[1] == id:
+            reservation_id.append(reservation[0])
+    return reservation_id;
+
+
+def find_ticket(ticket_list, id):
+    result_ticket = []
+    for ticket in ticket_list:
+        if ticket[1] == id:
+            result_ticket.append(ticket)
+            break
+    return result_ticket
+
+
+def find_schedule(schedule_list, id):
+    for schedule in schedule_list:
+        if schedule[0] == id:
+            return schedule
+    return None
+
+
+def find_movie(movie_list, id):
+    for movie in movie_list:
+        if movie[0] == id:
+            return movie
+    return None
+
+
+def find_theater(theater_list, id):
+    for theater in theater_list:
+        if theater[0] == id:
+            return theater
+    return None
+
+
+def find_seat(seat_list, id):
+    for seat in seat_list:
+        if seat[0] == id:
+            return seat
+    return None
+
+
+def find_reserve_num(reservation_list, id):
+    for reservation in reservation_list:
+        if reservation[0] == id:
+            return reservation[2]
+    return None
+
+
+def print_reservation_table(table):
     # 예매내역
     # 예매아이디  영화제목   날짜/상영시간     상영관  예약인원수 시작좌석 시간표아이디
     #    1       파묘   04.04/08-10      1관     2       A3      1
 
-    while True:
-        print("예매취소할 예매아이디를 입력해주세요")
-        choice = int(input("예매아이디 입력: "))
+    print("예매내역")
+    print("예매아이디\t영화제목\t날짜/상영시간\t\t상영관\t예약인원수\t시작좌석\t시간표아이디")
+    for (id, movie_title, date, start_time, end_time, theater_name, reserve_number, start_seat, schedule_id ) in table:
+        print(str(id)+"\t\t"+movie_title+"\t\t"+date+"/"+start_time+"-"+end_time+"\t"+theater_name+"관"+"\t"+reserve_number+"\t\t"+start_seat+"\t\t"+schedule_id)
 
-        if choice: # 문법 규칙 위배
-            print("올바른 예매아이디를 입력해 주시기 바랍니다.")
-        elif choice: # 의미 규칙 위배(없는 아이디)
-            print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
-            return
-        
-    print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
+
+
+### print_cancel_reservation_menu 짜잘이 함수들 ###
+
+def validate_cancel_input(choice):
+    # 문법적 형식 검증
+    if len(choice) < 1 or not choice.isdigit():
+        return False
+    return True
+
+
+def cancel_reservation(user_id, choosed_reservation_id, ticket_list):
+
+    # reservation_list에서 해당하는 reservation의 예약취소여부를 'O'로 변경
+    # 해당 reservation에 해당하는 ticket을 ticket_list에서 찾아 ticket의 reservation_id 컬럼 값을 -1로 변경
+     
+    # 둘 다 텍스트 파일 수정하는 것. reserve.edit_ticket_reservation() 참고
+
+    return True
+
