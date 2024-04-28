@@ -89,7 +89,6 @@ def print_cancel_reservation_menu(user_id):
     # 예매 취소를 위한 예매 아이디 추출
     reservation_id_list = []
     reservation_id_list = [reservation[0] for reservation in reservation_table]
-    print(reservation_id_list)
 
     while True:
         print("예매취소할 예매아이디를 입력해주세요")
@@ -102,25 +101,11 @@ def print_cancel_reservation_menu(user_id):
         else:
             break
         
-    cancel_reservation(user_id, int(choice), ticket_list)
+    cancel_reservation(choice, ticket_list)
     print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
 
 
-
-
-
-
-
-
-
-
-
-
 ##### 여기서부턴 짜잘이 함수들 #####
-
-
-
-
 
 
 ### print_check_reservation_menu 짜잘이 함수들 ###
@@ -247,18 +232,34 @@ def validate_cancel_syntax(choice):
 def validate_cancel_semantics(choice, reservation_id_list):
     # 의미 규칙 검증
     for id in reservation_id_list:
-        print(choice, id)
         if choice == id:
             return True             
     return False
 
 
-def cancel_reservation(user_id, choosed_reservation_id, ticket_list):
+def cancel_reservation(choosed_reservation_id, ticket_list):
+    reservation_list = data.get_reservation_list() # 기존 예약 리스트 읽어옴
 
-    # reservation_list에서 해당하는 reservation의 예약취소여부를 'O'로 변경
-    # 해당 reservation에 해당하는 ticket을 ticket_list에서 찾아 ticket의 reservation_id 컬럼 값을 -1로 변경
-     
-    # 둘 다 텍스트 파일 수정하는 것. reserve.edit_ticket_reservation() 참고
+    for reservation in reservation_list:
+        if reservation[0] == choosed_reservation_id: # 해당 reservation 찾음
+            reservation[3] = 'O' # 예약 취소 여부를 '0'으로 변경
+            break
+
+    # 수정된 내용을 파일에 기록
+    with open("data/" + "reservation.txt", 'w', encoding='utf-8') as f:
+        for reservation in reservation_list:
+            f.write(f"{reservation[0]}/{reservation[1]}/{reservation[2]}/{reservation[3]}\n")
+
+    # 해당 reservation에 해당하는 ticket을 ticket_list에서 찾아 ticket에서 삭제
+    for ticket in ticket_list:
+        if ticket[1] == choosed_reservation_id:
+            ticket_list.remove(ticket)
+        
+    print(ticket_list)
+
+    # 수정된 내용을 파일에 기록
+    with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
+        for ticket in ticket_list:
+            f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}\n")
 
     return True
-
