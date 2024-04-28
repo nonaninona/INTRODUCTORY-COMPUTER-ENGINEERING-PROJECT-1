@@ -5,7 +5,7 @@ import sys
 def reserve(user_id):
     # 상영 스케쥴 출력
     schedule_list = data.get_schedule_list()
-    schedule_list = sort_schedule(schedule_list, "20240404", "04:04")
+    schedule_list = sort_schedule(schedule_list, "20240402", "04:04")
     [ movie_list, theater_list, seat_list, ticket_list, reservation_list ] = get_lists()
 
     table = get_schedule_table(schedule_list, movie_list, theater_list, seat_list, ticket_list, reservation_list)
@@ -67,7 +67,6 @@ def reserve(user_id):
 
 def sort_schedule(schedule_list, date, time):
     schedule_list = sorted(schedule_list,key=lambda x:x[3]+x[4])
-    print(schedule_list)
     idx = -1
     length = len(schedule_list)
     for i in range(length):
@@ -95,13 +94,14 @@ def get_lists():
 def get_schedule_table(schedule_list, movie_list, theater_list, seat_list, ticket_list, reservation_list):
     table = []
     for i in range(len(schedule_list)):
-        (id, movie_id, theater_id, date, time) = schedule_list[i]
-        movie_title = find_movie(movie_list, movie_id)[1]
+        (id, theater_id, movie_id, date, time) = schedule_list[i]
+        movie = find_movie(movie_list, movie_id)
+        movie_title = movie[1]
         theater_name = find_theater(theater_list, theater_id)[1]
         max = get_maximum(theater_id, seat_list)
         cur = get_current(id, ticket_list, reservation_list)
-        start_time = time.split("-")[0].strip()
-        end_time = time.split("-")[1].strip()
+        start_time = time
+        end_time = get_endtime(movie, start_time)
         table.append([id, movie_title, date, start_time, end_time, cur, max, theater_name])
 
     return table
@@ -145,12 +145,33 @@ def get_current(schedule_id, ticket_list, reservation_list):
     
     return count
 
+# 종료 시간 얻기
+def get_endtime(movie, start_time):
+    (id, title, running_time) = movie
+
+    run_h = int(running_time) // 60
+    run_m = int(running_time) % 60
+
+    start_h = start_time.split(':')[0]
+    start_m = start_time.split(':')[1]
+    start_h = int(start_h)
+    start_m = int(start_m)
+
+    end_m = (start_m + run_m) % 60
+    end_h = start_h + run_h + (start_m + run_m) // 60
+
+    # 다음날로 넘어가는 건?
+
+    return str(end_h) + ":" + str(end_m)
+
+    
+
 # 스케쥴 표 출력
 def print_schedule_list(table):
     print("영화목록")
-    print("시간표아이디\t영화제목\t날짜/상영시간\t예약인원/최대예약인원\t상영관")
+    print("시간표아이디\t영화제목\t날짜/상영시간\t\t예약인원/최대예약인원\t상영관")
     for (id, movie_title, date, start_time, end_time, cur, max, theater_name) in table:
-        print(str(id)+"\t\t"+movie_title+"\t\t"+date+"/"+start_time+"-"+end_time+"\t"+str(cur)+"/"+str(max)+"\t\t"+theater_name)
+        print(str(id)+"\t\t"+movie_title+"\t\t"+date+"/"+start_time+"-"+end_time+"\t"+str(cur)+"/"+str(max)+"\t\t\t"+theater_name)
     # 영화목록
     # 시간표아이디 영화제목  날짜/상영시간     예약인원/최대예약인원   상영관
     #     1      파묘   04.04/08-10        25 / 25명       1관

@@ -132,11 +132,11 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
     # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
     for ticket in sorted_ticket:
         schedule = find_schedule(schedule_list, ticket[3])
-        movie = find_movie(movie_list, schedule[1])
-        theater = find_theater(theater_list, schedule[2])
+        movie = find_movie(movie_list, schedule[2])
+        theater = find_theater(theater_list, schedule[1])
         seat = find_seat(seat_list, ticket[2])
-        start_time = schedule[4].split("-")[0].strip()
-        end_time = schedule[4].split("-")[1].strip()
+        start_time = schedule[4]
+        end_time = get_endtime(movie, start_time)
         # 인원수 찾기 위함
         reserve_num = find_reserve_num(reservation_list, ticket[1])
         result.append([ticket[1], movie[1], schedule[3], start_time, end_time, theater[1], reserve_num, seat[2], ticket[3]])
@@ -150,7 +150,7 @@ def get_reservation_id_list(reservation_list, id):
     for reservation in reservation_list:
         if reservation[1] == id:
             reservation_id.append(reservation[0])
-    return reservation_id;
+    return reservation_id
 
 
 def find_ticket(ticket_list, id):
@@ -174,6 +174,24 @@ def find_movie(movie_list, id):
         if movie[0] == id:
             return movie
     return None
+
+def get_endtime(movie, start_time):
+    (id, title, running_time) = movie
+
+    run_h = int(running_time) // 60
+    run_m = int(running_time) % 60
+
+    start_h = start_time.split(':')[0]
+    start_m = start_time.split(':')[1]
+    start_h = int(start_h)
+    start_m = int(start_m)
+
+    end_m = (start_m + run_m) % 60
+    end_h = start_h + run_h + (start_m + run_m) // 60
+
+    # 다음날로 넘어가는 건?
+
+    return str(end_h) + ":" + str(end_m)
 
 
 def find_theater(theater_list, id):
