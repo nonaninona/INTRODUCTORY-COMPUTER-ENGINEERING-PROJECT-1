@@ -212,9 +212,9 @@ def write_movie(id, movie, time):
     elif (100 <= id):
         newID = f"{id + 1}"
 
-    #data.add_movie(newID, movie, time)
-    with open("data/" + "movie.txt", "a", encoding="utf-8") as f:
-         f.write(f"{newID}/{movie}/{time}\n")
+    data.add_movie(newID, movie, time)
+    #with open("data/" + "movie.txt", "a", encoding="utf-8") as f:
+    #     f.write(f"{newID}/{movie}/{time}\n")
 
 def edit_movie_title(id, movie):
     movieTable = read_movie()  # 기존 영화 목록을 읽어옴
@@ -228,7 +228,6 @@ def edit_movie_title(id, movie):
     with open("data/" + "movie.txt", 'w', encoding='utf-8') as f:
         for i, m, t in movieTable:
             f.write(f"{i}/{m}/{t}\n")
-
 
 def edit_movie_time(id, time):
     movieTable = read_movie()  # 기존 영화 목록을 읽어옴
