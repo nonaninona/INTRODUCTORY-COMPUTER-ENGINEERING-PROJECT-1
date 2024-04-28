@@ -61,16 +61,17 @@ def print_check_reservation_menu(user_id):
         print("※(예매 취소를 원할 시 '1', 이전 화면으로 돌아가려면 '2'를 눌러주세요)")
         print("1. 영화 예매 취소")
         print("2. 돌아가기")
-        choice = int(input("입력: "))
-
-        if choice == 1:
-            print("예매 취소")
-            print_cancel_reservation_menu(user_id)
-        elif choice == 2:
-            print("메인메뉴로 돌아갑니다.")
-            break
-        # 왜 비정상 입력에 대한 게 없지
-
+        choice = input("입력: ")
+        
+        if not validate_choice_syntax(choice): # 문법 규칙 위배
+            print("입력이 올바르지 않습니다. 다시 입력해주세요.")
+        else:
+            if int(choice) == 1:
+                print("예매 취소")
+                print_cancel_reservation_menu(user_id)
+            elif int(choice) == 2:
+                print("메인메뉴로 돌아갑니다.")
+                break
 
 # 예매 취소 기능
 def print_cancel_reservation_menu(user_id):
@@ -235,6 +236,14 @@ def validate_cancel_semantics(choice, reservation_id_list):
         if choice == id:
             return True             
     return False
+
+def validate_choice_syntax(choice):
+    # 문법 규칙 검증
+    if not choice.isdigit():
+        return False
+    if (int(choice) < 1 or int(choice) > 2) or len(choice) != 1:
+        return False
+    return True
 
 
 def cancel_reservation(choosed_reservation_id, ticket_list):
