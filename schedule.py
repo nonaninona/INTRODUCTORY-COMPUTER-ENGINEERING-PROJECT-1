@@ -1,6 +1,5 @@
 import data
 import moviesystem
-import sys
 
 
 def get_movie_list():
