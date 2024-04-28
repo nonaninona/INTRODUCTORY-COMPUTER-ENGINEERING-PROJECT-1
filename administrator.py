@@ -17,7 +17,8 @@ def read_schedule():
 def manage_menu():
     while True:
         print("[관리자 모드] 실행할 메뉴를 선택하세요.")
-        menu = input("1. 영화 관리\n2. 상영관 관리\n3. 상영스케줄 관리\n4. 종료\n입력 : ")
+        # menu = input("1. 영화 관리\n2. 상영관 관리\n3. 상영스케줄 관리\n4. 종료\n입력 : ")
+        menu = "2"
         if menu == "1":
             manage_movie()
         elif menu == "2":
