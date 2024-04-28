@@ -158,7 +158,7 @@ def get_endtime(movie, start_time):
     start_m = int(start_m)
 
     end_m = (start_m + run_m) % 60
-    end_h = start_h + run_h + (start_m + run_m) // 60
+    end_h = (start_h + run_h + (start_m + run_m) // 60) // 24
 
     # 다음날로 넘어가는 건?
 
