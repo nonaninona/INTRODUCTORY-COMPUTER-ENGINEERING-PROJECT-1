@@ -129,6 +129,8 @@ def get_maximum(theater_id, seat_list):
     for seat in seat_list:
         if seat[1] == theater_id:
             count = count + 1
+    if count == 1:
+        return 25
     return count
 
 # 해당하는 스케쥴의 에약된 seat의 수

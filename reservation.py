@@ -30,7 +30,6 @@ def print_reserve_menu(user_id):
             print("화면에 출력된 숫자 내에서 입력해주세요")
         else:
             if int(choice) == 1:
-                print("영화 예매")
                 reserve.reserve(user_id)
             elif int(choice) == 2:
                 print("영화 조회")
