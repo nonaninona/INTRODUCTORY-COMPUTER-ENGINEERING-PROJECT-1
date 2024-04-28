@@ -101,12 +101,12 @@ def get_schedule_table(schedule_list, movie_list, theater_list, seat_list, ticke
         (id, theater_id, movie_id, date, time) = schedule_list[i]
         movie = find_movie(movie_list, movie_id)
         movie_title = movie[1]
-        theater_name = find_theater(theater_list, theater_id)[1]
+        # theater_name = find_theater(theater_list, theater_id)
         max = get_maximum(theater_id, seat_list)
         cur = get_current(id, ticket_list, reservation_list)
         start_time = time
         end_time = get_endtime(movie, start_time)
-        table.append([id, movie_title, date, start_time, end_time, cur, max, theater_name])
+        table.append([id, movie_title, date, start_time, end_time, cur, max, theater_id])
 
     return table
 
@@ -118,7 +118,7 @@ def find_movie(movie_list, id):
 
 def find_theater(theater_list, id):
     for theater in theater_list:
-        if theater[0] == id:
+        if theater == id:
             return theater
     return None
 
@@ -244,7 +244,7 @@ def get_ticket_reservation_map(tickets, reservation_list):
         row = seat[0]
         row = (ord(row) - ord('A')) * 5
         column = int(seat[1])
-        idx = row + column - 1
+        idx = row + column
 
         for reservation in reservation_list:
             if ticket[1] == reservation[0]:
@@ -331,7 +331,7 @@ def check_seat_available(choice, seats, people):
         return False
     
     for i in range(people):
-        idx = row + column + i - 1
+        idx = row + column + i
         if seats[idx] == 'X':
             return False
 
