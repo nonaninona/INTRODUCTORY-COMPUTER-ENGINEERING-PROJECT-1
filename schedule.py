@@ -216,14 +216,14 @@ def check_movie_id(movie, movie_list):
     for i in range(0, len(movie_list)):
         if movie == movie_list[i][0]:
             return True
-    print("일치하는 영화 아이디가 없습니다.")
+    print("일치하는 영화아이디가 없습니다.")
     return False
 
 
 def check_theater_id(theater_id, theater_list):
     # 기존 상영관아이디와 일치하는 지 검사하는 함수
     if theater_id not in theater_list:
-        print("일치하는 상영관 아이디가 없습니다.")
+        print("일치하는 상영관아이디가 없습니다.")
         return False
     else:
         return True
@@ -236,7 +236,7 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
 
     for i in range(0, len(schedule_list)):
         # 상영관이 겹치는 스케줄만 가져옴
-        if theater_id == schedule_list[i][1] and flag != schedule_list[i][0]:
+        if theater_id == schedule_list[i][1] and str(int(flag)+1) != schedule_list[i][0]:
             overlap_theater_id_list.append(schedule_list[i])
     if len(overlap_theater_id_list) == 0:  # 상영관이 겹치지 않는다면 바로 추가
         return True
@@ -253,16 +253,24 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
             start = overlap_theater_id_list[i][4]  # 각 영화의 시작시간 가져옴
             end = calculate_end_time(start, runtime)  # 각 영화의 종료 시간 구하기
 
-            if new_hour >= int(end[:2]):
-                if new_hour == int(end[:2]) & new_minute >= int(end[3:]) + 10:
-                    return True
+            if new_hour >= int(start[:2]) & new_hour <= int(end[:2]):
+                if new_hour == int(end[:2]):
+                    if new_minute >= int(end[3:])+10:
+                        return True
+                    else:
+                        print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
+                        return False
                 else:
                     print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
                     return False
 
-            if int(new_end[:2]) <= int(start[:2]):
-                if int(new_end[:2]) == int(start[:2]) & int(new_end[3:]) <= int(start[3:]):
-                    return True
+            if int(new_end[:2]) >= int(start[:2]) & int(new_end[:2]) <= int(end[:2]):
+                if int(new_end[:2]) == int(start[:2]):
+                    if new_minute >= int(end[3:])-10:
+                        return True
+                    else:
+                        print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
+                        return False
                 else:
                     print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
                     return False
@@ -288,6 +296,8 @@ def calculate_end_time(start_time, runtime):
 
     end_time = '{:02d}:{:02d}'.format(end_hour, end_minute)
     return end_time  # 문자열 00:00 형식으로 반환
+
+
 def check_schedule_id(user_input, schedule_table):
     #선택한 상영스케줄이 실제 상영스케줄 리스트에 있는지 검사하는 함수
     for id, _, _, _, _ in schedule_table:
