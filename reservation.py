@@ -29,7 +29,6 @@ def print_reserve_menu(user_id):
             print("영화 예매")
             reserve.reserve(user_id)
         elif choice == 2:
-            print("영화 조회")
             print_check_reservation_menu(user_id)
         elif choice == 3:
             print("로그아웃이 완료되었습니다.")
@@ -54,7 +53,8 @@ def print_check_reservation_menu(user_id):
     if not reservation_table: # 예매한 영화가 없는 경우
         print("예매한 영화가 없습니다")
         return
-    
+
+    print("영화 조회")
     print_reservation_table(reservation_table)
 
     while True:
@@ -69,6 +69,7 @@ def print_check_reservation_menu(user_id):
             if int(choice) == 1:
                 print("예매 취소")
                 print_cancel_reservation_menu(user_id)
+                break
             elif int(choice) == 2:
                 print("메인메뉴로 돌아갑니다.")
                 break
