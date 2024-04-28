@@ -184,7 +184,7 @@ def schedule_delete_menu():
                 continue
 
         delete_schedule(user_input)  # 실제 스케줄 삭제하는 부분
-        print("상영스케줄이 삭제되었습니다.")
+        print("성공적으로 삭제되었습니다.")
         return
 
 
