@@ -103,8 +103,7 @@ def schedule_add_menu():
 
         data.add_schedule(str(timetable_id), theater_id, movie_id, date, time)
         print("상영스케줄이 추가되었습니다.")
-        break
-        # return  #관리자 프롬프트로 이동
+        return  #관리자 프롬프트로 이동
 
 
 def schedule_edit_menu():
@@ -126,6 +125,7 @@ def schedule_edit_menu():
             if not check_schedule_reservation_empty(user_input):
                 continue
             schedule_edit_menu2(user_input)
+            break
 
 
 def schedule_edit_menu2(timetable_id):
@@ -155,14 +155,14 @@ def schedule_edit_menu2(timetable_id):
             continue
 
         edit_schedule(timetable_id, movie_id, theater_id, date, time)   #실제 스케줄 수정하는 부분
+        print("상영스케줄이 수정되었습니다.")
         return  # 관리자 프롬프트로 이동
 
 
 def edit_schedule(timetable_id, movie_id, theater_id, date, time):
     # 실제 스케줄을 수정하는 부분
     delete_schedule(timetable_id)
-    data.add_schedule(timetable_id, movie_id, theater_id, date, time)
-    print("상영스케줄이 수정되었습니다.")
+    data.add_schedule(timetable_id, theater_id, movie_id, date, time)
 
 
 def schedule_delete_menu():
@@ -186,7 +186,9 @@ def schedule_delete_menu():
                 continue
 
         delete_schedule(user_input)  # 실제 스케줄 삭제하는 부분
+        print("상영스케줄이 삭제되었습니다.")
         return
+
 
 def delete_schedule(delete_id):
     # 실제 스케줄을 삭제하는 부분
@@ -196,7 +198,6 @@ def delete_schedule(delete_id):
     with open("data/" + "schedule.txt", 'w', encoding='utf-8') as f:
         for id, movie, theater, date, time in schedule_table:
             f.write(f"{id}/{movie}/{theater}/{date}/{time}\n")
-    print("상영스케줄이 삭제되었습니다.")
 
 
 def get_movie_data(flag, id):  # flag : name/runtime 중 하나
@@ -283,6 +284,7 @@ def check_time_overlap(movie_id, theater_id, date, time):
 
 
 def check_schedule_id(user_input, schedule_table):
+    #선택한 상영스케줄이 실제 상영스케줄 리스트에 있는지 검사하는 함수
     for id, _, _, _, _ in schedule_table:
         if id == user_input:
             return True
@@ -291,13 +293,13 @@ def check_schedule_id(user_input, schedule_table):
 
 
 def check_schedule_reservation_empty(timetable_id):
+    #해당 스케줄에 예약자가 있는지 검사하는 함수
     ticket_list = data.get_ticket_list()  # 티켓아이디 예매아이디 좌석아이디 시간표아이디
     reservation_list = data.get_reservation_list()  # 예매아이디 예약자아이디 예약인원수 예약취소여부
 
     for _, reserv_id, _, time_id in ticket_list:
         if timetable_id == time_id:
-            for _, id, _, cancel in reservation_list:
-                print(f"id : {id}, reserv_id : {reserv_id}, cancel: {cancel}")
+            for id, _, _, cancel in reservation_list:
                 if reserv_id == id and cancel == "X":
                     print("이미 예약한 인원이 있어 수정이 불가능합니다. 다시 입력해주세요.")
                     return False
