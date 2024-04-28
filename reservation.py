@@ -8,7 +8,7 @@ import reserve
 
 print_reserve_menu : 메뉴 출력 기능, 최상위 반복문
 - reserve.reserve : 예매하기 기능
-- print_check_reserveation_menu : 예매조회 기능
+- print_check_reservation_menu : 예매조회 기능
     - print_cancel_reservation_menu : 예매취소 기능
 
 
@@ -48,7 +48,7 @@ def print_check_reservation_menu(user_id):
     theater_list = data.get_theater_list()
     seat_list = data.get_seat_list()
     schedule_list = data.get_schedule_list()
-    reservation_table = get_user_reseration_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
 
     if not reservation_table: # 예매한 영화가 없는 경우
         print("예매한 영화가 없습니다")
@@ -80,7 +80,7 @@ def print_cancel_reservation_menu(user_id):
     seat_list = data.get_seat_list()
     schedule_list = data.get_schedule_list()
 
-    reservation_table = get_user_reseration_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
 
     # 예매내역 출력
     print_reservation_table(reservation_table)
@@ -118,18 +118,86 @@ def print_cancel_reservation_menu(user_id):
 
 ### print_check_reservation_menu 짜잘이 함수들 ###
 
-def get_user_reseration_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list):
+def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list):
     
-    # reservation_list에서 user_id에 해당하는 reservation id list 만들기
-    # reservation id list의 reservation id 각각에 대한 ticket_list 가져오기(join)
-    # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
-    # 정보 모두 종합해서 2차원 배열로 리턴
-
     # join의 경우 reserve.get_schedule_table() 참고
+    sorted_ticket = []
+    result = []
+    # reservation_list에서 user_id에 해당하는 reservation id list 만들기
+    reservation_id_list = get_reservation_id_list(reservation_list, user_id)
 
-    return []
+    # reservation id list의 reservation id 각각에 대한 ticket_list 가져오기(join)
+    for id in reservation_id_list:
+        sorted_ticket.extend(find_ticket(ticket_list, id))  
+    
+    # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
+    for ticket in sorted_ticket:
+        schedule = find_schedule(schedule_list, ticket[3])
+        movie = find_movie(movie_list, schedule[1])
+        theater = find_theater(theater_list, schedule[2])
+        seat = find_seat(seat_list, ticket[2])
+        start_time = schedule[4].split("-")[0].strip()
+        end_time = schedule[4].split("-")[1].strip()
+        # 인원수 찾기 위함
+        reserve_num = find_reserve_num(reservation_list, ticket[1])
+        result.append([ticket[1], movie[1], schedule[3], start_time, end_time, theater[1], reserve_num, seat[2], ticket[3]])
 
-def print_reservation_table():
+    # 정보 모두 종합해서 2차원 배열로 리턴
+    return result
+
+
+def get_reservation_id_list(reservation_list, id):
+    reservation_id = []
+    for reservation in reservation_list:
+        if reservation[1] == id:
+            reservation_id.append(reservation[0])
+    return reservation_id;
+
+
+def find_ticket(ticket_list, id):
+    result_ticket = []
+    for ticket in ticket_list:
+        if ticket[1] == id:
+            result_ticket.append(ticket)
+    return result_ticket
+
+
+def find_schedule(schedule_list, id):
+    for schedule in schedule_list:
+        if schedule[0] == id:
+            return schedule
+    return None
+
+
+def find_movie(movie_list, id):
+    for movie in movie_list:
+        if movie[0] == id:
+            return movie
+    return None
+
+
+def find_theater(theater_list, id):
+    for theater in theater_list:
+        if theater[0] == id:
+            return theater
+    return None
+
+
+def find_seat(seat_list, id):
+    for seat in seat_list:
+        if seat[0] == id:
+            return seat
+    return None
+
+
+def find_reserve_num(reservation_list, id):
+    for reservation in reservation_list:
+        if reservation[0] == id:
+            return reservation[2]
+    return None
+
+
+def print_reservation_table(table):
     # 예매내역
     # 예매아이디  영화제목   날짜/상영시간     상영관  예약인원수 시작좌석 시간표아이디
     #    1       파묘   04.04/08-10      1관     2       A3      1
@@ -137,9 +205,10 @@ def print_reservation_table():
     # 얘는 출력만 하면 되서 쉬울 듯
     # reserve.print_schedule_list() 참고
 
-    print()
-
-
+    print("예매내역")
+    print("예매아이디\t영화제목\t날짜/상영시간\t\t상영관\t예약인원수\t시작좌석\t시간표아이디")
+    for (id, movie_title, date, start_time, end_time, theater_name, reserve_number, start_seat, schedule_id ) in table:
+        print(str(id)+"\t\t"+movie_title+"\t\t"+date+"/"+start_time+"-"+end_time+"\t"+theater_name+"관"+"\t"+reserve_number+"\t\t"+start_seat+"\t\t"+schedule_id)
 
 
 
