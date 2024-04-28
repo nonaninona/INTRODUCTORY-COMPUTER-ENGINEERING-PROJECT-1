@@ -86,14 +86,21 @@ def print_cancel_reservation_menu(user_id):
     # 예매내역 출력
     print_reservation_table(reservation_table)
 
+    # 예매 취소를 위한 예매 아이디 추출
+    reservation_id_list = []
+    reservation_id_list = [reservation[0] for reservation in reservation_table]
+    print(reservation_id_list)
+
     while True:
         print("예매취소할 예매아이디를 입력해주세요")
         choice = input("예매아이디 입력: ")
 
-        if not validate_cancel_input(choice): # 문법 규칙 위배
+        if not validate_cancel_syntax(choice): # 문법 규칙 위배
             print("올바른 예매아이디를 입력해 주시기 바랍니다.")
-        else: # 의미 규칙 위배(없는 아이디)
+        elif not validate_cancel_semantics(choice, reservation_id_list): # 의미 규칙 위배 (없는 아이디)
             print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
+        else:
+            break
         
     cancel_reservation(user_id, int(choice), ticket_list)
     print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
@@ -230,11 +237,20 @@ def print_reservation_table(table):
 
 ### print_cancel_reservation_menu 짜잘이 함수들 ###
 
-def validate_cancel_input(choice):
-    # 문법적 형식 검증
+def validate_cancel_syntax(choice):
+    # 문법 규칙 검증
     if len(choice) < 1 or not choice.isdigit():
         return False
     return True
+
+
+def validate_cancel_semantics(choice, reservation_id_list):
+    # 의미 규칙 검증
+    for id in reservation_id_list:
+        print(choice, id)
+        if choice == id:
+            return True             
+    return False
 
 
 def cancel_reservation(user_id, choosed_reservation_id, ticket_list):
