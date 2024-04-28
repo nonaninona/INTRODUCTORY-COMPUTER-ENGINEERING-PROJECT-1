@@ -87,15 +87,14 @@ def print_cancel_reservation_menu(user_id):
 
     while True:
         print("예매취소할 예매아이디를 입력해주세요")
-        choice = int(input("예매아이디 입력: "))
+        choice = input("예매아이디 입력: ")
 
-        if validate_cancel_input(choice): # 문법 규칙 위배
+        if not validate_cancel_input(choice): # 문법 규칙 위배
             print("올바른 예매아이디를 입력해 주시기 바랍니다.")
         else: # 의미 규칙 위배(없는 아이디)
             print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
-            break
         
-    cancel_reservation(user_id, choice, ticket_list)
+    cancel_reservation(user_id, int(choice), ticket_list)
     print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
 
 
@@ -203,9 +202,6 @@ def print_reservation_table(table):
     # 예매아이디  영화제목   날짜/상영시간     상영관  예약인원수 시작좌석 시간표아이디
     #    1       파묘   04.04/08-10      1관     2       A3      1
 
-    # 얘는 출력만 하면 되서 쉬울 듯
-    # reserve.print_schedule_list() 참고
-
     print("예매내역")
     print("예매아이디\t영화제목\t날짜/상영시간\t\t상영관\t예약인원수\t시작좌석\t시간표아이디")
     for (id, movie_title, date, start_time, end_time, theater_name, reserve_number, start_seat, schedule_id ) in table:
@@ -216,6 +212,9 @@ def print_reservation_table(table):
 ### print_cancel_reservation_menu 짜잘이 함수들 ###
 
 def validate_cancel_input(choice):
+    # 문법적 형식 검증
+    if len(choice) < 1 or not choice.isdigit():
+        return False
     return True
 
 
