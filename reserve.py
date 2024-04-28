@@ -331,7 +331,7 @@ def check_seat_available(choice, seats, people):
         return False
     
     for i in range(people):
-        idx = row + column + i - 1
+        idx = row + column + i
         if seats[idx] == 'X':
             return False
 
