@@ -37,7 +37,7 @@ def input_date_time():
 
         # 의미규칙 검증 (여기에 추가적인 검증을 수행할 수 있습니다)
         if not validate_date_semantics(date_str) or not validate_time_semantics(time_str):
-            print("예매가능한 영화가 없습니다. 다시 입력해주세요.")
+            print("지원하지 않는 날짜입니다. 다시 입력해주세요.")
             continue
 
         # 모든 검증 통과시 True 반환
