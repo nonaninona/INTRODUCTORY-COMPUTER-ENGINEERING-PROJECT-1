@@ -1,4 +1,5 @@
 import moviesystem
+import data
 
 theater_list = []  # 상영관 정보
 # theater_dict = {}  # 상영관 행렬 정보
@@ -13,6 +14,45 @@ def write_theater():
 # 예매아이디
 seat_id = 0
 
+# 상영관 좌석 추가 함수
+def add_seat(theater_id):
+    # seat id 얻어오기
+    seat_list = data.get_seat_list()
+    seat_id = -1
+    if seat_list == []:
+        seat_id = 1
+    else:
+        max = 0
+        for seat in seat_list:
+            (s_id, t_id, label) = seat
+            if max < int(s_id):
+                max = int(s_id)
+        seat_id = max + 1
+
+    row = ['A', 'B', 'C', 'D', 'E']
+    column = ['1', '2', '3', '4', '5']
+
+    for r in row:
+        for c in column:
+            data.add_seat(str(seat_id), str(theater_id), r+c)
+
+def delete_seat(theater_id):
+    seat_list = data.get_seat_list()
+
+    # 삭제할 행 빼고 넣기
+    new_lines = []
+    for seat in seat_list:
+        (s_id, t_id, label) = seat
+        print(theater_id, t_id)
+        if not str(t_id) == str(theater_id):
+            new_lines.append(str(s_id)+'/'+str(t_id)+'/'+str(label)+'\n')
+    
+    print(new_lines)
+    try:
+        with open("data/" + "seat.txt", "w", encoding="utf-8") as file:
+            file.writelines(new_lines)
+    except FileNotFoundError:
+        print("파일을 찾을 수 없습니다.")
 
 # # 상영관 업데이트 함수
 # def update_seat(theater_id, new_rows, new_cols):
@@ -192,6 +232,7 @@ def add_cinema():
             # 상영관 등록
             # theater_dict[cinema_id] = {'rows': rows, 'cols': cols}
             theater_list.append(cinema_id)
+            add_seat(cinema_id)
             # update_seat(cinema_id, rows, cols)
             print("정상적으로 추가되었습니다.")
             break
@@ -267,6 +308,7 @@ def delete_cinema():
             theater_list.remove(cinema_id)
             # del theater_dict[cinema_id]
             delete_theater(cinema_id)
+            delete_seat(cinema_id)
             print("정상적으로 삭제가 완료되었습니다.")
             break
 
