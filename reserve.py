@@ -242,7 +242,7 @@ def get_ticket_reservation_map(tickets, reservation_list):
         row = seat[0]
         row = (ord(row) - ord('A')) * 5
         column = int(seat[1])
-        idx = row + column
+        idx = row + column - 1
 
         for reservation in reservation_list:
             if ticket[1] == reservation[0]:
@@ -256,7 +256,7 @@ def print_seats(seats):
     alphabet = ['A', 'B', 'C', 'D', 'E']
 
     print("좌석 입력")
-    print("  | 0 1 2 3 4")
+    print("  | 1 2 3 4 5")
     print("  -----------")
 
     j = 0
@@ -315,7 +315,7 @@ def validate_seat_number(choice):
 
     if not ('A' <= row and row <= 'E'):
         return False
-    if not column.isdigit() or int(column) < 0 or 4 < int(column):
+    if not column.isdigit() or int(column) < 1 or 5 < int(column):
         return False
     return True
 
@@ -329,7 +329,7 @@ def check_seat_available(choice, seats, people):
         return False
     
     for i in range(people):
-        idx = row + column + i
+        idx = row + column + i - 1
         if seats[idx] == 'X':
             return False
 
@@ -345,7 +345,7 @@ def make_reservation(reservation_list, user_id, people):
             (id, reserver_id, people, is_canceled) = reservation
             if max < int(id):
                 max = int(id)
-        reservation_id = max
+        reservation_id = max + 1
 
     data.add_reservation(str(reservation_id), str(user_id), str(people), 'X')
 
@@ -380,11 +380,11 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     else:
         max = 0
         for ticket in ticket_list:
-            (id, reservation_id, seat_id, schedule_id) = ticket
+            (id, reservation_id, seat_id, s_id) = ticket
             if max < int(id):
                 max = int(id)
+        ticket_id = max + 1
 
-        ticket_id = max
 
     # ticket 생성
     for seat_id in seat_ids:
