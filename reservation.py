@@ -24,21 +24,26 @@ def print_reserve_menu(user_id):
         print("2. 영화조회하기")
         print("3. 로그아웃")
         print("4. 종료하기")
-        choice = int(input("입력: "))
-        # validation 필요##################
-        if choice == 1:
-            print("영화 예매")
-            reserve.reserve(user_id)
-        elif choice == 2:
-            print_check_reservation_menu(user_id)
-        elif choice == 3:
-            print("로그아웃이 완료되었습니다.")
-            break
-        elif choice == 4:
-            print("프로그램을 종료합니다.")
-            sys.exit(0)
-        else:  # 비정상 입력
+        choice = input("입력: ")
+        
+
+        if not validate_main_syntax(choice): # 문법 규칙 위배
             print("화면에 출력된 숫자 내에서 입력해주세요")
+        else:
+            if int(choice) == 1:
+                reserve.reserve(user_id)
+            elif int(choice) == 2:
+                print("영화 조회")
+                print_check_reservation_menu(user_id)
+            elif int(choice) == 3:
+                print("로그아웃이 완료되었습니다.")
+                break
+            elif int(choice) == 4:
+                print("프로그램을 종료합니다.")
+                sys.exit(0)
+            else: # 비정상 입력
+                print("화면에 출력된 숫자 내에서 입력해주세요")
+
 
 
 # 예매 조회 기능
@@ -245,6 +250,15 @@ def validate_cancel_semantics(choice, reservation_id_list):
     return False
 
 
+def validate_main_syntax(choice):
+    # 문법 규칙 검증
+    if not choice.isdigit():
+        return False
+    if (int(choice) < 1 or int(choice) > 4) or len(choice) != 1:
+        return False
+    return True
+
+  
 def validate_choice_syntax(choice):
     # 문법 규칙 검증
     if not choice.isdigit():
