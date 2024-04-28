@@ -1,4 +1,4 @@
-import sys
+import moviesystem
 
 theater_list = []  # 상영관 정보
 theater_dict = {}  # 상영관 행렬 정보

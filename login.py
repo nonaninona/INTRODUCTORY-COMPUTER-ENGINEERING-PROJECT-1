@@ -8,14 +8,14 @@ import sys
 
 
 def input_date_time():
-    moviesystem.file_exist()
-    moviesystem.validate_theater()
-    moviesystem.validate_seat()
-    moviesystem.validate_reservation()
-    moviesystem.validate_ticket()
-    moviesystem.validate_user()
-    moviesystem.validate_schedule()
-    moviesystem.validate_movie()
+    # moviesystem.file_exist()
+    # moviesystem.validate_theater()
+    # moviesystem.validate_seat()
+    # moviesystem.validate_reservation()
+    # moviesystem.validate_ticket()
+    # moviesystem.validate_user()
+    # moviesystem.validate_schedule()
+    # moviesystem.validate_movie()
     while True:
         print("[날짜 및 시간 입력]")
         print("날짜와 현재 시간을 입력해주세요.")

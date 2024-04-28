@@ -1,5 +1,6 @@
 import data
 import sys
+import moviesystem
 
 # 예매 기능
 def reserve(user_id):
