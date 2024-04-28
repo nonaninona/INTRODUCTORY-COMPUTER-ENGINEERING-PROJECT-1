@@ -260,7 +260,7 @@ def manage_cinema():
             print("관리자모드 메뉴로 돌아갑니다.")
             break  # 루프 종료
         else:
-            print("잘못된 입력입니다. 다시 입력해주세요.")
+            print("1~4 사이 숫자 내에서 입력해주세요.")
 
 
 # manage_cinema()
