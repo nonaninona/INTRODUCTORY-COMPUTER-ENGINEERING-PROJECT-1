@@ -298,6 +298,10 @@ def delete_cinema():
         try:
             cinema_id = int(user_input)
 
+            if cinema_id < 0:
+                print("상영관아이디는 0 이상인 정수입니다.")
+                continue
+
             # 존재하지 않는 상영관 검증
             if cinema_id not in theater_list:
                 print("해당 상영관이 존재하지 않습니다. 다시 입력해주세요.")
