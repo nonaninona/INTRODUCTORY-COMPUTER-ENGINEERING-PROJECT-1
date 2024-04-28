@@ -266,6 +266,3 @@ def check_schedule_reservation_empty(user_input):
     # print("이미 예약한 인원이 있어 수정이 불가능합니다. 다시 입력해주세요.")
     # return False
     return True
-
-
-manage_schedule()
