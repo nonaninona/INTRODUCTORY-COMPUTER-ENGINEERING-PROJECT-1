@@ -262,6 +262,10 @@ def update_cinema():
                 print("상영스케줄이 잡힌 영화가 있어 수정이 불가능합니다.")
                 continue
 
+            if cinema_id < 0:
+                print("상영관아이디는 0 이상인 정수입니다.")
+                continue
+
             # 존재하지 않는 상영관 검증
             if cinema_id not in theater_list:
                 print("해당하는 상영관이 없습니다.")
