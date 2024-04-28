@@ -3,26 +3,6 @@ import moviesystem
 import sys
 
 
-def manage_schedule():
-    while True:
-        print("[관리자 모드] 실행할 메뉴를 선택하세요.")
-        menu = input("1. 상영스케줄 추가\n2. 상영스케줄 수정\n3. 상영스케줄 삭제\n4. 종료\n입력 : ")
-        if menu == "1":
-            schedule_add_menu()
-            break
-        elif menu == "2":
-            schedule_edit_menu()
-            break
-        elif menu == "3":
-            schedule_delete_menu()
-            break
-        elif menu == "4":
-            print("관리자모드 메뉴로 돌아갑니다.")
-            break
-        else:
-            print("1~4 사이 숫자 내에서 입력해주세요.")
-
-
 def get_movie_list():
     # 각 영화 데이터를 [영화아이디, 영화명, 러닝타임]으로 리스트를 만들어주는 함수
     movie_list = []
@@ -48,25 +28,38 @@ def get_schedule_list():
     return schedule_list
 
 
-def calculate_end_time(start_time, runtime):
-    # 영화의 끝나는 시간을 구하는 함수 / start_time : "00:00", runtime : "000" 형식으로 받음
-    start_hour = int(start_time[:2])
-    start_minute = int(start_time[4:])
+def get_movie_data(flag, id):  # flag : name/runtime 중 하나
+    # 영화아이디로 영화 정보 가져오는 함수
+    movie_list = get_movie_list()
 
-    runtime_hour = int(runtime) // 60
-    runtime_minute = int(runtime) % 60
+    for movie_id, movie_name, movie_runtime in movie_list:
+        if movie_id == id:
+            if flag == "name":
+                return movie_name
+            elif flag == "runtime":
+                return movie_runtime
+            else:
+                print("flag 값이 잘못 입력됨")
 
-    end_hour = start_hour + runtime_hour
-    end_minute = start_minute + runtime_minute
 
-    if end_minute >= 60:
-        end_hour += 1
-        end_minute -= 60
-
-    end_hour %= 24
-
-    end_time = '{:02d}:{:02d}'.format(end_hour, end_minute)
-    return end_time  # 문자열 00:00 형식으로 반환
+def manage_schedule():
+    while True:
+        print("[관리자 모드] 실행할 메뉴를 선택하세요.")
+        menu = input("1. 상영스케줄 추가\n2. 상영스케줄 수정\n3. 상영스케줄 삭제\n4. 종료\n입력 : ")
+        if menu == "1":
+            schedule_add_menu()
+            break
+        elif menu == "2":
+            schedule_edit_menu()
+            break
+        elif menu == "3":
+            schedule_delete_menu()
+            break
+        elif menu == "4":
+            print("관리자모드 메뉴로 돌아갑니다.")
+            break
+        else:
+            print("1~4 사이 숫자 내에서 입력해주세요.")
 
 
 def schedule_add_menu():
@@ -95,8 +88,6 @@ def schedule_add_menu():
             continue
         if not check_theater_id(theater_id, theater_list):  # 상영관 입력 검사 함수
             continue
-        # if not check_start_time(time):  # 시작시간 입력 검사 함수
-        #     continue
         if not check_time_overlap(0, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
@@ -156,8 +147,6 @@ def schedule_edit_menu2(timetable_id):
             continue
         if not check_theater_id(theater_id, theater_list):  # 상영관 입력 검사 함수
             continue
-        # if not check_start_time(time):  # 시작시간 입력 검사 함수
-        #     continue
         if not check_time_overlap(timetable_id, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
@@ -207,20 +196,6 @@ def delete_schedule(delete_id):
             f.write(f"{id}/{movie}/{theater}/{date}/{time}\n")
 
 
-def get_movie_data(flag, id):  # flag : name/runtime 중 하나
-    # 영화아이디로 영화 정보 가져오는 함수
-    movie_list = get_movie_list()
-
-    for movie_id, movie_name, movie_runtime in movie_list:
-        if movie_id == id:
-            if flag == "name":
-                return movie_name
-            elif flag == "runtime":
-                return movie_runtime
-            else:
-                print("flag 값이 잘못 입력됨")
-
-
 def validate_input(movie_id, theater_id, date, time):
     # 사용자 입력의 유효성을 검사하는 함수
     if not moviesystem.validate_movie_id(movie_id):
@@ -231,7 +206,6 @@ def validate_input(movie_id, theater_id, date, time):
         return False
     if not (moviesystem.validate_time_semantics(time) or moviesystem.validate_time_syntax(time)):
         return False
-
     return True
 
 
@@ -251,17 +225,6 @@ def check_theater_id(theater_id, theater_list):
         return False
     else:
         return True
-
-
-# def check_start_time(new_start_time):
-#     # 추가하고자하는 스케줄의 시작시간이 유효한지 검사하는 함수
-#     if not moviesystem.validate_time_syntax(new_start_time):
-#         print("상영시작시간의 문법적 형식이 올바르지 않습니다.")
-#         return False
-#     if not moviesystem.validate_time_semantics(new_start_time):
-#         print("상영시작시간은 00:00 ~ 24:00 입니다. 다시 입력해주세요.")
-#         return False
-#     return True
 
 
 def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 경우 0 / edit인 경우 1이상 정수 중 하나
@@ -304,6 +267,25 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
     return True
 
 
+def calculate_end_time(start_time, runtime):
+    # 영화의 끝나는 시간을 구하는 함수 / start_time : "00:00", runtime : "000" 형식으로 받음
+    start_hour = int(start_time[:2])
+    start_minute = int(start_time[4:])
+
+    runtime_hour = int(runtime) // 60
+    runtime_minute = int(runtime) % 60
+
+    end_hour = start_hour + runtime_hour
+    end_minute = start_minute + runtime_minute
+
+    if end_minute >= 60:
+        end_hour += 1
+        end_minute -= 60
+
+    end_hour %= 24
+
+    end_time = '{:02d}:{:02d}'.format(end_hour, end_minute)
+    return end_time  # 문자열 00:00 형식으로 반환
 def check_schedule_id(user_input, schedule_table):
     #선택한 상영스케줄이 실제 상영스케줄 리스트에 있는지 검사하는 함수
     for id, _, _, _, _ in schedule_table:
