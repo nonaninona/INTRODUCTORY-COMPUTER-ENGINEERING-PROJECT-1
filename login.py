@@ -18,7 +18,7 @@ def input_date_time():
         #print(date_str)
         #print(time_str)
         # 입력 형식 및 문법 검증
-        if (len(user_input) != 14 or user_input[8] != ' '
+        if (len(user_input) != 13 or user_input[8] != ' '
                 or not validate_date_syntax(date_str)) or not validate_time_syntax(time_str):
             print("올바르지 않은 입력 형식입니다. 다시 입력해주세요.")
             continue
@@ -104,7 +104,7 @@ def validate_date_semantics(date_str):
 
 def validate_time_syntax(time_str):
     # 문법적 형식 검증
-    if len(time_str) != 5 or not time_str[:2].isdigit() or not time_str[3:].isdigit() or time_str[2] != ':':
+    if len(time_str) != 4 or not time_str.isdigit():
         #print("validate_time_syntax error")
         return False
 
@@ -114,7 +114,7 @@ def validate_time_syntax(time_str):
 def validate_time_semantics(time_str):
     # 의미적 규칙 검증
     hour = int(time_str[:2])
-    minute = int(time_str[3:])
+    minute = int(time_str[2:])
 
     if hour < 0 or hour > 23:
         #print("validate_time_semantics error")
