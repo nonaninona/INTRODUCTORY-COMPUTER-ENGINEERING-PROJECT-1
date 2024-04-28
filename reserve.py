@@ -258,7 +258,7 @@ def print_seats(seats):
     alphabet = ['A', 'B', 'C', 'D', 'E']
 
     print("좌석 입력")
-    print("  | 1 2 3 4 5")
+    print("  | 0 1 2 3 4")
     print("  -----------")
 
     j = 0
