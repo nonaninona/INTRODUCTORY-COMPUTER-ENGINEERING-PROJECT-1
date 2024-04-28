@@ -159,6 +159,7 @@ def find_ticket(ticket_list, id):
     for ticket in ticket_list:
         if ticket[1] == id:
             result_ticket.append(ticket)
+            break
     return result_ticket
 
 
