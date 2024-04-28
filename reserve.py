@@ -67,7 +67,7 @@ def reserve(user_id):
 ### reserve 짜잘이 함수들 ###
 
 def sort_schedule(schedule_list, date, time):
-    schedule_list = sorted(schedule_list,key=lambda x:x[3]+x[4])
+    schedule_list = sorted(schedule_list, key=lambda x:x[3]+x[4])
     idx = -1
     length = len(schedule_list)
     for i in range(length):
@@ -76,11 +76,14 @@ def sort_schedule(schedule_list, date, time):
         if date+time < date1+time1:
             idx = i
             break
+
     if idx == -1:
         return []
     else:
-        return schedule_list[idx:length]
-
+        schedule_list = schedule_list[idx:length]
+        schedule_list = sorted(schedule_list, key=lambda x:x[0])
+        return schedule_list
+    
 # 테이블 긁어오기
 def get_lists():
     movie_list = data.get_movie_list()
@@ -172,7 +175,8 @@ def print_schedule_list(table):
     print("영화목록")
     print("시간표아이디\t영화제목\t날짜/상영시간\t\t예약인원/최대예약인원\t상영관")
     for (id, movie_title, date, start_time, end_time, cur, max, theater_name) in table:
-        print(str(id)+"\t\t"+movie_title+"\t\t"+date+"/"+start_time+"-"+end_time+"\t"+str(cur)+"/"+str(max)+"\t\t\t"+theater_name)
+        date = date[4:6] + "." + date[6:8]
+        print(str(id)+"\t\t"+movie_title+"\t\t"+date+" / "+start_time+" - "+end_time+"\t"+str(cur)+" / "+str(max)+"명\t\t"+theater_name+"관")
     # 영화목록
     # 시간표아이디 영화제목  날짜/상영시간     예약인원/최대예약인원   상영관
     #     1      파묘   04.04/08-10        25 / 25명       1관
@@ -264,6 +268,8 @@ def print_seats(seats):
             j = j+1
         str = str + " " + seats[i]
         if i % 5 == 4:
+            if i == 24:
+                str = str + "\t\t※(X : 예매불가능 / O 예매가능)"
             str = str + "\n"
             print(str)
     # 좌석 입력
