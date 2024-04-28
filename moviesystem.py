@@ -200,6 +200,18 @@ def validate_user():
                 exit()
 
 
+def validate_movie_id(movie_id_str):
+    if len(movie_id_str) != 3 or not movie_id_str.isdigit():
+        return False
+    return True
+
+
+def validate_theater_id(theater_id_str):
+    if len(theater_id_str) < 1 or not theater_id_str.isdigit():
+        return False
+    return True
+
+
 def validate_date_syntax(date_str):
     # 문법적 형식 검증
     if len(date_str) != 8 or not date_str.isdigit():
