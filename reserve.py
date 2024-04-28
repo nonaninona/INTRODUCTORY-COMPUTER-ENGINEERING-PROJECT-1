@@ -28,7 +28,6 @@ def reserve(user_id):
         else: # 문법적으로 올바르지 않을 때
             print("시간표아이디는 숫자로 이루어진 길이가 1 이상인 문자열입니다.")
     
-
     schedule = get_schedule(choice, schedule_list)
     tickets = get_tickets(schedule, seat_list, ticket_list)
     seats = get_ticket_reservation_map(tickets, reservation_list)
@@ -59,7 +58,8 @@ def reserve(user_id):
         else: # 문법 규칙에 부합하지 않는 경우
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
     
-    make_reservation(reservation_list, user_id, choice, people, tickets)
+    reservation_id = make_reservation(reservation_list, user_id, people)
+    add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
     print("예매가 완료되었습니다")
 
 
@@ -230,15 +230,20 @@ def sort_tickets(tickets, seat_list):
 
 def get_ticket_reservation_map(tickets, reservation_list):
     ret = []
-    for i in range(len(tickets)):
-        ret.append(tickets[i] + ['O'])
+    for i in range(25):
+        ret.append('O')
 
-    for i in range(len(tickets)):
-        ticket = tickets[i]
+    for ticket in tickets:
+        (id, reservation_id, seat_id, schedule_id, seat) = ticket
+        row = seat[0]
+        row = (ord(row) - ord('A')) * 5
+        column = int(seat[1])
+        idx = row + column
+
         for reservation in reservation_list:
             if ticket[1] == reservation[0]:
                 if reservation[3] == 'X':
-                    ret[i][5] = 'X'
+                    ret[idx] = 'X'
 
     return ret
 
@@ -257,7 +262,7 @@ def print_seats(seats):
             str = ""
             str = str + alphabet[j] + " |"
             j = j+1
-        str = str + " " + seats[i][5]
+        str = str + " " + seats[i]
         if i % 5 == 4:
             str = str + "\n"
             print(str)
@@ -280,7 +285,7 @@ def check_maximum_inline(choice, seats):
     cur = 0
     local_max = 0
     for i in range(len(seats)):
-        if seats[i][5] == 'O':
+        if seats[i] == 'O':
             cur = cur + 1
         else:
             if local_max < cur:
@@ -319,41 +324,56 @@ def check_seat_available(choice, seats, people):
     
     for i in range(people):
         idx = row + column + i
-        if seats[idx][5] == 'X':
+        if seats[idx] == 'X':
             return False
 
     return True
 
-def make_reservation(reservation_list, user_id, choice, people, tickets):
-    row = choice[0]
-    row = (ord(row) - ord('A')) * 5
-    column = int(choice[1])
-    people = int(people)
-
-    ticket_ids = []
-    for i in range(people):
-        idx = row + column + i
-        ticket_ids.append(tickets[idx][0])
-    
+def make_reservation(reservation_list, user_id, people):
+    # reservation 추가
     if reservation_list == []:
         reservation_id = 1
     else:
         reservation_id = int(reservation_list[-1][0]) + 1
-
     data.add_reservation(str(reservation_id), str(user_id), str(people), 'X')
-    edit_ticket_reservation(ticket_ids, reservation_id)
+
+    return reservation_id
 
 
-def edit_ticket_reservation(ticket_id_list, reservation_id):
-    ticket_list = data.get_ticket_list()  # 기존 영화 목록을 읽어옴
+def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people):
 
-    # 티켓을 수정할 대상의 인덱스를 찾음
-    for a, (id, reservation_id1, seat_id, schedule_id) in enumerate(ticket_list):
-        for ticket_id in ticket_id_list:
-            if ticket_id == id:
-                ticket_list[a] = (id, reservation_id, seat_id, schedule_id)  # 새로운 예약 아이디로 수정
+    # 좌석 번호 목록
+    row = choice[0]
+    column = int(choice[1])
 
-    # 수정된 내용을 파일에 기록
-    with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
-        for id, reservation_id1, seat_id, schedule_id in ticket_list:
-            f.write(f"{id}/{reservation_id1}/{seat_id}/{schedule_id}\n")
+    choices = []
+    for i in range(int(people)):
+        choices.append(row + str(column))
+        column = column + 1
+
+
+    # 좌석 번호에 해당하는 seat들의 id 목록
+    (schedule_id, theater_id, movie_id, date, time) = schedule
+
+    seat_ids = []
+    for seat in seat_list:
+        (id, t_id, label) = seat
+        if label in choices and theater_id == t_id:
+            seat_ids.append(id)
+
+
+    # 시작 아이디 얻어오기
+    if ticket_list == []:
+        ticket_id = 1
+    else:
+        ticket_id = int(ticket_list[-1][0]) + 1
+    
+    print(ticket_id)
+    print(seat_ids)
+    print(schedule_id)
+    print(reservation_id)
+
+    # ticket 생성
+    for seat_id in seat_ids:
+        data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id))
+        ticket_id = ticket_id + 1
