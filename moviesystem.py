@@ -264,7 +264,6 @@ def validate_time_semantics(time_str):
     return True
 
 
-# todo : def check_schedule(date_str, time_str): # 입력한 날짜 뒤에 영화 스케쥴이 있는지 확인
 
 
 def input_date_time():

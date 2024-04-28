@@ -1,6 +1,5 @@
 import data
 import moviesystem
-import sys
 
 
 def get_movie_list():
@@ -108,7 +107,8 @@ def schedule_edit_menu():
         print("[상영스케줄 수정] 시간표아이디를 선택해주세요.\n시간표아이디     영화명     상영관     날짜     시간")
         for id, theater, movie, date, time in schedule_table:
             movie_name = get_movie_data("name", movie)
-            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time)
+            runtime = get_movie_data("runtime", movie)
+            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time+' - '+calculate_end_time(time, runtime))
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  #문법 규칙에 부합하지 않는 경우
@@ -169,7 +169,9 @@ def schedule_delete_menu():
         print("[상영스케줄 삭제] 삭제할 시간표아이디를 선택해주세요.\n시간표아이디     영화명     상영관     날짜     시간")
         for id, theater, movie, date, time in schedule_table:
             movie_name = get_movie_data("name", movie)
-            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time)
+            runtime = get_movie_data("runtime", movie)
+            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time + ' - ' + calculate_end_time(time, runtime))
+
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  # 문법 규칙에 부합하지 않는 경우
