@@ -22,6 +22,7 @@ def manage_schedule():
         else:
             print("1~4 사이 숫자 내에서 입력해주세요.")
 
+
 def get_movie_list():
     # 각 영화 데이터를 [영화아이디, 영화명, 러닝타임]으로 리스트를 만들어주는 함수
     movie_list = []
@@ -93,7 +94,7 @@ def schedule_add_menu():
             continue
         if not check_start_time(time):  # 시작시간 입력 검사 함수
             continue
-        if not check_time_overlap(movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
+        if not check_time_overlap(0, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
         if len(schedule_list) == 0:
@@ -151,10 +152,10 @@ def schedule_edit_menu2(timetable_id):
             continue
         if not check_start_time(time):  # 시작시간 입력 검사 함수
             continue
-        if not check_time_overlap(movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
+        if not check_time_overlap(timetable_id, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
-        edit_schedule(timetable_id, movie_id, theater_id, date, time)   #실제 스케줄 수정하는 부분
+        edit_schedule(timetable_id, movie_id, theater_id, date, time)  #실제 스케줄 수정하는 부분
         print("상영스케줄이 수정되었습니다.")
         return  # 관리자 프롬프트로 이동
 
@@ -243,14 +244,14 @@ def check_start_time(new_start_time):
     return True
 
 
-def check_time_overlap(movie_id, theater_id, date, time):
+def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 경우 0 / edit인 경우 1이상 정수 중 하나
     # 추가하고자 하는 스케줄이 현재 스케줄에 들어갈 수 있는지 검사하는 함수
     schedule_list = get_schedule_list()
     overlap_theater_id_list = []
 
     for i in range(0, len(schedule_list)):
         # 상영관이 겹치는 스케줄만 가져옴
-        if theater_id == schedule_list[i][1]:
+        if theater_id == schedule_list[i][1] and flag != schedule_list[i][0]:
             overlap_theater_id_list.append(schedule_list[i])
     if len(overlap_theater_id_list) == 0:  # 상영관이 겹치지 않는다면 바로 추가
         return True
@@ -268,7 +269,7 @@ def check_time_overlap(movie_id, theater_id, date, time):
             end = calculate_end_time(start, runtime)  # 각 영화의 종료 시간 구하기
 
             if new_hour >= int(end[:2]):
-                if new_hour == int(end[:2]) & new_minute >= int(end[3:])+10:
+                if new_hour == int(end[:2]) & new_minute >= int(end[3:]) + 10:
                     return True
                 else:
                     print("같은 상영관 내에서 상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
