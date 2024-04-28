@@ -17,10 +17,10 @@ def manage_schedule():
             schedule_delete_menu()
             break
         elif menu == "4":
+            print("관리자모드 메뉴로 돌아갑니다.")
             break
         else:
             print("1~4 사이 숫자 내에서 입력해주세요.")
-    print("관리자모드 메뉴로 돌아갑니다.")
 
 def get_movie_list():
     # 각 영화 데이터를 [영화아이디, 영화명, 러닝타임]으로 리스트를 만들어주는 함수
