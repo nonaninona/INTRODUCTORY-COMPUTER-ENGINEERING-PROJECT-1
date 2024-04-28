@@ -1,4 +1,4 @@
-import sys
+import moviesystem
 
 theater_list = []  # 상영관 정보
 theater_dict = {}  # 상영관 행렬 정보
@@ -257,10 +257,10 @@ def manage_cinema():
 
             break
         elif choice == "4":
-            print("관리자 모드를 종료합니다.")
+            print("관리자모드 메뉴로 돌아갑니다.")
             break  # 루프 종료
         else:
-            print("잘못된 입력입니다. 다시 입력해주세요.")
+            print("1~4 사이 숫자 내에서 입력해주세요.")
 
 
 # manage_cinema()

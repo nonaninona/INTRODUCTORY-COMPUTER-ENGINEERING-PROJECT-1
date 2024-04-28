@@ -2,6 +2,7 @@ import data
 import theater
 import schedule
 
+
 # schedule.txt 파일 읽어오기
 def read_schedule():
     movie_ids = set()  # 중복을 제거하기 위해 set 사용
@@ -9,7 +10,7 @@ def read_schedule():
         for line in f:
             parts = line.strip().split("/")
 
-            theater_id = parts[1]
+            theater_id = parts[2]
             movie_ids.add(theater_id)
     return list(movie_ids)
 
@@ -36,12 +37,15 @@ def manage_movie():
         menu = input("1. 영화 추가\n2. 영화 수정\n3. 영화 삭제\n4. 종료\n입력 : ")
         if menu == "1":
             movie_add_menu()
+            break
         elif menu == "2":
             movie_change_menu()
+            break
         elif menu == "3":
             movie_delete_menu()
+            break
         elif menu == "4":
-            print("관리자모드를 종료합니다.")
+            print("관리자모드 메뉴로 돌아갑니다.")
             break
         else:
             print("1~4 사이 숫자 내에서 입력해주세요.")
@@ -77,7 +81,6 @@ def movie_add_menu():
             else:
                 print("러닝타임은 50 이상 240 이하의 정수입니다. 다시 입력해주세요.")
 
-# 반복문 수정 필요
 def movie_change_menu():
     print("수정할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
     movieTable = read_movie()
