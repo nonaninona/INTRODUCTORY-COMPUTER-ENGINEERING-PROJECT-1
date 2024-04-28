@@ -84,7 +84,7 @@ def schedule_add_menu():
 
         try:
             movie_id, theater_id, date, time = user_input.strip().split()
-            if not (moviesystem.validate_date_semantics(date) or moviesystem.validate_date_syntax(date) or moviesystem.validate_time_semantics(time) or moviesystem.validate_time_syntax(time)):
+            if not validate_input(movie_id, theater_id, date, time):
                 print("[오류] 올바른 형식으로 입력해주세요.")
                 continue
         except ValueError:
@@ -145,7 +145,7 @@ def schedule_edit_menu2(timetable_id):
 
         try:
             movie_id, theater_id, date, time = user_input.strip().split()
-            if not (moviesystem.validate_date_semantics(date) or moviesystem.validate_date_syntax(date) or moviesystem.validate_time_semantics(time) or moviesystem.validate_time_syntax(time)):
+            if not validate_input(movie_id, theater_id, date, time):
                 print("[오류] 올바른 형식으로 입력해주세요.")
                 continue
         except ValueError:
@@ -221,6 +221,20 @@ def get_movie_data(flag, id):  # flag : name/runtime 중 하나
                 print("flag 값이 잘못 입력됨")
 
 
+def validate_input(movie_id, theater_id, date, time):
+    # 사용자 입력의 유효성을 검사하는 함수
+    if not moviesystem.validate_movie_id(movie_id):
+        return False
+    if not moviesystem.validate_theater_id(theater_id):
+        return False
+    if not (moviesystem.validate_date_semantics(date) or moviesystem.validate_date_syntax(date)):
+        return False
+    if not (moviesystem.validate_time_semantics(time) or moviesystem.validate_time_syntax(time)):
+        return False
+
+    return True
+
+
 def check_movie_id(movie, movie_list):
     # 기존 영화아이디와 일치하는 지 검사하는 함수
     for i in range(0, len(movie_list)):
@@ -278,14 +292,14 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
                 if new_hour == int(end[:2]) & new_minute >= int(end[3:]) + 10:
                     return True
                 else:
-                    print("같은 상영관 내에서 상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
+                    print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
                     return False
 
             if int(new_end[:2]) <= int(start[:2]):
                 if int(new_end[:2]) == int(start[:2]) & int(new_end[3:]) <= int(start[3:]):
                     return True
                 else:
-                    print("같은 상영관 내에서 상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
+                    print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
                     return False
     return True
 
