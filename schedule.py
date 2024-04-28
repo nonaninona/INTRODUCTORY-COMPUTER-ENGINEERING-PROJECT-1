@@ -1,4 +1,5 @@
 import data
+import moviesystem
 import sys
 
 
@@ -48,7 +49,6 @@ def calculate_end_time(start_time, runtime):
     # 영화의 끝나는 시간을 구하는 함수 / start_time : "00:00", runtime : "000" 형식으로 받음
     start_hour = int(start_time[:2])
     start_minute = int(start_time[4:])
-    print(f"시간 : {start_hour} : 분 : {start_minute}")
 
     runtime_hour = int(runtime) // 60
     runtime_minute = int(runtime) % 60
@@ -63,106 +63,46 @@ def calculate_end_time(start_time, runtime):
     end_hour %= 24
 
     end_time = '{:02d}:{:02d}'.format(end_hour, end_minute)
-    print(end_time)
     return end_time  # 문자열 00:00 형식으로 반환
 
 
 def schedule_add_menu():
+    # 상영스케줄 추가함수
     while True:
         movie_list = get_movie_list()
         theater_list = get_theater_list()
+        schedule_list = get_schedule_list()
 
-        print("[상영스케줄 추가] 추가할 영화아이디, 상영관, 상영날짜, 상영시작시작을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
+        print("[상영스케줄 추가] 추가할 영화아이디, 상영관, 상영날짜, 상영시작시간을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
         for i in range(0, len(movie_list)):
-            print(movie_list[i][1]+"    "+movie_list[i][2]+"    "+movie_list[i][0])
+            print(movie_list[i][1] + "    " + movie_list[i][2] + "    " + movie_list[i][0])
         print("현재 상영관 목록 : " + ", ".join(theater_list))
         user_input = input("입력 : ")
 
         try:
-            movie_id, theater_id, date, start_time = user_input.strip().split(" ")
+            movie_id, theater_id, date, start_time = user_input.strip().split()
         except ValueError:
-            print("잘못된 형식입니다.")
+            print("[오류] 올바른 형식으로 입력해주세요.")
             continue
 
-        if not check_start_time(start_time):  # 시작시간 입력 검사 함수
-            continue
-        if not check_time_overlap(theater_id, start_time):  # 시간표가 중복되는지 검사하는 함수
-            continue
         if not check_movie_id(movie_id, movie_list):  # 영화아이디 입력 검사 함수
             continue
         if not check_theater_id(theater_id, theater_list):  # 상영관 입력 검사 함수
             continue
+        if not check_start_time(start_time):  # 시작시간 입력 검사 함수
+            continue
+        if not check_time_overlap(movie_id, theater_id, date, start_time):  # 시간표가 중복되는지 검사하는 함수
+            continue
 
-        if len(theater_list)==0:
+        if len(schedule_list) == 0:
             timetable_id = 1
         else:
-            timetable_id = theater_list[len(theater_list) - 1][0] + 1
+            timetable_id = int(schedule_list[len(schedule_list) - 1][0]) + 1
 
-        data.add_schedule(timetable_id, theater_id, movie_id, date, start_time)
+        data.add_schedule(str(timetable_id), theater_id, movie_id, date, start_time)
         print("상영스케줄이 추가되었습니다.")
 
         return  #관리자 프롬프트로 이동
-
-
-def check_start_time(new_start_time):
-    # 추가하고자하는 스케줄의 시작시간이 유효한지 검사하는 함수
-    if not sys.validate_time_syntax(new_start_time):
-        print("상영시작시간의 문법적 형식이 올바르지 않습니다.")
-        return False
-    if not sys.validate_time_semantics(new_start_time):
-        print("상영시작시간은 00:00 ~ 24:00 입니다. 다시 입력해주세요.")
-        return False
-    return True
-
-
-def check_time_overlap(theater_id, new_start_time):
-    schedule_list = get_schedule_list()
-    overlap_theater_id_list = []
-
-    for i in range(0, len(schedule_list)):
-        # 상영관이 겹치는 스케줄만 가져옴
-        if theater_id == schedule_list[i][1]:
-            overlap_theater_id_list.append(schedule_list[i])
-
-    for i in range(0, len(overlap_theater_id_list)):
-        # 스케줄이 겹치는지 확인하는 부분
-
-        for id, _, runtime in get_movie_list(): # 영화의 runtime 가져옴
-            if id == schedule_list[i][2]:
-                runtime = runtime
-                break
-        start_time = schedule_list[i][4]  # 각 영화의 시작시간 가져옴
-        end_time = calculate_end_time(start_time, runtime)  # 각 영화의 종료 시간 구하기
-
-        new_time_hour = int(new_start_time[:2])
-        new_time_minute = int(new_start_time[4:])
-
-        if new_time_hour >= int(start_time[:2]) & new_time_hour <= int(end_time[:2]):  # 이미 존재하는 상영스케줄 러닝 타임과 중복이고
-            if new_time_minute >= int(end_time[4:]) + 10:  # 종료 시간+10분이라면 추가 가능
-                return True
-            else:
-                print("같은 상영관 내에서 상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
-                return False
-
-    return True
-
-
-def check_movie_id(movie, movie_list):
-    # 기존 영화아이디와 일치하는 지 검사하는 함수
-    for i in range(0, len(movie_list)):
-        if movie == movie_list[i][0]:
-            return True
-    print("일치하는 영화 아이디가 없습니다.")
-    return False
-
-
-def check_theater_id(theater_id, theater_list):
-    # 기존 상영관아이디와 일치하는 지 검사하는 함수
-    if theater_id not in theater_list:
-        print("일치하는 상영관이 없습니다.")
-        return False
-    else:
-        return True
 
 
 def schedule_edit_menu():
@@ -170,8 +110,9 @@ def schedule_edit_menu():
 
     while True:
         print("[상영스케줄 수정] 시간표아이디를 선택해주세요.\n시간표아이디     영화명     상영관     날짜     시간")
-        for id, movie, theater, date, time in schedule_table:
-            print('     ' + id + '         ' + movie + '     ' + theater + '상영관     ' + date + '     ' + time)
+        for id, theater, movie, date, time in schedule_table:
+            movie_name = get_movie_data("name", movie)
+            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time)
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  #문법 규칙에 부합하지 않는 경우
@@ -195,7 +136,7 @@ def schedule_edit():
         theater_list.append(theater_id)
 
     while True:
-        print("[상영스케줄 수정] 수정할 영화아이디, 상영관, 상영날짜, 상영시작시작을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
+        print("[상영스케줄 수정] 수정할 영화아이디, 상영관, 상영날짜, 상영시작시간을 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
         for i, m, t in movie_table:
             print(m, "     ", t, "     ", i)
         print("현재 상영관 목록 : " + ", ".join(theater_list))
@@ -225,8 +166,9 @@ def schedule_delete_menu():
 
     while True:
         print("[상영스케줄 삭제] 삭제할 시간표아이디를 선택해주세요.\n시간표아이디     영화명     상영관     날짜     시간")
-        for id, movie, theater, date, time in schedule_table:
-            print('     ' + id + '         ' + movie + '     ' + theater + '상영관     ' + date + '     ' + time)
+        for id, theater, movie, date, time in schedule_table:
+            movie_name = get_movie_data("name", movie)
+            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time)
         user_input = input("입력 : ")
 
         if not user_input.isdigit():  # 문법 규칙에 부합하지 않는 경우
@@ -251,6 +193,89 @@ def delete_schedule(delete_id):
             f.write(f"{id}/{movie}/{theater}/{date}/{time}\n")
 
     print("상영스케줄이 삭제되었습니다.")
+
+
+def get_movie_data(value, searching_movie_id):  # value : name/runtime 중 하나
+    # 영화아이디로 영화 정보 가져오는 함수
+    movie_list = get_movie_list()
+    for movie_id, movie_name, movie_runtime in movie_list:
+        if movie_id == searching_movie_id:
+            if value == "name":
+                return movie_name
+            elif value == "runtime":
+                return movie_runtime
+
+
+def check_movie_id(movie, movie_list):
+    # 기존 영화아이디와 일치하는 지 검사하는 함수
+    for i in range(0, len(movie_list)):
+        if movie == movie_list[i][0]:
+            return True
+    print("일치하는 영화 아이디가 없습니다.")
+    return False
+
+
+def check_theater_id(theater_id, theater_list):
+    # 기존 상영관아이디와 일치하는 지 검사하는 함수
+    if theater_id not in theater_list:
+        print("일치하는 상영관 아이디가 없습니다.")
+        return False
+    else:
+        return True
+
+
+def check_start_time(new_start_time):
+    # 추가하고자하는 스케줄의 시작시간이 유효한지 검사하는 함수
+    if not moviesystem.validate_time_syntax(new_start_time):
+        print("상영시작시간의 문법적 형식이 올바르지 않습니다.")
+        return False
+    if not moviesystem.validate_time_semantics(new_start_time):
+        print("상영시작시간은 00:00 ~ 24:00 입니다. 다시 입력해주세요.")
+        return False
+    return True
+
+
+def check_time_overlap(movie_id, theater_id, new_date, new_start_time):
+    schedule_list = get_schedule_list()
+    overlap_theater_id_list = []
+
+    for i in range(0, len(schedule_list)):
+        # 상영관이 겹치는 스케줄만 가져옴
+        if theater_id == schedule_list[i][1]:
+            overlap_theater_id_list.append(schedule_list[i])
+    if len(overlap_theater_id_list) == 0:
+        # 상영관이 겹치지 않는다면 바로 추가
+        return True
+
+    # 새로 넣을 스케줄 정보
+    new_time_hour = int(new_start_time[:2])
+    new_time_minute = int(new_start_time[3:])
+    new_runtime = get_movie_data("runtime", movie_id)
+    new_end_time = calculate_end_time(new_start_time, new_runtime)
+
+    for i in range(0, len(overlap_theater_id_list)):
+        if new_date == overlap_theater_id_list[i][3]:  # 날짜가 일치하다면
+            # 스케줄이 겹치는지 확인하는 부분
+
+            # 비교하고자하는 영화스케줄 정보
+            in_schedule_runtime = get_movie_data("runtime", overlap_theater_id_list[i][2])  # 영화의 runtime 가져옴
+            in_schedule_start_time = overlap_theater_id_list[i][4]  # 각 영화의 시작시간 가져옴
+            in_schedule_end_time = calculate_end_time(in_schedule_start_time, in_schedule_runtime)  # 각 영화의 종료 시간 구하기
+
+            if new_time_hour >= int(in_schedule_end_time[:2]):
+                if new_time_hour == int(in_schedule_end_time[:2]) & new_time_minute >= int(in_schedule_end_time[3:])+10:
+                    return True
+                else:
+                    print("같은 상영관 내에서 상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
+                    return False
+
+            if int(new_end_time[:2]) <= int(in_schedule_start_time[:2]):
+                if int(new_end_time[:2]) == int(in_schedule_start_time[:2]) & int(new_end_time[3:]) <= int(in_schedule_start_time[3:]):
+                    return True
+                else:
+                    print("같은 상영관 내에서 상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
+                    return False
+    return True
 
 
 def check_schedule_id(user_input, schedule_table):
