@@ -83,7 +83,7 @@ def movie_add_menu():
                 print("러닝타임은 50 이상 240 이하의 정수입니다. 다시 입력해주세요.")
 
 def movie_change_menu():
-    print("수정할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
+    print("수정할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
     movieTable = read_movie()
     movieIdTable = []
     for i, m, t in movieTable:
@@ -164,7 +164,7 @@ def movie_change_menu():
             print("0과 정수로만 이루어진 길이가 3인 숫자입니다. 다시 입력해주세요.")
 
 def movie_delete_menu():
-    print("삭제할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디\n")
+    print("삭제할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
     movieTable = read_movie()
     for i, m, t in movieTable:
         print(m, "     ", t, "     ", i)
