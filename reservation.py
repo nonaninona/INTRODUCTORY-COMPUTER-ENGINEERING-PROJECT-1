@@ -141,7 +141,7 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
 def get_reservation_id_list(reservation_list, id):
     reservation_id = []
     for reservation in reservation_list:
-        if reservation[1] == id:
+        if reservation[1] == id and reservation[3] == 'X':
             reservation_id.append(reservation[0])
     return reservation_id
 
@@ -251,15 +251,14 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
             f.write(f"{reservation[0]}/{reservation[1]}/{reservation[2]}/{reservation[3]}\n")
 
     # 해당 reservation에 해당하는 ticket을 ticket_list에서 찾아 ticket에서 삭제
+    modified_ticket_list = []
     for ticket in ticket_list:
-        if ticket[1] == choosed_reservation_id:
-            ticket_list.remove(ticket)
+        if ticket[1] != choosed_reservation_id:
+            modified_ticket_list.append(ticket)
         
-    print(ticket_list)
-
     # 수정된 내용을 파일에 기록
     with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
-        for ticket in ticket_list:
+        for ticket in modified_ticket_list:
             f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}\n")
 
     return True
