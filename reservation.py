@@ -15,6 +15,7 @@ print_reserve_menu : 메뉴 출력 기능, 최상위 반복문
 
 """
 
+
 # 메뉴 출력
 def print_reserve_menu(user_id):
     while True:
@@ -46,19 +47,21 @@ def print_reserve_menu(user_id):
 
 
 # 예매 조회 기능
-def print_check_reservation_menu(user_id):    
+def print_check_reservation_menu(user_id):
     reservation_list = data.get_reservation_list()
     ticket_list = data.get_ticket_list()
     movie_list = data.get_movie_list()
     theater_list = data.get_theater_list()
     seat_list = data.get_seat_list()
     schedule_list = data.get_schedule_list()
-    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list,
+                                                   seat_list, schedule_list)
 
-    if not reservation_table: # 예매한 영화가 없는 경우
+    if not reservation_table:  # 예매한 영화가 없는 경우
         print("예매한 영화가 없습니다")
         return
-    
+
+    print("영화 조회")
     print_reservation_table(reservation_table)
 
     while True:
@@ -66,16 +69,18 @@ def print_check_reservation_menu(user_id):
         print("1. 영화 예매 취소")
         print("2. 돌아가기")
         choice = input("입력: ")
-        
-        if not validate_choice_syntax(choice): # 문법 규칙 위배
+
+        if not validate_choice_syntax(choice):  # 문법 규칙 위배
             print("입력이 올바르지 않습니다. 다시 입력해주세요.")
         else:
             if int(choice) == 1:
                 print("예매 취소")
                 print_cancel_reservation_menu(user_id)
+                break
             elif int(choice) == 2:
                 print("메인메뉴로 돌아갑니다.")
                 break
+
 
 # 예매 취소 기능
 def print_cancel_reservation_menu(user_id):
@@ -86,7 +91,8 @@ def print_cancel_reservation_menu(user_id):
     seat_list = data.get_seat_list()
     schedule_list = data.get_schedule_list()
 
-    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list)
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list,
+                                                   seat_list, schedule_list)
 
     # 예매내역 출력
     print_reservation_table(reservation_table)
@@ -99,13 +105,13 @@ def print_cancel_reservation_menu(user_id):
         print("예매취소할 예매아이디를 입력해주세요")
         choice = input("예매아이디 입력: ")
 
-        if not validate_cancel_syntax(choice): # 문법 규칙 위배
+        if not validate_cancel_syntax(choice):  # 문법 규칙 위배
             print("올바른 예매아이디를 입력해 주시기 바랍니다.")
-        elif not validate_cancel_semantics(choice, reservation_id_list): # 의미 규칙 위배 (없는 아이디)
+        elif not validate_cancel_semantics(choice, reservation_id_list):  # 의미 규칙 위배 (없는 아이디)
             print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
         else:
             break
-        
+
     cancel_reservation(choice, ticket_list)
     print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
 
@@ -115,8 +121,8 @@ def print_cancel_reservation_menu(user_id):
 
 ### print_check_reservation_menu 짜잘이 함수들 ###
 
-def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list, schedule_list):
-    
+def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list, seat_list,
+                               schedule_list):
     # join의 경우 reserve.get_schedule_table() 참고
     sorted_ticket = []
     result = []
@@ -125,9 +131,9 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
 
     # reservation id list의 reservation id 각각에 대한 ticket_list 가져오기(join)
     for id in reservation_id_list:
-        sorted_ticket.extend(find_ticket(ticket_list, id))  
-    
-    # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
+        sorted_ticket.extend(find_ticket(ticket_list, id))
+
+        # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
     for ticket in sorted_ticket:
         schedule = find_schedule(schedule_list, ticket[3])
         movie = find_movie(movie_list, schedule[2])
@@ -137,7 +143,8 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
         end_time = get_endtime(movie, start_time)
         # 인원수 찾기 위함
         reserve_num = find_reserve_num(reservation_list, ticket[1])
-        result.append([ticket[1], movie[1], schedule[3], start_time, end_time, theater[1], reserve_num, seat[2], ticket[3]])
+        result.append(
+            [ticket[1], movie[1], schedule[3], start_time, end_time, theater[1], reserve_num, seat[2], ticket[3]])
 
     # 정보 모두 종합해서 2차원 배열로 리턴
     return result
@@ -172,6 +179,7 @@ def find_movie(movie_list, id):
         if movie[0] == id:
             return movie
     return None
+
 
 def get_endtime(movie, start_time):
     (id, title, running_time) = movie
@@ -220,9 +228,9 @@ def print_reservation_table(table):
 
     print("예매내역")
     print("예매아이디\t영화제목\t날짜/상영시간\t\t상영관\t예약인원수\t시작좌석\t시간표아이디")
-    for (id, movie_title, date, start_time, end_time, theater_name, reserve_number, start_seat, schedule_id ) in table:
-        print(str(id)+"\t\t"+movie_title+"\t\t"+date+"/"+start_time+"-"+end_time+"\t"+theater_name+"관"+"\t"+reserve_number+"\t\t"+start_seat+"\t\t"+schedule_id)
-
+    for (id, movie_title, date, start_time, end_time, theater_name, reserve_number, start_seat, schedule_id) in table:
+        print(
+            str(id) + "\t\t" + movie_title + "\t\t" + date + "/" + start_time + "-" + end_time + "\t" + theater_name + "관" + "\t" + reserve_number + "\t\t" + start_seat + "\t\t" + schedule_id)
 
 
 ### print_cancel_reservation_menu 짜잘이 함수들 ###
@@ -238,7 +246,7 @@ def validate_cancel_semantics(choice, reservation_id_list):
     # 의미 규칙 검증
     for id in reservation_id_list:
         if choice == id:
-            return True             
+            return True
     return False
 
 
@@ -250,7 +258,7 @@ def validate_main_syntax(choice):
         return False
     return True
 
-
+  
 def validate_choice_syntax(choice):
     # 문법 규칙 검증
     if not choice.isdigit():
@@ -261,11 +269,11 @@ def validate_choice_syntax(choice):
 
 
 def cancel_reservation(choosed_reservation_id, ticket_list):
-    reservation_list = data.get_reservation_list() # 기존 예약 리스트 읽어옴
+    reservation_list = data.get_reservation_list()  # 기존 예약 리스트 읽어옴
 
     for reservation in reservation_list:
-        if reservation[0] == choosed_reservation_id: # 해당 reservation 찾음
-            reservation[3] = 'O' # 예약 취소 여부를 '0'으로 변경
+        if reservation[0] == choosed_reservation_id:  # 해당 reservation 찾음
+            reservation[3] = 'O'  # 예약 취소 여부를 '0'으로 변경
             break
 
     # 수정된 내용을 파일에 기록
@@ -278,7 +286,7 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
     for ticket in ticket_list:
         if ticket[1] != choosed_reservation_id:
             modified_ticket_list.append(ticket)
-        
+
     # 수정된 내용을 파일에 기록
     with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
         for ticket in modified_ticket_list:
