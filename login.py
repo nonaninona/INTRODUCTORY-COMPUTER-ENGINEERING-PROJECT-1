@@ -20,8 +20,7 @@ def input_date_time():
         print("[날짜 및 시간 입력]")
         print("날짜와 현재 시간을 입력해주세요.")
         print("형식: (<날짜><space><시간>)")
-        # user_input = input("입력: ")
-        user_input = "20240402 04:04"
+        user_input = input("입력: ")
 
         date_str = user_input[:8]
         time_str = user_input[9:]
@@ -51,8 +50,7 @@ def movie_theater_menu():
         print("1. 로그인")
         print("2. 관리자모드")
         print("3. 종료")
-        # choice = int(input("메뉴 입력: "))
-        choice = 2
+        choice = int(input("메뉴 입력: "))
         if choice == 1:
             print("로그인을 시작합니다.")
             user_id = login()
