@@ -25,9 +25,8 @@ def print_reserve_menu(user_id):
         print("3. 로그아웃")
         print("4. 종료하기")
         choice = input("입력: ")
-        
 
-        if not validate_main_syntax(choice): # 문법 규칙 위배
+        if not validate_main_syntax(choice):  # 문법 규칙 위배
             print("화면에 출력된 숫자 내에서 입력해주세요")
         else:
             if int(choice) == 1:
@@ -41,9 +40,8 @@ def print_reserve_menu(user_id):
             elif int(choice) == 4:
                 print("프로그램을 종료합니다.")
                 sys.exit(0)
-            else: # 비정상 입력
+            else:  # 비정상 입력
                 print("화면에 출력된 숫자 내에서 입력해주세요")
-
 
 
 # 예매 조회 기능
@@ -258,7 +256,7 @@ def validate_main_syntax(choice):
         return False
     return True
 
-  
+
 def validate_choice_syntax(choice):
     # 문법 규칙 검증
     if not choice.isdigit():

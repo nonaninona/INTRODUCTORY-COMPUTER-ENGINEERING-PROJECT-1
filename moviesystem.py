@@ -25,9 +25,9 @@ def validate_theater():
         if len(arr) != 1:
             print('theater.txt 저장 형식 오류')
             exit()
-        id=arr[0]
+        id = arr[0]
         # print(id)
-        if int(id[0])<0 or not str.isdigit(id[0]) :
+        if int(id[0]) < 0 or not str.isdigit(id[0]):
             print('theater_id 오류')
         if prev_id == int(id[0]):
             print('theater.txt id 중복')
@@ -102,7 +102,7 @@ def validate_schedule():
             print('schedule.txt 저장 형식 오류')
             exit()
         timetable_ID, movie_ID, theater_ID, date, time = arr
-        #print(arr)
+        # print(arr)
         if int(movie_ID) > 999 or int(movie_ID) < 0 or not str.isdigit(movie_ID):
             print('movie_id형식 오류')
             exit()
