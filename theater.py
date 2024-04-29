@@ -47,7 +47,6 @@ def delete_seat(theater_id):
         if not str(t_id) == str(theater_id):
             new_lines.append(str(s_id)+'/'+str(t_id)+'/'+str(label)+'\n')
     
-    print(new_lines)
     try:
         with open("data/" + "seat.txt", "w", encoding="utf-8") as file:
             file.writelines(new_lines)
