@@ -50,20 +50,12 @@ def movie_theater_menu():
         print("1. 로그인")
         print("2. 관리자모드")
         print("3. 종료")
-        choice = int(input("메뉴 입력: "))
-        if choice == 1:
-            print("로그인을 시작합니다.")
-            user_id = login()
-            reservation.print_reserve_menu(user_id)
-        elif choice == 2:
-            print("관리자 모드를 시작합니다.")
-            # todo : 관리자 모드 실행 함수
-            administrator.manage_menu()
-        elif choice == 3:
-            print("프로그램을 종료합니다.")
-            sys.exit(0)
-        else:
+        choice = input("메뉴 입력: ")
+        if not choice.isdigit():
             print("입력이 올바르지 않습니다. 다시 입력해 주세요.")
+            continue
+        else:
+            choice = int(choice)
 
 
 def login():
