@@ -181,10 +181,10 @@ def get_endtime(movie, start_time):
 # 스케쥴 표 출력
 def print_schedule_list(table):
     print("영화목록")
-    print("시간표아이디\t영화제목\t날짜/상영시간\t\t예약인원/최대예약인원\t상영관")
+    print("시간표아이디\t영화제목\t\t날짜/상영시간\t\t예약인원/최대예약인원\t상영관")
     for (id, movie_title, date, start_time, end_time, cur, max, theater_name) in table:
         date = date[4:6] + "." + date[6:8]
-        print(str(id).strip() + "\t\t" + movie_title.strip() + "\t\t" + date + " / " + start_time.strip() + " - " + end_time.strip() + "\t" + str(
+        print(str(id).strip() + "\t\t" + "{0:<10}".format(movie_title.strip()) + "\t\t" + date + " / " + start_time.strip() + " - " + end_time.strip() + "\t" + str(
             cur).strip() + " / " + str(max).strip() + "명\t\t" + theater_name.strip() + "관")
     # 영화목록
     # 시간표아이디 영화제목  날짜/상영시간     예약인원/최대예약인원   상영관
@@ -391,8 +391,14 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     seat_ids = []
     for seat in seat_list:
         (id, t_id, label) = seat
+        # print(id)
+        # print(t_id)
+        # print(label)
+        # print(choices)
+
         if label in choices and theater_id == t_id:
             seat_ids.append(id)
+
 
     # 시작 아이디 얻어오기
     if ticket_list == []:
