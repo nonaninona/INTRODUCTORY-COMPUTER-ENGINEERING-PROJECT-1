@@ -171,7 +171,7 @@ def is_user_id_exist(user_id):
     # user.txt 무결성 검사 진행 to do
     user_list = data.get_user_list()
     for (user_id1,) in user_list:
-        if user_id1 == user_id:
+        if str(user_id1).strip() == str(user_id).strip():
             found = True
             break
     # with open('user.txt', 'r', encoding='utf-8') as file:

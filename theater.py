@@ -38,6 +38,7 @@ def add_seat(theater_id):
     for r in row:
         for c in column:
             data.add_seat(str(seat_id), str(theater_id), r + c)
+            seat_id = seat_id + 1
 
 
 def delete_seat(theater_id):

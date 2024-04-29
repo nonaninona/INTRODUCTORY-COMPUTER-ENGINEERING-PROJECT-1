@@ -184,8 +184,8 @@ def print_schedule_list(table):
     print("시간표아이디\t영화제목\t날짜/상영시간\t\t예약인원/최대예약인원\t상영관")
     for (id, movie_title, date, start_time, end_time, cur, max, theater_name) in table:
         date = date[4:6] + "." + date[6:8]
-        print(str(id) + "\t\t" + movie_title + "\t\t" + date + " / " + start_time + " - " + end_time + "\t" + str(
-            cur) + " / " + str(max) + "명\t\t" + theater_name + "관")
+        print(str(id).strip() + "\t\t" + movie_title.strip() + "\t\t" + date + " / " + start_time.strip() + " - " + end_time.strip() + "\t" + str(
+            cur).strip() + " / " + str(max).strip() + "명\t\t" + theater_name.strip() + "관")
     # 영화목록
     # 시간표아이디 영화제목  날짜/상영시간     예약인원/최대예약인원   상영관
     #     1      파묘   04.04/08-10        25 / 25명       1관
