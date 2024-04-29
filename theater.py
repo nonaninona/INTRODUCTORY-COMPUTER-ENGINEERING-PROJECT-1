@@ -257,6 +257,10 @@ def update_cinema():
             #     print("좌석 행과 열의 개수는 1~5 중 하나입니다.")
             #     continue
 
+            if cinema_id < 0 or new_cinema_id < 0:
+                print("상영관아이디는 0 이상인 정수입니다.")
+                continue
+
             # 상영 스케줄이 잡힌 상영관 검증
             if cinema_id in scheduled_cinemas:
                 print("상영스케줄이 잡힌 영화가 있어 수정이 불가능합니다.")
@@ -293,6 +297,10 @@ def delete_cinema():
 
         try:
             cinema_id = int(user_input)
+
+            if cinema_id < 0:
+                print("상영관아이디는 0 이상인 정수입니다.")
+                continue
 
             # 존재하지 않는 상영관 검증
             if cinema_id not in theater_list:
