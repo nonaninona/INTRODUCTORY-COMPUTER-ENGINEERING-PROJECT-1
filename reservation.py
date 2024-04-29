@@ -144,7 +144,7 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
         # 인원수 찾기 위함
         reserve_num = find_reserve_num(reservation_list, ticket[1])
         result.append(
-            [ticket[1], movie[1], schedule[3], start_time, end_time, theater[1], reserve_num, seat[2], ticket[3]])
+            [ticket[1], movie[1], schedule[3], start_time, end_time, theater[0], reserve_num, seat[2], ticket[3]])
 
     # 정보 모두 종합해서 2차원 배열로 리턴
     return result
