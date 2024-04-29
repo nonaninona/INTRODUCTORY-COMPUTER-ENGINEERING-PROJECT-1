@@ -47,7 +47,7 @@ def input_date_time():
         return user_input
 
 
-def movie_theater_menu():
+def movie_theater_menu(date_time):
     while True:
         print("[건국 영화관]")
         print("1. 로그인")
@@ -60,7 +60,7 @@ def movie_theater_menu():
             if choice == 1:
                 print("로그인을 시작합니다.")
                 user_id = login()
-                reservation.print_reserve_menu(user_id)
+                reservation.print_reserve_menu(user_id, date_time)
             elif choice == 2:
                 print("관리자 모드를 시작합니다.")
                 # todo : 관리자 모드 실행 함수

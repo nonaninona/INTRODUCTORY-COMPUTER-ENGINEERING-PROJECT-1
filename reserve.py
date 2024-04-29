@@ -4,10 +4,10 @@ import moviesystem
 
 
 # 예매 기능
-def reserve(user_id):
+def reserve(user_id, date_time):
     # 상영 스케쥴 출력
     schedule_list = data.get_schedule_list()
-    schedule_list = sort_schedule(schedule_list, "20240402", "04:04")
+    schedule_list = sort_schedule(schedule_list, date_time)
     [movie_list, theater_list, seat_list, ticket_list, reservation_list] = get_lists()
 
     table = get_schedule_table(schedule_list, movie_list, theater_list, seat_list, ticket_list, reservation_list)
@@ -31,9 +31,7 @@ def reserve(user_id):
 
     schedule = get_schedule(choice, schedule_list)
     tickets = get_tickets(schedule, seat_list, ticket_list)
-    print(tickets)
     seats = get_ticket_reservation_map(tickets, reservation_list)
-    print(seats)
     print_seats(seats)
 
     while True:
@@ -68,10 +66,13 @@ def reserve(user_id):
 
 ### reserve 짜잘이 함수들 ###
 
-def sort_schedule(schedule_list, date, time):
+def sort_schedule(schedule_list, date_time):
     schedule_list = sorted(schedule_list, key=lambda x: x[3] + x[4])
     idx = -1
     length = len(schedule_list)
+    date = date_time.split(' ')[0]
+    time = date_time.split(' ')[1]
+
     for i in range(length):
         date1 = schedule_list[i][3]
         time1 = schedule_list[i][4]
@@ -228,7 +229,6 @@ def get_tickets(schedule, seat_list, ticket_list):
 
     tickets = []
     for ticket in ticket_list:
-        print(ticket)
         temp = str(ticket[3].strip())
         if temp == str(id):
             tickets.append(ticket)
@@ -399,7 +399,6 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
         if (label in choices) and (str(theater_id) == str(t_id)):
             seat_ids.append(id)
 
-    print(seat_ids)
 
     # 시작 아이디 얻어오기
     if ticket_list == []:
@@ -407,12 +406,11 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     else:
         max = 0
         for ticket in ticket_list:
-            (id, reservation_id, seat_id, s_id) = ticket
+            (id, r_id, seat_id, s_id) = ticket
             if max < int(id):
                 max = int(id)
         ticket_id = max + 1
 
-    print(ticket_id)
 
 
     # ticket 생성

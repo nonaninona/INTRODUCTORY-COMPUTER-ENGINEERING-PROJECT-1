@@ -17,7 +17,7 @@ print_reserve_menu : 메뉴 출력 기능, 최상위 반복문
 
 
 # 메뉴 출력
-def print_reserve_menu(user_id):
+def print_reserve_menu(user_id, date_time):
     while True:
         print("[메인 메뉴] 실행할 메뉴를 선택하세요.")
         print("1. 영화예매하기")
@@ -30,7 +30,7 @@ def print_reserve_menu(user_id):
             print("화면에 출력된 숫자 내에서 입력해주세요")
         else:
             if int(choice) == 1:
-                reserve.reserve(user_id)
+                reserve.reserve(user_id, date_time)
             elif int(choice) == 2:
                 print("영화 조회")
                 print_check_reservation_menu(user_id)
@@ -124,12 +124,15 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
     # join의 경우 reserve.get_schedule_table() 참고
     sorted_ticket = []
     result = []
+    print(reservation_list)
     # reservation_list에서 user_id에 해당하는 reservation id list 만들기
     reservation_id_list = get_reservation_id_list(reservation_list, user_id)
-
+    print(reservation_id_list)
     # reservation id list의 reservation id 각각에 대한 ticket_list 가져오기(join)
     for id in reservation_id_list:
         sorted_ticket.extend(find_ticket(ticket_list, id))
+    
+    print(sorted_ticket)
 
         # ticket_list에서 movie, theater, seat, schedule 정보 구해오기(join)
     for ticket in sorted_ticket:
@@ -144,6 +147,7 @@ def get_user_reservation_table(user_id, reservation_list, ticket_list, movie_lis
         result.append(
             [ticket[1], movie[1], schedule[3], start_time, end_time, theater[0], reserve_num, seat[2], ticket[3]])
 
+    print(result)
     # 정보 모두 종합해서 2차원 배열로 리턴
     return result
 
