@@ -245,7 +245,7 @@ def add_cinema():
 def update_cinema():
     while True:
         # print("[상영관 수정] 수정할 상영관아이디와 좌석수(행,열)를 입력해주세요.")
-        print("[상영관 추가] 수정 대상이 될 상영관아이디와 수정 결과가 될 상영관아이디를 입력해주세요.")
+        print("[상영관 수정] 수정 대상이 될 상영관아이디와 수정 결과가 될 상영관아이디를 입력해주세요.")
         user_input = input("입력 : ")
 
         try:
@@ -260,10 +260,6 @@ def update_cinema():
             # 상영 스케줄이 잡힌 상영관 검증
             if cinema_id in scheduled_cinemas:
                 print("상영스케줄이 잡힌 영화가 있어 수정이 불가능합니다.")
-                continue
-
-            if cinema_id < 0:
-                print("상영관아이디는 0 이상인 정수입니다.")
                 continue
 
             # 존재하지 않는 상영관 검증
@@ -297,10 +293,6 @@ def delete_cinema():
 
         try:
             cinema_id = int(user_input)
-
-            if cinema_id < 0:
-                print("상영관아이디는 0 이상인 정수입니다.")
-                continue
 
             # 존재하지 않는 상영관 검증
             if cinema_id not in theater_list:
