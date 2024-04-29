@@ -317,7 +317,7 @@ def validate_seat_number(choice):
 
     if not ('A' <= row and row <= 'E'):
         return False
-    if not column.isdigit() or int(column) < 1 or 5 < int(column):
+    if not column.isdigit() or int(column) < 0 or 4 < int(column):
         return False
     return True
 
