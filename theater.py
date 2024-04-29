@@ -47,7 +47,6 @@ def delete_seat(theater_id):
     new_lines = []
     for seat in seat_list:
         (s_id, t_id, label) = seat
-        print(theater_id, t_id)
         if not str(t_id) == str(theater_id):
             new_lines.append(str(s_id) + '/' + str(t_id) + '/' + str(label) + '\n')
 
