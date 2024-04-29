@@ -2,17 +2,20 @@ import moviesystem
 import data
 
 theater_list = []  # 상영관 정보
+
+
 # theater_dict = {}  # 상영관 행렬 정보
 
 
 def write_theater():
     with open("data/" + "theater.txt", "w", encoding="utf-8") as file:
         for item in theater_list:
-            file.write(str(item)+"\n")
+            file.write(str(item) + "\n")
 
 
 # 예매아이디
 seat_id = 0
+
 
 # 상영관 좌석 추가 함수
 def add_seat(theater_id):
@@ -34,7 +37,8 @@ def add_seat(theater_id):
 
     for r in row:
         for c in column:
-            data.add_seat(str(seat_id), str(theater_id), r+c)
+            data.add_seat(str(seat_id), str(theater_id), r + c)
+
 
 def delete_seat(theater_id):
     seat_list = data.get_seat_list()
@@ -44,13 +48,14 @@ def delete_seat(theater_id):
     for seat in seat_list:
         (s_id, t_id, label) = seat
         if not str(t_id) == str(theater_id):
-            new_lines.append(str(s_id)+'/'+str(t_id)+'/'+str(label)+'\n')
-    
+            new_lines.append(str(s_id) + '/' + str(t_id) + '/' + str(label) + '\n')
+
     try:
         with open("data/" + "seat.txt", "w", encoding="utf-8") as file:
             file.writelines(new_lines)
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
+
 
 # # 상영관 업데이트 함수
 # def update_seat(theater_id, new_rows, new_cols):
@@ -123,6 +128,7 @@ def update_theather(theater_id, new_theater_id):
             file.writelines(temp_lines)
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
+
 
 # 상영관 삭제함수
 def delete_theater(theater_id):
@@ -336,7 +342,7 @@ def manage_cinema():
             break
         elif choice == "2":
             update_cinema()  # 상영관 수정 함수
-            
+
             break
         elif choice == "3":
             delete_cinema()  # 상영관 삭제 함수
@@ -348,6 +354,5 @@ def manage_cinema():
             break  # 루프 종료
         else:
             print("1~4 사이 숫자 내에서 입력해주세요.")
-
 
 # manage_cinema()

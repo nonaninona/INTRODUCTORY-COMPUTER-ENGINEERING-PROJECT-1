@@ -14,6 +14,7 @@ def read_schedule():
             movie_ids.add(theater_id)
     return list(movie_ids)
 
+
 def manage_menu():
     while True:
         print("[관리자 모드] 실행할 메뉴를 선택하세요.")
@@ -80,6 +81,7 @@ def movie_add_menu():
                     print("러닝타임은 50 이상 240 이하의 정수입니다. 다시 입력해주세요.")
             else:
                 print("러닝타임은 50 이상 240 이하의 정수입니다. 다시 입력해주세요.")
+
 
 def movie_change_menu():
     print("수정할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
@@ -162,6 +164,7 @@ def movie_change_menu():
         else:
             print("0과 정수로만 이루어진 길이가 3인 숫자입니다. 다시 입력해주세요.")
 
+
 def movie_delete_menu():
     print("삭제할 영화아이디를 입력해주세요.\n[등록된 영화 내역]\n영화명     러닝타임     영화아이디")
     movieTable = read_movie()
@@ -196,15 +199,15 @@ def movie_delete_menu():
 
 
 def read_movie():
-    #print(data.get_movie_list())
+    # print(data.get_movie_list())
     return data.get_movie_list()
 
-     #movieTable = []
-     #with open("data/" + "movie.txt", "r", encoding="utf-8") as f:
-     #    for line in f:
-     #        id, movie, time = line.strip().split("/")
-     #        movieTable.append((id, movie, time))
-     #return movieTable
+    # movieTable = []
+    # with open("data/" + "movie.txt", "r", encoding="utf-8") as f:
+    #    for line in f:
+    #        id, movie, time = line.strip().split("/")
+    #        movieTable.append((id, movie, time))
+    # return movieTable
 
 
 def write_movie(id, movie, time):
@@ -216,8 +219,9 @@ def write_movie(id, movie, time):
         newID = f"{id + 1}"
 
     data.add_movie(newID, movie, time)
-    #with open("data/" + "movie.txt", "a", encoding="utf-8") as f:
+    # with open("data/" + "movie.txt", "a", encoding="utf-8") as f:
     #     f.write(f"{newID}/{movie}/{time}\n")
+
 
 def edit_movie_title(id, movie):
     movieTable = read_movie()  # 기존 영화 목록을 읽어옴
@@ -231,6 +235,7 @@ def edit_movie_title(id, movie):
     with open("data/" + "movie.txt", 'w', encoding='utf-8') as f:
         for i, m, t in movieTable:
             f.write(f"{i}/{m}/{t}\n")
+
 
 def edit_movie_time(id, time):
     movieTable = read_movie()  # 기존 영화 목록을 읽어옴

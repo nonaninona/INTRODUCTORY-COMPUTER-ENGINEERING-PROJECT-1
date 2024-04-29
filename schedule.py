@@ -97,7 +97,7 @@ def schedule_add_menu():
 
         data.add_schedule(str(timetable_id), theater_id, movie_id, date, time)
         print("상영스케줄이 추가되었습니다.")
-        return  #관리자 프롬프트로 이동
+        return  # 관리자 프롬프트로 이동
 
 
 def schedule_edit_menu():
@@ -108,14 +108,16 @@ def schedule_edit_menu():
         for id, theater, movie, date, time in schedule_table:
             movie_name = get_movie_data("name", movie)
             runtime = get_movie_data("runtime", movie)
-            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time+' - '+calculate_end_time(time, runtime))
+            print(
+                '     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time + ' - ' + calculate_end_time(
+                    time, runtime))
         user_input = input("입력 : ")
 
-        if not user_input.isdigit():  #문법 규칙에 부합하지 않는 경우
+        if not user_input.isdigit():  # 문법 규칙에 부합하지 않는 경우
             print("번호를 입력해주세요. 다시 입력해주세요.")
             continue
         else:
-            if not check_schedule_id(user_input, schedule_table):  #의미규칙 1번에 부합하지 않는 경우
+            if not check_schedule_id(user_input, schedule_table):  # 의미규칙 1번에 부합하지 않는 경우
                 continue
             if not check_schedule_reservation_empty(user_input):
                 continue
@@ -150,7 +152,7 @@ def schedule_edit_menu2(timetable_id):
         if not check_time_overlap(timetable_id, movie_id, theater_id, date, time):  # 시간표가 중복되는지 검사하는 함수
             continue
 
-        edit_schedule(timetable_id, movie_id, theater_id, date, time)  #실제 스케줄 수정하는 부분
+        edit_schedule(timetable_id, movie_id, theater_id, date, time)  # 실제 스케줄 수정하는 부분
         print("상영스케줄이 수정되었습니다.")
         return  # 관리자 프롬프트로 이동
 
@@ -170,7 +172,9 @@ def schedule_delete_menu():
         for id, theater, movie, date, time in schedule_table:
             movie_name = get_movie_data("name", movie)
             runtime = get_movie_data("runtime", movie)
-            print('     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time + ' - ' + calculate_end_time(time, runtime))
+            print(
+                '     ' + id + '        ' + movie_name + '     ' + theater + '상영관     ' + date + '     ' + time + ' - ' + calculate_end_time(
+                    time, runtime))
 
         user_input = input("입력 : ")
 
@@ -236,7 +240,7 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
 
     for i in range(0, len(schedule_list)):
         # 상영관이 겹치는 스케줄만 가져옴
-        if theater_id == schedule_list[i][1] and str(int(flag)+1) != schedule_list[i][0]:
+        if theater_id == schedule_list[i][1] and str(int(flag) + 1) != schedule_list[i][0]:
             overlap_theater_id_list.append(schedule_list[i])
     if len(overlap_theater_id_list) == 0:  # 상영관이 겹치지 않는다면 바로 추가
         return True
@@ -255,7 +259,7 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
 
             if new_hour >= int(start[:2]) & new_hour <= int(end[:2]):
                 if new_hour == int(end[:2]):
-                    if new_minute >= int(end[3:])+10:
+                    if new_minute >= int(end[3:]) + 10:
                         return True
                     else:
                         print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
@@ -266,7 +270,7 @@ def check_time_overlap(flag, movie_id, theater_id, date, time):  # flag add인 �
 
             if int(new_end[:2]) >= int(start[:2]) & int(new_end[:2]) <= int(end[:2]):
                 if int(new_end[:2]) == int(start[:2]):
-                    if new_minute >= int(end[3:])-10:
+                    if new_minute >= int(end[3:]) - 10:
                         return True
                     else:
                         print("해당 상영관의 상영스케줄과 겹칩니다.\n상영시작시간은 그 전 영화의 종료시간보다 + 10분 이상이여야 합니다.")
@@ -299,7 +303,7 @@ def calculate_end_time(start_time, runtime):
 
 
 def check_schedule_id(user_input, schedule_table):
-    #선택한 상영스케줄이 실제 상영스케줄 리스트에 있는지 검사하는 함수
+    # 선택한 상영스케줄이 실제 상영스케줄 리스트에 있는지 검사하는 함수
     for id, _, _, _, _ in schedule_table:
         if id == user_input:
             return True

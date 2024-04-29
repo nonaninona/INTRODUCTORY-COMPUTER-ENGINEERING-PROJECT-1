@@ -3,19 +3,21 @@ import administrator
 import reservation
 import data
 import sys
+
+
 # import data
 # import reservation
 
 
 def input_date_time():
-    # moviesystem.file_exist()
-    # moviesystem.validate_theater()
-    # moviesystem.validate_seat()
-    # moviesystem.validate_reservation()
-    # moviesystem.validate_ticket()
-    # moviesystem.validate_user()
-    # moviesystem.validate_schedule()
-    # moviesystem.validate_movie()
+    moviesystem.file_exist()
+    moviesystem.validate_theater()
+    moviesystem.validate_seat()
+    moviesystem.validate_reservation()
+    moviesystem.validate_ticket()
+    moviesystem.validate_user()
+    moviesystem.validate_schedule()
+    moviesystem.validate_movie()
     while True:
         print("[날짜 및 시간 입력]")
         print("날짜와 현재 시간을 입력해주세요.")
@@ -24,11 +26,11 @@ def input_date_time():
 
         date_str = user_input[:8]
         time_str = user_input[9:]
-        #print(date_str)
-        #print(time_str)
+        # print(date_str)
+        # print(time_str)
         # 입력 형식 및 문법 검증
         if (len(user_input) != 14 or user_input[8] != ' '
-                or not validate_date_syntax(date_str)) or not validate_time_syntax(time_str):
+            or not validate_date_syntax(date_str)) or not validate_time_syntax(time_str):
             print("올바르지 않은 입력 형식입니다. 다시 입력해주세요.")
             continue
 
@@ -42,7 +44,7 @@ def input_date_time():
 
         # 모든 검증 통과시 True 반환
         return user_input
-    
+
 
 def movie_theater_menu():
     while True:
@@ -65,9 +67,8 @@ def movie_theater_menu():
             elif choice == 3:
                 print("프로그램을 종료합니다.")
                 sys.exit(0)
-        else:        
+        else:
             print("입력이 올바르지 않습니다. 다시 입력해 주세요.")
-        
 
 
 def validate_main_menu(choice):
@@ -78,8 +79,8 @@ def validate_main_menu(choice):
 
     return True
 
-def login():
 
+def login():
     while True:
         user_id = input("아이디(4자리 숫자)를 입력하세요 : ")
 
@@ -98,7 +99,7 @@ def login():
 def validate_date_syntax(date_str):
     # 문법적 형식 검증
     if len(date_str) != 8 or not date_str.isdigit():
-        #print("validate_date_syntax error")
+        # print("validate_date_syntax error")
         return False
 
     return True
@@ -111,13 +112,13 @@ def validate_date_semantics(date_str):
     day = int(date_str[6:])
 
     if year != 2024:
-        #print("validate_date_semantics error")
+        # print("validate_date_semantics error")
         return False
     if month < 1 or month > 12:
-        #print("validate_date_semantics error")
+        # print("validate_date_semantics error")
         return False
     if day < 1 or day > 31:
-        #print("validate_date_semantics error")
+        # print("validate_date_semantics error")
         return False
 
     return True
@@ -126,7 +127,7 @@ def validate_date_semantics(date_str):
 def validate_time_syntax(time_str):
     # 문법적 형식 검증
     if len(time_str) != 5 or not time_str[:2].isdigit() or not time_str[3:].isdigit() or time_str[2] != ':':
-        #print("validate_time_syntax error")
+        # print("validate_time_syntax error")
         return False
 
     return True
@@ -138,13 +139,14 @@ def validate_time_semantics(time_str):
     minute = int(time_str[3:])
 
     if hour < 0 or hour > 23:
-        #print("validate_time_semantics error")
+        # print("validate_time_semantics error")
         return False
     if minute < 0 or minute > 59:
-        #print("validate_time_semantics error")
+        # print("validate_time_semantics error")
         return False
 
     return True
+
 
 # todo : def check_schedule(date_str, time_str): # 입력한 날짜 뒤에 영화 스케쥴이 있는지 확인
 
@@ -168,10 +170,10 @@ def is_user_id_exist(user_id):
     found = False
     # user.txt 무결성 검사 진행 to do
     user_list = data.get_user_list()
-    for (user_id1, ) in user_list:
-            if user_id1 == user_id:
-                found = True
-                break
+    for (user_id1,) in user_list:
+        if user_id1 == user_id:
+            found = True
+            break
     # with open('user.txt', 'r', encoding='utf-8') as file:
     #     for line in file:
     #         existing_id, _ = line.strip().split('/')

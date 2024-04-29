@@ -17,111 +17,119 @@ def file_exist():
         print('파일이 존재하지않음')
         exit(0)
 
+
 def validate_theater():
     data_list = data.sort_data(data.file_r('theater.txt'), 0)
     prev_id = -1
     for arr in data_list:
-        if len(arr) != 2:
+        if len(arr) != 1:
             print('theater.txt 저장 형식 오류')
             exit()
-        for id, name in arr:
-            if int(id) or int(id)!=id < 0:
-                print('theater_id 오류')
-            if prev_id == int(id):
-                print('theater.txt id 중복')
-                exit()
-            else:
-                prev_id = int(id)
-            name_to_arr = [char for char in name]
-            if name_to_arr[-1] != '\n':
-                print('theater.txt 형식 오류 발생')
-                exit()
+        id = arr[0]
+        # print(id)
+        if int(id[0]) < 0 or not str.isdigit(id[0]):
+            print('theater_id 오류')
+        if prev_id == int(id[0]):
+            print('theater.txt id 중복')
+            exit()
+        else:
+            prev_id = int(id)
+        id_to_arr = [char for char in id]
+        if id_to_arr[-1] != '\n':
+            print('theater.txt 형식 오류 발생')
+            # print(id_to_arr)
+            exit()
 
 
 def validate_seat():
-    data_list = data.sort_data(data.file_r('theater.txt'), 0)
+    data_list = data.sort_data(data.file_r('seat.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 3:
-            print('theater.txt 저장 형식 오류')
+            print('seat.txt 저장 형식 오류')
             exit()
-        for seat_ID, theater_ID, seat_num in arr:
-            if int(theater_ID) or int(theater_ID)!=theater_ID < 0:
-                print('theater_id 오류')
-            if int(seat_ID) or int(seat_ID)!=seat_ID < 0:
-                print('seat_ID 오류')
-            if prev_id == int(seat_ID):
-                print('seat.txt seat_ID 중복')
-                exit()
-            else:
-                prev_id = int(id)
-            seat_num_to_arr = [char for char in seat_num]
-            if seat_num_to_arr[-1] != '\n':
-                print('seat.txt 형식 오류 발생')
-                exit()
-            if not ((seat_num_to_arr[0] >= 'A' and seat_num_to_arr[0] <= 'E') and (
-                    int(seat_num_to_arr[1]) >= 0 and int(seat_num_to_arr[1]) <= 4)):
-                print('seat.txt 좌석번호 형식 오류')
+        seat_ID, theater_ID, seat_num = arr
+        if int(theater_ID) < 0 or not str.isdigit(theater_ID):
+            print('theater_id 오류')
+            exit()
+        if int(seat_ID) < 0 or not str.isdigit(seat_ID):
+            print('seat_ID 오류')
+            exit()
+        if prev_id == int(seat_ID):
+            print('seat.txt seat_ID 중복')
+            exit()
+        else:
+            prev_id = int(seat_ID)
+        seat_num_to_arr = [char for char in seat_num]
+        if seat_num_to_arr[-1] != '\n':
+            print('seat.txt 형식 오류 발생')
+            exit()
+        if not ((seat_num_to_arr[0] >= 'A' and seat_num_to_arr[0] <= 'E') or (
+                int(seat_num_to_arr[1]) >= 0 and int(seat_num_to_arr[1]) <= 4)):
+            print('seat.txt 좌석번호 형식 오류')
+            exit()
 
 
 def validate_movie():
-    data_list = data.sort_data(data.file_r('theater.txt'), 0)
+    data_list = data.sort_data(data.file_r('movie.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 3:
-            print('theater.txt 저장 형식 오류')
+            print('movie.txt 저장 형식 오류')
             exit()
-        for ID, name, time in arr:
-            if int(ID) > 999 or int(ID) < 100 or int(ID)!=ID:
-                print('movie.txt ID형식 오류')
-            if prev_id == int(ID):
-                print('movie.txt movie ID 중복')
-                exit()
-            else:
-                prev_id = int(ID)
-            time_to_arr = [char for char in time]
-            if time_to_arr[-1] != '\n':
-                print('movie.txt 형식 오류 발생')
-                exit()
-            if int(time) < 50 or int(time) > 240:
-                print('movie.txt 러닝타임 오류')
+        ID, name, time = arr
+        if int(ID) > 999 or int(ID) < 0 or not str.isdigit(ID):
+            print('movie.txt ID형식 오류')
+        if prev_id == int(ID):
+            print('movie.txt movie ID 중복')
+            exit()
+        else:
+            prev_id = int(ID)
+        time_to_arr = [char for char in time]
+        if time_to_arr[-1] != '\n':
+            print('movie.txt 형식 오류 발생')
+            exit()
+        if int(time[:3]) < 50 or int(time[:3]) > 240 or not str.isdigit(time[:3]):
+            print('movie.txt 러닝타임 오류')
+            exit()
 
 
 def validate_schedule():
-    data_list = data.sort_data(data.file_r('theater.txt'), 0)
+    data_list = data.sort_data(data.file_r('schedule.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 5:
-            print('theater.txt 저장 형식 오류')
+            print('schedule.txt 저장 형식 오류')
             exit()
-        for timetable_ID, movie_ID, theater_ID, date, time in arr:
-
-            if int(movie_ID) > 999 or int(movie_ID) < 100 or int(movie_ID)!=movie_ID:
-                print('movie_id형식 오류')
-
-            if int(theater_ID)<0 or int(theater_ID)!=theater_ID < 0:
-                print('theater_id 오류')
-                
-            if int(timetable_ID)<0 or int(timetable_ID)!=timetable_ID < 0:
-                print('timetable_ID 오류')
-
-            if prev_id == int(timetable_ID):
-                print('movie.txt movie ID 중복')
+        timetable_ID, movie_ID, theater_ID, date, time = arr
+        # print(arr)
+        if int(movie_ID) > 999 or int(movie_ID) < 0 or not str.isdigit(movie_ID):
+            print('movie_id형식 오류')
+            exit()
+        if int(theater_ID) < 0 or not str.isdigit(theater_ID):
+            print('theater_id 오류')
+            exit()
+        if int(timetable_ID) < 0 or not str.isdigit(timetable_ID):
+            print('timetable_ID 오류')
+            exit()
+        if prev_id == int(timetable_ID):
+            print('schedule.txt movie ID 중복')
+            exit()
+        else:
+            prev_id = int(timetable_ID)
+        if validate_date_syntax(date) & validate_date_semantics(date):
+            time_to_arr = [char for char in time]
+            if time_to_arr[-1] != '\n':
+                print(time_to_arr)
+                print('schedule.txt 형식 오류 발생')
                 exit()
-            else:
-                prev_id = int(timetable_ID)
-            if validate_date_syntax(date) & validate_date_semantics(date):
-                time_to_arr = [char for char in time]
-                if time_to_arr[-1] != '\n':
-                    print('movie.txt 형식 오류 발생')
-                    exit()
-                if not (validate_date_semantics(time_to_arr[0:4]) and validate_time_syntax(
-                        time_to_arr[0:4]) and validate_date_semantics(time_to_arr[5:9]) and validate_time_syntax(
-                        time_to_arr[5:9])):
-                    print('movie.txt 시간 형식 오류 발생')
-            else:
-                print('movie.txt date 형식 오류 발생')
+            if not (validate_time_semantics(''.join(time_to_arr[:5])) and validate_time_syntax(
+                    ''.join(time_to_arr[:5]))):
+                print('schedule.txt 시간 형식 오류 발생')
                 exit()
+        else:
+            print('schedule.txt date 형식 오류 발생')
+            exit()
 
 
 def validate_ticket():
@@ -131,25 +139,31 @@ def validate_ticket():
         if len(arr) != 4:
             print('ticket.txt 저장 형식 오류')
             exit()
-        for ticket_ID, reservation_ID, seat_ID, timetable_ID in arr:
-            
-            if int(reservation_ID) < 0 or int(reservation_ID)!=reservation_ID:
-                print('reservation_id 오류')
-            if int(seat_ID) < 0 or int(seat_ID)!=seat_ID:
-                print('seat_id 오류')
-            if int(timetable_ID)<0 or int(timetable_ID)!=timetable_ID < 0:
-                print('timetable_ID 오류')
-            if int(ticket_ID)<0 or int(ticket_ID)!=ticket_ID < 0:
-                print('ticket_ID 오류')
-            if prev_id == int(ticket_ID):
-                print('ticket.txt ticket ID 중복')
-                exit()
-            else:
-                prev_id = int(ticket_ID)
-            timetable_ID_to_arr = [char for char in timetable_ID]
-            if timetable_ID_to_arr[-1] != '\n':
-                print('ticket.txt 형식 오류 발생')
-                exit()
+        ticket_ID, reservation_ID, seat_ID, timetable_ID = arr
+
+        if int(reservation_ID) < 0 or not str.isdigit(reservation_ID):
+            print('reservation_id 오류')
+            exit()
+
+        if int(seat_ID) < 0 or not str.isdigit(seat_ID):
+            print('seat_id 오류')
+            exit()
+        if int(timetable_ID) < 0 or not str.isdigit(timetable_ID[:-1]):
+            print('timetable_ID 오류')
+            print(timetable_ID)
+            exit()
+        if int(ticket_ID) < 0 or not str.isdigit(ticket_ID):
+            print('ticket_ID 오류')
+            exit()
+        if prev_id == int(ticket_ID):
+            print('ticket.txt ticket ID 중복')
+            exit()
+        else:
+            prev_id = int(ticket_ID)
+        timetable_ID_to_arr = [char for char in timetable_ID]
+        if timetable_ID_to_arr[-1] != '\n':
+            print('ticket.txt 형식 오류 발생')
+            exit()
 
 
 def validate_reservation():
@@ -159,45 +173,54 @@ def validate_reservation():
         if len(arr) != 4:
             print('reservation.txt 저장 형식 오류')
             exit()
-        for reservation_ID, reservation_person_ID, num, cancel in arr:
-            if int(reservation_ID) < 0 or int(reservation_ID)!=reservation_ID:
-                print('reservation_id 오류')
-            if int(reservation_person_ID) > 9999 or int(reservation_person_ID) < 1000 or int(reservation_person_ID)!=reservation_person_ID:
-                print('user ID 형식 오류')
-            if prev_id == int(reservation_ID):
-                print('reservation.txt reservation ID 중복')
-                exit()
-            else:
-                prev_id = int(reservation_ID)
-            cancel_to_arr = [char for char in cancel]
-            if cancel_to_arr[-1] != '\n':
-                print('reservation.txt 형식 오류 발생')
-                exit()
-            if int(num) < 1 or int(num) > 5:
-                print('reservation.txt 인원수 오류')
-            if not (cancel_to_arr[0] == 'O' or cancel_to_arr[0] == 'X'):
-                print('reservation.txt 예약최소여부 형식 오류')
+        reservation_ID, reservation_person_ID, num, cancel = arr
+        if int(reservation_ID) < 0 or not str.isdigit(reservation_ID):
+            print('reservation_id 오류')
+            exit()
+        if int(reservation_person_ID) > 9999 or int(reservation_person_ID) < 0 or not str.isdigit(
+                reservation_person_ID):
+            print('user ID 형식 오류1')
+            print(reservation_person_ID)
+            exit()
+        if prev_id == int(reservation_ID):
+            print('reservation.txt reservation ID 중복')
+            exit()
+        else:
+            prev_id = int(reservation_ID)
+        cancel_to_arr = [char for char in cancel]
+        if cancel_to_arr[-1] != '\n':
+            print('reservation.txt 형식 오류 발생')
+            exit()
+        if int(num) < 1 or int(num) > 5 or not str.isdigit(num):
+            print('reservation.txt 인원수 오류')
+            exit()
+        if not (cancel_to_arr[0] == 'O' or cancel_to_arr[0] == 'X'):
+            print('reservation.txt 예약최소여부 형식 오류')
+            exit()
 
 
 def validate_user():
     data_list = data.sort_data(data.file_r('user.txt'), 0)
     prev_id = -1
     for arr in data_list:
-        if len(arr) != 4:
+        if len(arr) != 1:
             print('user.txt 저장 형식 오류')
             exit()
-        for reservation_person_ID in arr:
-            if int(reservation_person_ID) > 9999 or int(reservation_person_ID) < 1000 or int(reservation_person_ID)!=reservation_person_ID:
-                print('user ID 형식 오류')
-            if prev_id == int(reservation_person_ID):
-                print('user.txt user ID 중복')
-                exit()
-            else:
-                prev_id = int(reservation_person_ID)
-            id_to_arr = [char for char in reservation_person_ID]
-            if id_to_arr[-1] != '\n':
-                print('user.txt 형식 오류 발생')
-                exit()
+        reservation_person_ID = arr[0]
+        if len(reservation_person_ID) != 5 or int(reservation_person_ID[:4]) > 9999 or int(
+                reservation_person_ID[:4]) < 0 or not str.isdigit(reservation_person_ID[:4]):
+            print('user ID 형식 오류2')
+            print(reservation_person_ID)
+            exit()
+        if prev_id == int(reservation_person_ID):
+            print('user.txt user ID 중복')
+            exit()
+        else:
+            prev_id = int(reservation_person_ID)
+        id_to_arr = [char for char in reservation_person_ID]
+        if id_to_arr[-1] != '\n':
+            print('user.txt 형식 오류 발생')
+            exit()
 
 
 def validate_movie_id(movie_id_str):
@@ -262,8 +285,6 @@ def validate_time_semantics(time_str):
         return False
 
     return True
-
-
 
 
 def input_date_time():
