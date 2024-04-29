@@ -91,7 +91,7 @@ def file_r(path):
 def data_parsing(array):
     parsed_data = []
     for str in array:
-        row = str.strip().split('/')
+        row = str.split('/')
         parsed_data.append(row)
     return parsed_data
 
