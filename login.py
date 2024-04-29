@@ -18,6 +18,7 @@ def input_date_time():
     moviesystem.validate_user()
     moviesystem.validate_schedule()
     moviesystem.validate_movie()
+    
     while True:
         print("[날짜 및 시간 입력]")
         print("날짜와 현재 시간을 입력해주세요.")

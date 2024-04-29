@@ -31,7 +31,9 @@ def reserve(user_id):
 
     schedule = get_schedule(choice, schedule_list)
     tickets = get_tickets(schedule, seat_list, ticket_list)
+    print(tickets)
     seats = get_ticket_reservation_map(tickets, reservation_list)
+    print(seats)
     print_seats(seats)
 
     while True:
@@ -226,7 +228,9 @@ def get_tickets(schedule, seat_list, ticket_list):
 
     tickets = []
     for ticket in ticket_list:
-        if ticket[3] == id:
+        print(ticket)
+        temp = str(ticket[3].strip())
+        if temp == str(id):
             tickets.append(ticket)
 
     tickets = sort_tickets(tickets, seat_list)
@@ -344,9 +348,6 @@ def check_seat_available(choice, seats, people):
     row = (ord(row) - ord('A')) * 5
     column = int(choice[1])
     people = int(people)
-    print(people)
-    print(row)
-    print(column)
     if 4 - column + 1 < people:
         return False
 
@@ -391,14 +392,14 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     seat_ids = []
     for seat in seat_list:
         (id, t_id, label) = seat
-        # print(id)
-        # print(t_id)
-        # print(label)
-        # print(choices)
+        id = id.strip()
+        t_id = t_id.strip()
+        label = str(label).strip()
 
-        if label in choices and theater_id == t_id:
+        if (label in choices) and (str(theater_id) == str(t_id)):
             seat_ids.append(id)
 
+    print(seat_ids)
 
     # 시작 아이디 얻어오기
     if ticket_list == []:
@@ -410,6 +411,9 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
             if max < int(id):
                 max = int(id)
         ticket_id = max + 1
+
+    print(ticket_id)
+
 
     # ticket 생성
     for seat_id in seat_ids:

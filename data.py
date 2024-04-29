@@ -86,9 +86,23 @@ def file_r(path):
     f.close()
     return data_parsing(data_list)
 
+def file_r_no_strip(path):
+    f = open("data/" + path, 'r', encoding='utf-8')
+    data_list = f.readlines()
+    f.close()
+    return data_parsing_no_strip(data_list)
+
 
 # base function
 def data_parsing(array):
+    parsed_data = []
+    for str in array:
+        row = str.strip().split('/')
+        parsed_data.append(row)
+    return parsed_data
+
+# base function
+def data_parsing_no_strip(array):
     parsed_data = []
     for str in array:
         row = str.split('/')

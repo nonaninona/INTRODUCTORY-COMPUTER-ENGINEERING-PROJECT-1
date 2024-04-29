@@ -19,7 +19,7 @@ def file_exist():
 
 
 def validate_theater():
-    data_list = data.sort_data(data.file_r('theater.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('theater.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 1:
@@ -42,7 +42,7 @@ def validate_theater():
 
 
 def validate_seat():
-    data_list = data.sort_data(data.file_r('seat.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('seat.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 3:
@@ -71,7 +71,7 @@ def validate_seat():
 
 
 def validate_movie():
-    data_list = data.sort_data(data.file_r('movie.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('movie.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 3:
@@ -95,7 +95,7 @@ def validate_movie():
 
 
 def validate_schedule():
-    data_list = data.sort_data(data.file_r('schedule.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('schedule.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 5:
@@ -133,7 +133,7 @@ def validate_schedule():
 
 
 def validate_ticket():
-    data_list = data.sort_data(data.file_r('ticket.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('ticket.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 4:
@@ -167,7 +167,7 @@ def validate_ticket():
 
 
 def validate_reservation():
-    data_list = data.sort_data(data.file_r('reservation.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('reservation.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 4:
@@ -200,7 +200,7 @@ def validate_reservation():
 
 
 def validate_user():
-    data_list = data.sort_data(data.file_r('user.txt'), 0)
+    data_list = data.sort_data(data.file_r_no_strip('user.txt'), 0)
     prev_id = -1
     for arr in data_list:
         if len(arr) != 1:

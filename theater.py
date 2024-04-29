@@ -33,7 +33,7 @@ def add_seat(theater_id):
         seat_id = max + 1
 
     row = ['A', 'B', 'C', 'D', 'E']
-    column = ['1', '2', '3', '4', '5']
+    column = ['0', '1', '2', '3', '4']
 
     for r in row:
         for c in column:
