@@ -22,20 +22,30 @@ def validate_theater():
     data_list = data.sort_data(data.file_r_no_strip('theater.txt'), 0)
     prev_id = -1
     for arr in data_list:
-        if len(arr) != 1:
-            print('theater.txt 저장 형식 오류')
+        if len(arr) != 2:  # chrin2 : 1->2로 수정
+            print('theater.txt id(길이)저장 형식 오류')
             exit()
         id = arr[0]
         # print(id)
         if int(id[0]) < 0 or not str.isdigit(id[0]):
             print('theater_id 오류')
+        # chrin2 ====== start
+        seat = arr[1]
+        if len(seat) != 25:
+            print('thearter.txt seat(길이)저장 형식 오류')
+            exit()
+        for s in seat:
+            if s != 'S' or s != 'E':
+                print('seat 형식 오류')
+                exit()
+        # chrin2 ====== end
         if prev_id == int(id[0]):
             print('theater.txt id 중복')
             exit()
         else:
             prev_id = int(id)
-        id_to_arr = [char for char in id]
-        if id_to_arr[-1] != '\n':
+        # id_to_arr = [char for char in id]
+        if seat[-1] != '\n': #변경
             print('theater.txt 형식 오류 발생')
             # print(id_to_arr)
             exit()
@@ -136,32 +146,36 @@ def validate_ticket():
     data_list = data.sort_data(data.file_r_no_strip('ticket.txt'), 0)
     prev_id = -1
     for arr in data_list:
-        if len(arr) != 4:
+        if len(arr) != 5: # chrin2 : 4->5로 수정
             print('ticket.txt 저장 형식 오류')
             exit()
-        ticket_ID, reservation_ID, seat_ID, timetable_ID = arr
+        ticket_id, reservation_id, seat_id, timetable_id, ticket_price = arr # chrin2 : 변수 추가
 
-        if int(reservation_ID) < 0 or not str.isdigit(reservation_ID):
+        if int(reservation_id) < 0 or not str.isdigit(reservation_id):
             print('reservation_id 오류')
             exit()
-
-        if int(seat_ID) < 0 or not str.isdigit(seat_ID):
+        if int(seat_id) < 0 or not str.isdigit(seat_id):
             print('seat_id 오류')
             exit()
-        if int(timetable_ID) < 0 or not str.isdigit(timetable_ID[:-1]):
+        if int(timetable_id) < 0 or not str.isdigit(timetable_id[:-1]):
             print('timetable_ID 오류')
-            print(timetable_ID)
+            print(timetable_id)
             exit()
-        if int(ticket_ID) < 0 or not str.isdigit(ticket_ID):
+        if int(ticket_id) < 0 or not str.isdigit(ticket_id):
             print('ticket_ID 오류')
             exit()
-        if prev_id == int(ticket_ID):
+        # chrin2 == == == start
+        if int(ticket_price) != 10000:
+            print('ticket_price 오류')
+            exit()
+        # chrin2 == == == end
+        if prev_id == int(ticket_id):
             print('ticket.txt ticket ID 중복')
             exit()
         else:
-            prev_id = int(ticket_ID)
-        timetable_ID_to_arr = [char for char in timetable_ID]
-        if timetable_ID_to_arr[-1] != '\n':
+            prev_id = int(ticket_id)
+        ticket_price_to_arr = [char for char in ticket_price] #여기부터 아래도 수정
+        if ticket_price_to_arr[-1] != '\n':
             print('ticket.txt 형식 오류 발생')
             exit()
 
@@ -170,25 +184,26 @@ def validate_reservation():
     data_list = data.sort_data(data.file_r_no_strip('reservation.txt'), 0)
     prev_id = -1
     for arr in data_list:
-        if len(arr) != 4:
+        if len(arr) != 5: # chrin2 : 4->5로 수정
             print('reservation.txt 저장 형식 오류')
             exit()
-        reservation_ID, reservation_person_ID, num, cancel = arr
-        if int(reservation_ID) < 0 or not str.isdigit(reservation_ID):
+        reservation_id, reservation_person_id, num, cancel, coupon_price = arr  # chrin2 : 변수 추가
+        if int(reservation_id) < 0 or not str.isdigit(reservation_id):
             print('reservation_id 오류')
             exit()
-        if int(reservation_person_ID) > 9999 or int(reservation_person_ID) < 0 or not str.isdigit(
-                reservation_person_ID):
+        if int(reservation_person_id) > 9999 or int(reservation_person_id) < 0 or not str.isdigit(
+                reservation_person_id):
             print('user ID 형식 오류1')
-            print(reservation_person_ID)
+            print(reservation_person_id)
             exit()
-        if prev_id == int(reservation_ID):
+        if prev_id == int(reservation_id):
             print('reservation.txt reservation ID 중복')
             exit()
         else:
-            prev_id = int(reservation_ID)
+            prev_id = int(reservation_id)
         cancel_to_arr = [char for char in cancel]
-        if cancel_to_arr[-1] != '\n':
+        coupon_price_to_arr = [char for char in coupon_price] #추가
+        if coupon_price_to_arr[-1] != '\n': #여기도 수정
             print('reservation.txt 형식 오류 발생')
             exit()
         if int(num) < 1 or int(num) > 5 or not str.isdigit(num):
@@ -197,28 +212,43 @@ def validate_reservation():
         if not (cancel_to_arr[0] == 'O' or cancel_to_arr[0] == 'X'):
             print('reservation.txt 예약최소여부 형식 오류')
             exit()
+        # chrin2 == == == start
+        if int(coupon_price) != 0 or int(coupon_price) < 1000 or int(coupon_price) > 5000 or not str.isdigit(
+                coupon_price):
+            print('reservation.txt coupon_price 오류')
+            exit()
+        # chrin2 == == == end
 
 
 def validate_user():
     data_list = data.sort_data(data.file_r_no_strip('user.txt'), 0)
     prev_id = -1
     for arr in data_list:
-        if len(arr) != 1:
+        if len(arr) != 3: # chrin2 : 1->3로 수정
             print('user.txt 저장 형식 오류')
             exit()
-        reservation_person_ID = arr[0]
-        if len(reservation_person_ID) != 5 or int(reservation_person_ID[:4]) > 9999 or int(
-                reservation_person_ID[:4]) < 0 or not str.isdigit(reservation_person_ID[:4]):
+        #reservation_person_id = arr[0]
+        user_id, coupon_price, coupon_available = arr #추가 및 아래 다 수정
+        if len(user_id) != 4 or int(user_id) > 9999 or int(user_id) < 0 or not str.isdigit(user_id):
             print('user ID 형식 오류2')
-            print(reservation_person_ID)
+            print(user_id)
             exit()
-        if prev_id == int(reservation_person_ID):
+        if prev_id == int(user_id):
             print('user.txt user ID 중복')
             exit()
         else:
-            prev_id = int(reservation_person_ID)
-        id_to_arr = [char for char in reservation_person_ID]
-        if id_to_arr[-1] != '\n':
+            prev_id = int(user_id)
+        #id_to_arr = [char for char in user_id]
+        # chrin2 == == == start
+        if int(coupon_price) != 0 or int(coupon_price) < 1000 or int(coupon_price) > 5000 or not str.isdigit(
+                coupon_price):
+            print('reservation.txt coupon_price 오류')
+            exit()
+        if not (coupon_available == 'O' or coupon_available == 'X'):
+            print('reservation.txt 예약최소여부 형식 오류')
+            exit()
+        if coupon_available[-1] != '\n':
+        # chrin2 == == == end
             print('user.txt 형식 오류 발생')
             exit()
 
