@@ -18,7 +18,7 @@ def get_user_coupon(user_id):
 
 
 def change_coupon_available(user_id):
-    # 쿠폰유효여부변경
+    # 쿠폰유효여부변경 O => X or X => O를 수행
     coupon_price = get_user_coupon(user_id)
 
     user_list = data.get_ticket_list2()
@@ -55,7 +55,7 @@ def get_used_coupon(type, id):
 
 
 def delete_user(user_id):
-    #user 삭제 부분
+    #user 삭제 부분 // coupon update에서 사용
     user_list = data.get_user_list2()
     new_user_list = [user for user in user_list if user[0] != user_id]
 
