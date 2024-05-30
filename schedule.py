@@ -19,6 +19,7 @@ def get_theater_list():
     return theater_list
 
 
+
 def get_schedule_list():
     # 상영스케줄 데이터를 [시간표아이디, 상영관아이디, 영화아이디, 날짜(20240000), 시작시간]으로 리스트를 만들어주는 함수
     schedule_list = []
