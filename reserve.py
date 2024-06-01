@@ -59,6 +59,27 @@ def reserve(user_id, date_time):
         else:  # 문법 규칙에 부합하지 않는 경우
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
 
+    while True:
+        print("결제하실 금액은 다음과 같습니다")
+        print("결제 금액 : %d원\n" %10000*people) # 10000 * 인원수
+        print("[나의 쿠폰 목록]\n")
+        # TODO: 쿠폰 목록들 모두 가져오기
+        print("※ (쿠폰을 적용하시려면 '1', 적용하지 않으시려면 '2'를 입력해주세요)")
+        print("1. 쿠폰 적용하기\n2. 쿠폰 적용없이 결제하기")
+        coupon_choice = input("입력: ")
+        # TODO: coupon_choice 유효성 검증 잘 되었는지 확인 필요
+        if validate_input(coupon_choice): # 문법이 맞은 경우
+            # TODO: 쿠폰 없는 경우 처리 필요
+            if coupon_choice == '1':
+                print("쿠폰 적용 로직 추가")
+            elif coupon_choice == '2':
+                print('쿠폰 미적용 로직 추가')
+            else: # 문법은 맞았지만 1, 2 외의 숫자를 입력한 경우
+                print("1~2 사이 숫자 내에서 입력해주세요")
+        else:
+            print("1~2 사이 숫자 내에서 입력해주세요")
+        
+
     reservation_id = make_reservation(reservation_list, user_id, people)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
     print("예매가 완료되었습니다")
