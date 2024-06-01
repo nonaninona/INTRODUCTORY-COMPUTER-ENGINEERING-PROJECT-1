@@ -1,6 +1,25 @@
 import data
 
+""""
+print_my_coupon(user_id) : 해당 유저의 쿠폰 출력
+"""
 
+def print_my_coupon(user_id):
+    print("-----------")
+    # 유효성 검사
+    result = get_user_coupon(user_id)
+    if result != -1: # 쿠폰 있는 경우
+        print("쿠폰 : %d원 할인 쿠폰" %result)
+        print("사용 가능 유무 : O")
+    else: # 쿠폰 없는 경우 (임의로 작성)
+        print("사용 가능한 쿠폰이 없습니다.")
+    
+
+""""
+
+data
+
+"""
 def get_user_coupon(user_id):
     # 사용자 리스트에서 해당 id에 대한 쿠폰을 조회 / 유효한 쿠폰이면 쿠폰값을 반환, 아니라면 오류 메시지 출력 후 -1 반환
     user_list = data.get_user_list2()

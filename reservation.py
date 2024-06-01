@@ -2,6 +2,7 @@ import sys
 import data
 import reserve
 import moviesystem
+import coupon
 
 """
 
@@ -37,7 +38,7 @@ def print_reserve_menu(user_id, date_time):
                 print_check_reservation_menu(user_id)
             elif int(choice) == 3:
                 print("나의 쿠폰 조회")
-                # print_my_coupon(user_id)
+                coupon.print_my_coupon(user_id)
             elif int(choice) == 4:
                 print("로그아웃이 완료되었습니다.")
                 break
