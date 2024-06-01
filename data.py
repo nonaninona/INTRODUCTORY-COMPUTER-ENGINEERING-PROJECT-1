@@ -1,6 +1,6 @@
 # theater
-def add_theater(id, name):
-    file_a("theater.txt", id + '/' + name + '\n')
+def add_theater(id, name, seat):
+    file_a("theater.txt", id + '/' + name + '/' + seat + '\n')
 
 
 def get_theater_list():
@@ -39,8 +39,9 @@ def get_schedule_list():
 
 
 # ticket
-def add_ticket(ticket_id, reservation_id, seat_id, timetable_id):
-    file_a("ticket.txt", ticket_id + '/' + reservation_id + '/' + seat_id + '/' + timetable_id + '\n')
+def add_ticket(ticket_id, reservation_id, seat_id, timetable_id, ticket_price):
+    file_a("ticket.txt",
+           ticket_id + '/' + reservation_id + '/' + seat_id + '/' + timetable_id + '/' + ticket_price + '\n')
 
 
 def get_ticket_list():
@@ -48,9 +49,17 @@ def get_ticket_list():
     return ticket_list
 
 
+def get_ticket_list2():  # chrin2 // 0 : 티켓아이디 1:예매아이디 2:좌석아이디 3:시간표아이디 4:티켓가격
+    ticket_list = []
+    file = file_r("ticket.txt")
+    for ticket_id, reservation_id, seat_id, timetable_id, ticket_price in file:
+        ticket_list.append([ticket_id, reservation_id, seat_id, timetable_id, ticket_price])
+    return ticket_list
+
+
 # reservation
-def add_reservation(reservation_id, user_id, num, cancel):
-    file_a("reservation.txt", reservation_id + '/' + user_id + '/' + num + '/' + cancel + '\n')
+def add_reservation(reservation_id, user_id, num, cancel, coupon_price):
+    file_a("reservation.txt", reservation_id + '/' + user_id + '/' + num + '/' + cancel + '/' + coupon_price + '\n')
 
 
 def get_reservation_list():
@@ -58,13 +67,29 @@ def get_reservation_list():
     return ticket_list
 
 
+def get_reservation_list2():  # chrin2 // 0 : 예매아이디 1:예약자아이디 2: 예약인원수 3: 예약취소여부 4: 적용쿠폰가격
+    reservation_list = []
+    file = file_r("reservation.txt")
+    for reservation_id, user_id, num, cancel, coupon_price in file:
+        reservation_list.append([reservation_id, user_id, num, cancel, coupon_price])
+    return reservation_list
+
+
 # user
-def add_user(user_id):
-    file_a("user.txt", user_id + '\n')
+def add_user(user_id, coupon_price, coupon_available):
+    file_a("user.txt", user_id + '/' + coupon_price + '/' + coupon_available + '\n')
 
 
 def get_user_list():
     user_list = file_r("user.txt")
+    return user_list
+
+
+def get_user_list2():  # chrin2 //0 : user_id, 1 :  coupon_price, 2 : coupon_available
+    user_list = []
+    file = file_r("user.txt")
+    for user_id, coupon_price, coupon_available in file:
+        user_list.append([user_id, coupon_price, coupon_available])
     return user_list
 
 
@@ -86,6 +111,7 @@ def file_r(path):
     f.close()
     return data_parsing(data_list)
 
+
 def file_r_no_strip(path):
     f = open("data/" + path, 'r', encoding='utf-8')
     data_list = f.readlines()
@@ -100,6 +126,7 @@ def data_parsing(array):
         row = str.strip().split('/')
         parsed_data.append(row)
     return parsed_data
+
 
 # base function
 def data_parsing_no_strip(array):
