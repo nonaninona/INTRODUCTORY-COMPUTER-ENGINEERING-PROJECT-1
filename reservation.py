@@ -22,6 +22,7 @@ def print_reserve_menu(user_id, date_time):
         print("[메인 메뉴] 실행할 메뉴를 선택하세요.")
         print("1. 영화예매하기")
         print("2. 영화조회하기")
+        print("3. 나의 쿠폰 확인하기")
         print("3. 로그아웃")
         print("4. 종료하기")
         choice = input("입력: ")
@@ -35,9 +36,12 @@ def print_reserve_menu(user_id, date_time):
                 print("영화 조회")
                 print_check_reservation_menu(user_id)
             elif int(choice) == 3:
+                print("나의 쿠폰 조회")
+                # print_my_coupon(user_id)
+            elif int(choice) == 4:
                 print("로그아웃이 완료되었습니다.")
                 break
-            elif int(choice) == 4:
+            elif int(choice) == 5:
                 print("프로그램을 종료합니다.")
                 sys.exit(0)
             else:  # 비정상 입력
