@@ -19,31 +19,46 @@ def print_my_coupon(user_id):
 
 
 def publish_new_coupon(user_id, date_time):
-    # 현재 날짜 확인
+    # 현재 날짜에서 월/일 저장
     current_month = int(date_time[4:6])
     current_date = int(date_time[6:8])
-    prev_month = 0
-    if current_month > 1: # 1월이 아닌 경우
-        prev_month = current_month - 1
-        print(prev_month)
-        print(current_date)
-    else: #1월인 경우
-        prev_month = 12
-        print(prev_month)
-        print(current_date)
-    reservation_list = data.get_reservation_list2() # 전체 resrvation list
-    ticket_list = data.get_ticket_list2() # 전체 ticket list
+    # 현재 날짜가 16일 이상인 경우 쿠폰유효여부 변경
+    if current_date >= 16:
+        # TODO: 쿠폰유효여부 X로 변경
+        return
+    else: # 현재 날짜가 15일 이하인 경우
+        is_used = is_coupon_used(current_month, user_id)
+        if is_used == True: # 이번달에 쿠폰 사용한 경우
+            return
+        # 이번달에 쿠폰 사용하지 않은 경우
+        user_list = data.get_user_list()
+        # 1. 쿠폰유효여부를 통해 쿠폰의 발급달 확인
+        # 유효여부가 O라면 이미 쿠폰 발급되었다는 것 => 종료 // X라면 저번달 쿠폰 => 계속 진행
 
-    # TODO: user_id를 통해 지난달의 예매 내역 가져오기
-    # for r in reservation_list:
-    #     if r[1] == user_id: # 해당하는 유저의 경우
-    #         for t in ticket_list:
-    #             if t[1] == r[0]: # 해당하는 티켓의 경우
-    #                 schedule_list = data.get_schedule_list()
-    #         # 지난달 예매 누적액 계산 후 분기처리
-    #     else:
-    #         continue
+        # 2. 지난달 실적 확인
+        prev_month = 0
+        if current_month > 1: # 1월이 아닌 경우
+            prev_month = current_month - 1
+        else: #1월인 경우
+            prev_month = 12
+
+        # TODO: user_id를 통해 지난달의 예매 내역 가져오기
+        # for r in reservation_list:
+        #     if r[1] == user_id: # 해당하는 유저의 경우
+        #         for t in ticket_list:
+        #             if t[1] == r[0]: # 해당하는 티켓의 경우
+        #                 schedule_list = data.get_schedule_list()
+        #         # 지난달 예매 누적액 계산 후 분기처리
+        #     else:
+        #         continue
     
+def is_coupon_used(current_month, user_id):
+    # 이번달의 예매내역
+    current_month_reservation = data.get_month_reservation_list(current_month, user_id)
+    for r in current_month_reservation:
+        if r[4] != "0": # 쿠폰 사용한 경우
+            return True
+    return False
 
 """"
 
@@ -64,6 +79,8 @@ def get_user_coupon(user_id):
 
     print("[오류] 일치하는 사용자아이디가 없습니다.")
     return -2
+
+
 def coupon_exist(user_id):
     if get_user_coupon(user_id) < 0:
         return False
