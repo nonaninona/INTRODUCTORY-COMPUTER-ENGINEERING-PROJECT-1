@@ -32,7 +32,8 @@ def reserve(user_id, date_time):
 
     schedule = get_schedule(choice, schedule_list)
     tickets = get_tickets(schedule, seat_list, ticket_list)
-    seats = get_ticket_reservation_map(tickets, reservation_list)
+    theater = get_theater(schedule[1], theater_list)
+    seats = get_ticket_reservation_map(tickets, reservation_list, theater)
     print_seats(seats)
 
     while True:
@@ -219,6 +220,10 @@ def if_seat_full(table, id):
                 return True
     return False
 
+def get_theater(theater_id, theather_list):
+    for theater in theather_list:
+        if theater[0] == theater_id:
+            return theater
 
 def get_schedule(schedule_id, schedule_list):
     for schedule in schedule_list:
@@ -255,10 +260,16 @@ def sort_tickets(tickets, seat_list):
     return ret
 
 
-def get_ticket_reservation_map(tickets, reservation_list):
+def get_ticket_reservation_map(tickets, reservation_list, theater):
+
+    (theater_id, theater_seats) = theater
+
     ret = []
-    for i in range(25):
-        ret.append('O')
+    for seat in theater_seats:
+        if seat == 'E':
+            ret.append('X')
+        elif seat == 'S':
+            ret.append('O')
 
     for ticket in tickets:
         (id, reservation_id, seat_id, schedule_id, ticket_price, seat) = ticket
@@ -431,7 +442,8 @@ def reserve_change(user_id, schedule_id, before_cost, coupon_price):
 
     schedule = get_schedule(schedule_id, schedule_list)
     tickets = get_tickets(schedule, seat_list, ticket_list)
-    seats = get_ticket_reservation_map(tickets, reservation_list)
+    theater = get_theater(schedule[1], theater_list)
+    seats = get_ticket_reservation_map(tickets, reservation_list, theater)
     ###
 
     # 좌석을 가져온 후 좌석 출력 코드
