@@ -34,6 +34,11 @@ def get_user_coupon(user_id):
 
     print("[오류] 일치하는 사용자아이디가 없습니다.")
     return -2
+def coupon_exist(user_id):
+    if get_user_coupon(user_id) < 0:
+        return False
+    else: return True
+
 
 
 def change_coupon_available(user_id):
@@ -82,3 +87,36 @@ def delete_user(user_id):
         for user_id, coupon_price, coupon_available in new_user_list:
             f.write(f"{user_id}/{coupon_price}/{coupon_available}\n")
 
+def apply_coupon(user_id,people):
+    coupon=get_user_coupon(user_id)
+    if coupon_exist() < 0:
+        print("적용 가능한 쿠폰이 없습니다.")      
+    else:
+        while True:
+            choice = input()
+            if choice.isdigit():      
+                while True:
+                    print("결제금액 : "+str(10000*people)+"원")
+                    print("적용쿠폰 : "+str(coupon)+"원 할인 쿠폰")
+                    print("----------------")
+                    print("총 결제금액 : "+str(10000*people-coupon)+"원\n")
+                    print("※ (최종 결제를 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+                    print("1.결제진행하기")
+                    print("2.돌아가기\n")
+                    print("입력 : ")
+                    choice=input()
+                    if choice.isdigit():
+                        if int(choice)==1:
+                            print("\n결제 금액 : "+str(10000*people-coupon)+"원")
+                            print("성공적으로 예매가 완료되었습니다.\n")
+                            change_coupon_available(user_id)
+                            break
+                        elif int(choice) == 2:
+                            print("\n쿠폰 적용 메뉴로 돌아갑니다.\n")
+                            break
+                    else:
+                        print("다시 입력해주세요.\n")   
+                break
+            else:
+                print("다시 입력해주세요\n")          
+    
