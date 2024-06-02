@@ -332,18 +332,13 @@ def print_change_reservation_menu(user_id) :
     # (추가)예매 번호로 티켓에서 예매한 영화의 좌석을 가져오는 코드 : 현재 코드는 임시 : 추가 함수로 대체
 
     target_ticket_list = []
-    ticket_list2 = data.get_ticket_list2()
-    for ticket in ticket_list2:
+    for ticket in ticket_list:
         if ticket[1] == choice:
             target_ticket_list.append(ticket)
             before_cost = before_cost + int(ticket[4])
 
-    target_reservation_list = []
-    reservation_list2 = data.get_reservation_list2()  # 기존 예약 리스트 읽어옴
-
-    for reservation in reservation_list2:
+    for reservation in reservation_list:
         if reservation[0] == choice:  # 해당 reservation 찾음
-            target_reservation_list.append(reservation)
             coupon_price = int(reservation[4])
             break
 
@@ -351,4 +346,4 @@ def print_change_reservation_menu(user_id) :
 
     # 결제 부분 추가 후 예매한 가격을 가져오는 코드
     cancel_reservation(choice, ticket_list)  # 변경을 위한 예매 취소
-    reserve.reserve_change(user_id, choice, schedule_id, before_cost, coupon_price) # 취소 후 좌석을 기준으로 예매 변경하기
+    reserve.reserve_change(user_id, schedule_id, before_cost, coupon_price) # 취소 후 좌석을 기준으로 예매 변경하기

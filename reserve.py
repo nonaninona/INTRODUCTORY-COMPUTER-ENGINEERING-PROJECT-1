@@ -419,7 +419,7 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
         data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id), str(10000))
         ticket_id = ticket_id + 1
 
-def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, coupon_price):
+def reserve_change(user_id, schedule_id, before_cost, coupon_price):
 
     # (추가)상영 스케쥴 출력
     schedule_list = data.get_schedule_list()
