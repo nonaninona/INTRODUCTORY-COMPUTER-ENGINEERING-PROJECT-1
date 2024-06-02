@@ -129,26 +129,11 @@ def print_coupon_menu(coupon, people, user_id):
             
     elif int(choice)==2:
         while True:
-            print("결제금액 : " + str(10000*int(people)) + "원")
-            print("————————")
+            print("쿠폰 미적용 시 금액은 다음과 같습니다.")
             print("총 결제금액 : " + str(10000*int(people)) + "원\n")
-            print("※ (최종 결제를 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
-            print("1.결제진행하기")
-            print("2.돌아가기\n")
-            choice = input("입력 : ")
-            if not choice.isdigit():
-                print("다시 입력해주세요.\n") 
-            else:
-                break
 
-        if int(choice)==1:
-            print("\n결제 금액 : " + str(10000*int(people)) + "원")
             print("성공적으로 예매가 완료되었습니다.\n")
             return 0
-        elif int(choice) == 2:
-            print("\n쿠폰 적용 메뉴로 돌아갑니다.\n")
-            return print_coupon_menu(coupon, people, user_id)
-
 
 """"
 
