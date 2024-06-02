@@ -220,8 +220,8 @@ def if_seat_full(table, id):
                 return True
     return False
 
-def get_theater(theater_id, theather_list):
-    for theater in theather_list:
+def get_theater(theater_id, theater_list):
+    for theater in theater_list:
         if theater[0] == theater_id:
             return theater
 
