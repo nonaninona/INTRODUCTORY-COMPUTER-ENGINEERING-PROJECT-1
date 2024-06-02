@@ -253,7 +253,6 @@ def sort_tickets(tickets, seat_list):
 
 
 def get_ticket_reservation_map(tickets, reservation_list):
-    print(tickets)
     ret = []
     for i in range(25):
         ret.append('O')
@@ -367,7 +366,7 @@ def make_reservation(reservation_list, user_id, people):
     else:
         max = 0
         for reservation in reservation_list:
-            (id, reserver_id, people, is_canceled, coupon_price) = reservation
+            (id, reserver_id, people2, is_canceled, coupon_price) = reservation
             if max < int(id):
                 max = int(id)
         reservation_id = max + 1
@@ -468,7 +467,7 @@ def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, co
 
     # 결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
     after_cost = int(people) * 10000
-    cost_diff = int(after_cost) - (int(before_cost) - int(coupon_price))
+    cost_diff = int(after_cost) - int(before_cost)
 
     # 계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
     check_resume(before_cost, after_cost, coupon_price, cost_diff)
