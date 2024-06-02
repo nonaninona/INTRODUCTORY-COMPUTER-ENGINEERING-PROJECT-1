@@ -417,3 +417,59 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     for seat_id in seat_ids:
         data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id))
         ticket_id = ticket_id + 1
+
+def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost):
+
+    # (추가)상영 스케쥴 출력
+    schedule_list = data.get_schedule_list()
+    # schedule_list = sort_schedule(schedule_list, date_time)
+    [movie_list, theater_list, seat_list, ticket_list, reservation_list] = get_lists()
+
+    table = get_schedule_table(schedule_list, movie_list, theater_list, seat_list, ticket_list, reservation_list)
+
+    schedule = get_schedule(schedule_id, schedule_list)
+    tickets = get_tickets(schedule, seat_list, ticket_list)
+    seats = get_ticket_reservation_map(tickets, reservation_list)
+    ###
+
+    # 좌석을 가져온 후 좌석 출력 코드
+    print_seats(seats)
+
+    # 예약 인원 입력 부분
+    while True:
+        print("예약인원수를 입력해주세요")
+        choice = input("예약인원수 입력: ")
+        if validate_seat_choice(choice):  # 문법이 맞은 경우
+            if check_maximum_inline(choice, seats):
+                break
+            else:  # 예약인원수를 만족하는 연속으로 배치된 좌석이 부족
+                print("예약인원수를 만족하는 연속으로 배치된 좌석이 부족합니다.")
+        else:
+            print("예약인원수는 1~5 사이 숫자로 이루어진 길이가 1인 문자열입니다.")
+
+    people = choice # 예약 인원
+    after_cost = 0
+
+    # 좌석 번호 선택 부분
+    while True:
+        print("예매할 좌석번호를 입력해주세요")
+        print("(좌석번호를 기준으로 오른쪽 방향으로 예약인원수 만큼 예매를 진행합니다.)")
+        choice = input("좌석번호 입력: ")
+        if validate_seat_number(choice):  # 문법이 맞은 경우
+            if check_seat_available(choice, seats, people):  # 오른쪽으로 예약인원수만큼 부족하거나 이미 예약된 좌석인 경우
+                break
+            else:
+                print("예약이 불가능한 좌석입니다.")
+        else:  # 문법 규칙에 부합하지 않는 경우
+            print("올바른 좌석번호를 입력해 주시기 바랍니다.")
+
+
+    # (추가)결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
+
+    # (추가)계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
+
+
+    # 결제 후 예약하기 부분
+    reservation_id = make_reservation(reservation_list, user_id, people)
+    add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
+    print("예매가 완료되었습니다")

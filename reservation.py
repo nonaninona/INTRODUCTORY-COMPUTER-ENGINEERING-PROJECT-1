@@ -291,3 +291,60 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
             f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}\n")
 
     return True
+
+
+# 영화 예매 변경 함수
+def print_change_reservation_menu(user_id) :
+
+    # 예매내역 출력을 위한 데이터 불러오기
+    reservation_list = data.get_reservation_list()
+    ticket_list = data.get_ticket_list()
+    movie_list = data.get_movie_list()
+    theater_list = data.get_theater_list()
+    seat_list = data.get_seat_list()
+    schedule_list = data.get_schedule_list()
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list,
+                                                   seat_list, schedule_list)
+
+    # 예매내역 출력
+    print_reservation_table(reservation_table)
+
+    # 예매 변경을 위한 예매 아이디 추출
+    reservation_id_list = [reservation[0] for reservation in reservation_table]
+
+    while True:
+        print("예매변경할 예매아이디를 입력해주세요")
+        choice = input("예매아이디 입력: ")
+
+        if not validate_cancel_syntax(choice):  # 문법 규칙 위배
+            print("올바른 예매아이디를 입력해 주시기 바랍니다.")
+        elif not validate_cancel_semantics(choice, reservation_id_list):  # 의미 규칙 위배 (없는 아이디)
+            print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
+        else:
+            break
+
+    before_cost = 0 # 변경 전 총 가격
+
+    # (추가)예매 번호로 티켓에서 예매한 영화의 좌석을 가져오는 코드 : 현재 코드는 임시 : 추가 함수로 대체
+
+    target_ticket_list = []
+    ticket_list = data.get_ticket_list2()
+    for ticket in ticket_list:
+        if ticket[1] == choice:
+            target_ticket_list.append(ticket)
+            before_cost = before_cost + ticket[4]
+
+    target_reservation_list = []
+    reservation_list = data.get_reservation_list2()  # 기존 예약 리스트 읽어옴
+
+    for reservation in reservation_list:
+        if reservation[0] == choice:  # 해당 reservation 찾음
+            target_reservation_list.append(reservation)
+            before_cost = before_cost - reservation[4]
+            break
+
+    schedule_id = target_ticket_list[0][3]
+
+    # 결제 부분 추가 후 예매한 가격을 가져오는 코드
+    cancel_reservation(choice, ticket_list)  # 변경을 위한 예매 취소
+    reserve.reserve_change(user_id, choice, schedule_id, before_cost) # 취소 후 좌석을 기준으로 예매 변경하기
