@@ -186,18 +186,21 @@ def change_coupon(user_id, price, available):
 def change_coupon_available(user_id):
     # 쿠폰유효여부변경 O => X or X => O를 수행
     new_available = ""
+    user_coupon = ""
     for user in data.get_user_list():
         if user[0] == user_id:
             if user[2].strip() == 'O':
                 new_available = 'X'
+                user_coupon = user[1]
                 break
             elif user[2].strip() == 'X':
                 new_available = 'O'
+                user_coupon = user[1]
                 break
             else:
                 print("[change_coupon_available] 잘못된 쿠폰유효여부가 들어있습니다.")
                 exit()
-    user_coupon = get_user_coupon(user_id)
+    print(user_coupon)
     delete_user(user_id)
     data.add_user(user_id, user_coupon, new_available)
 
