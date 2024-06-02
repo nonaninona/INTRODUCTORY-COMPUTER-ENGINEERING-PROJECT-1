@@ -88,7 +88,7 @@ def pay_prompt(user_id,people,exist):
         print("성공적으로 예매가 완료되었습니다.\n")
         return 0
     
-    print_coupon_menu(coupon, people, user_id)
+    return print_coupon_menu(coupon, people, user_id)
 
 
 def print_coupon_menu(coupon, people, user_id):
