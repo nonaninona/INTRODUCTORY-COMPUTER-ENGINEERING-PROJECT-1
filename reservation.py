@@ -2,6 +2,7 @@ import sys
 import data
 import reserve
 import moviesystem
+import coupon
 
 """
 
@@ -22,8 +23,9 @@ def print_reserve_menu(user_id, date_time):
         print("[메인 메뉴] 실행할 메뉴를 선택하세요.")
         print("1. 영화예매하기")
         print("2. 영화조회하기")
-        print("3. 로그아웃")
-        print("4. 종료하기")
+        print("3. 나의 쿠폰 확인하기")
+        print("4. 로그아웃")
+        print("5. 종료하기")
         choice = input("입력: ")
 
         if not validate_main_syntax(choice):  # 문법 규칙 위배
@@ -35,9 +37,12 @@ def print_reserve_menu(user_id, date_time):
                 print("영화 조회")
                 print_check_reservation_menu(user_id)
             elif int(choice) == 3:
+                print("나의 쿠폰 조회")
+                coupon.print_my_coupon(user_id)
+            elif int(choice) == 4:
                 print("로그아웃이 완료되었습니다.")
                 break
-            elif int(choice) == 4:
+            elif int(choice) == 5:
                 print("프로그램을 종료합니다.")
                 sys.exit(0)
             else:  # 비정상 입력
@@ -75,6 +80,7 @@ def print_check_reservation_menu(user_id):
             if int(choice) == 1:
                 print("예매 취소")
                 print_cancel_reservation_menu(user_id)
+                
                 break
             elif int(choice) == 2:
                 print_change_reservation_menu(user_id)
@@ -114,7 +120,7 @@ def print_cancel_reservation_menu(user_id):
         else:
             break
 
-    cancel_reservation(choice, ticket_list)
+    cancel_reservation(user_id,choice, ticket_list)
     print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
 
 
@@ -256,7 +262,7 @@ def validate_main_syntax(choice):
     # 문법 규칙 검증
     if not choice.isdigit():
         return False
-    if (int(choice) < 1 or int(choice) > 4) or len(choice) != 1:
+    if (int(choice) < 1 or int(choice) > 5) or len(choice) != 1:
         return False
     return True
 
@@ -270,7 +276,7 @@ def validate_choice_syntax(choice):
     return True
 
 
-def cancel_reservation(choosed_reservation_id, ticket_list):
+def cancel_reservation(user_id,choosed_reservation_id, ticket_list):
     reservation_list = data.get_reservation_list()  # 기존 예약 리스트 읽어옴
 
     for reservation in reservation_list:
@@ -288,7 +294,7 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
     for ticket in ticket_list:
         if ticket[1] != choosed_reservation_id:
             modified_ticket_list.append(ticket)
-
+    coupon.change_coupon_available(user_id)
     # 수정된 내용을 파일에 기록
     with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
         for ticket in modified_ticket_list:
