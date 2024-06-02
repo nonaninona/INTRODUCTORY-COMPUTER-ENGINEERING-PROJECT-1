@@ -354,5 +354,5 @@ def print_change_reservation_menu(user_id) :
 
     # 결제 부분 추가 후 예매한 가격을 가져오는 코드
     # TODO: 인자에 예약아이디 추가해야 함
-    cancel_reservation(choice, choice, ticket_list)  # 변경을 위한 예매 취소 
+    cancel_reservation(user_id, choice, ticket_list)  # 변경을 위한 예매 취소 
     reserve.reserve_change(user_id, schedule_id, before_cost, coupon_price) # 취소 후 좌석을 기준으로 예매 변경하기
