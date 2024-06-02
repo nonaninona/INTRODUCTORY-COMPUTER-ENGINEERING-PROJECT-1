@@ -58,9 +58,12 @@ def publish_new_coupon(user_id, date_time):
             elif last_price >= 60000 and last_price < 80000:
                 # 3000/O 쿠폰 발급
                 change_coupon(user_id, "3000", "O")
-            else:
+            elif last_price >= 80000:
                 # 5000/O 쿠폰 발급
                 change_coupon(user_id, "5000", "O")
+            else:
+                # 0/X 쿠폰 발급
+                change_coupon(user_id, "0", "X")
 
     
 def is_coupon_used(current_month, user_id):
