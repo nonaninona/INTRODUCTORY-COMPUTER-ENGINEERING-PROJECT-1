@@ -61,7 +61,7 @@ def reserve(user_id, date_time):
         else:  # 문법 규칙에 부합하지 않는 경우
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
 
-    coupon.pay_prompt(user_id, people, coupon.coupon_exit(user_id))
+    coupon.pay_prompt(user_id, people, coupon.coupon_exist(user_id))
     
     reservation_id = make_reservation(reservation_list, user_id, people, 1000)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)

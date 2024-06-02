@@ -12,7 +12,7 @@ def print_my_coupon(user_id):
     # 유효성 검사
     result = get_user_coupon(user_id)
     if result != -1: # 쿠폰 있는 경우
-        print("쿠폰 : %d원 할인 쿠폰" %result)
+        print("쿠폰 : "+result+"원 할인 쿠폰")
         print("사용 가능 유무 : O")
     else: # 쿠폰 없는 경우 (임의로 작성)
         print("사용 가능한 쿠폰이 없습니다.")
@@ -20,10 +20,10 @@ def print_my_coupon(user_id):
 
 def publish_new_coupon(user_id, date_time):
     # 현재 날짜에서 월/일 저장
-    current_month = int(date_time[4:6])
-    current_date = int(date_time[6:8])
+    current_month = date_time[4:6]
+    current_date = date_time[6:8]
     # 현재 날짜가 16일 이상인 경우 쿠폰유효여부 변경
-    if current_date >= 16:
+    if int(current_date) >= 16:
         change_coupon_unavailable(user_id)
         return
     
@@ -39,13 +39,13 @@ def publish_new_coupon(user_id, date_time):
             return
         
         # 2. 지난달 실적 확인
-        prev_month = 0
-        if current_month > 1: # 1월이 아닌 경우
-            prev_month = current_month - 1
+        prev_month = ""
+        if int(current_month) > 1: # 1월이 아닌 경우
+            prev_month = str(int(current_month) - 1)
         else: #1월인 경우
-            prev_month = 12
-        last_reservation = data.get_month_reservation_list(prev_month)
-        if last_reservation.length == 0:
+            prev_month = str(12)
+        last_reservation = data.get_month_reservation_list(prev_month, user_id)
+        if last_reservation == []:
             # 0/X 쿠폰 발급
             change_coupon(user_id, "0", "X")
         else:
@@ -75,9 +75,10 @@ def is_coupon_used(current_month, user_id):
     return False
 
 def pay_prompt(user_id,people,exist):
+    people = int(people)
     coupon=get_user_coupon(user_id)
     print("결제하실 금액은 다음과 같습니다")
-    print("결제 금액 : %d원\n" %10000*people) # 10000 * 인원수
+    print("결제 금액 : %d원\n" %(10000*people)) # 10000 * 인원수
     print("[나의 쿠폰 목록]\n")
     if exist==False:
         print("적용 가능한 쿠폰이 없습니다.")
@@ -89,7 +90,7 @@ def pay_prompt(user_id,people,exist):
 
     else:
         #쿠폰 있을 때
-        print(str(coupon)+"원 할인쿠폰\n")
+        print(coupon+"원 할인쿠폰\n")
         print("※ (쿠폰을 적용하시려면 '1', 적용하지 않으시려면 '2'를 입력해주세요)")
         print("1. 쿠폰 적용하기\n2. 쿠폰 적용없이 결제하기")
         while True:
@@ -98,16 +99,16 @@ def pay_prompt(user_id,people,exist):
                 if int(choice)==1:
                     while True:
                         print("결제금액 : "+str(10000*people)+"원")
-                        print("적용쿠폰 : "+str(coupon)+"원 할인 쿠폰")
+                        print("적용쿠폰 : "+coupon+"원 할인 쿠폰")
                         print("----------------")
-                        print("총 결제금액 : "+str(10000*people-coupon)+"원\n")
+                        print("총 결제금액 : "+str(10000*people-int(coupon))+"원\n")
                         print("※ (최종 결제를 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
                         print("1.결제진행하기")
                         print("2.돌아가기\n")
                         choice=input("입력 : ")
                         if choice.isdigit():
                             if int(choice)==1:
-                                print("\n결제 금액 : "+str(10000*people-coupon)+"원")
+                                print("\n결제 금액 : "+str(10000*people-int(coupon))+"원")
                                 print("성공적으로 예매가 완료되었습니다.\n")
                                 change_coupon_available(user_id)
                                 return get_user_coupon(user_id)
@@ -160,6 +161,7 @@ def get_user_coupon(user_id):
     # 사용자 리스트에서 해당 id에 대한 쿠폰을 조회 / 유효한 쿠폰이면 쿠폰값을 반환, 아니라면 오류 메시지 출력 후 -1 반환
     for user in data.get_user_list():
         if user[0] == user_id:
+            print(user[2])
             if user[2] == "O":
                 return user[1]
             else:
@@ -170,7 +172,7 @@ def get_user_coupon(user_id):
 
 
 def coupon_exist(user_id):
-    if get_user_coupon(user_id) < 0:
+    if int(get_user_coupon(user_id)) < 0:
         return False
     else: return True
 
@@ -186,7 +188,7 @@ def change_coupon_available(user_id):
     new_available = ""
     for user in data.get_user_list():
         if user[0] == user_id:
-            if user[2].strip() == '0':
+            if user[2].strip() == 'O':
                 new_available = 'X'
                 break
             elif user[2].strip() == 'X':
@@ -195,14 +197,16 @@ def change_coupon_available(user_id):
             else:
                 print("[change_coupon_available] 잘못된 쿠폰유효여부가 들어있습니다.")
                 exit()
+    user_coupon = get_user_coupon(user_id)
     delete_user(user_id)
-    data.add_user(user_id, get_user_coupon(user_id), new_available)
+    data.add_user(user_id, user_coupon, new_available)
 
 
 def change_coupon_unavailable(user_id):
     # 쿠폰유효여부를 X로 변경
+    user_coupon = get_user_coupon(user_id)
     delete_user(user_id)
-    data.add_user(user_id, get_user_coupon(user_id), "X")
+    data.add_user(user_id, user_coupon, "X")
 
 
 def get_used_coupon(type, id):

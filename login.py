@@ -188,6 +188,6 @@ def is_user_id_exist(user_id):
 
 
 def add_user(user_id):
-    data.add_user(user_id)
+    data.add_user(user_id, '0', 'X') # 초기화
     # with open('user.txt', 'a', encoding='utf-8') as file:
     #     file.write(f"{user_id}/{password}\n")
