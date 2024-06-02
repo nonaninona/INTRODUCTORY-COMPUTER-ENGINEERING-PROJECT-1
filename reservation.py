@@ -78,6 +78,7 @@ def print_check_reservation_menu(user_id):
                 break
             elif int(choice) == 2:
                 print_change_reservation_menu(user_id)
+                break
             elif int(choice) == 3:
                 print("메인메뉴로 돌아갑니다.")
                 break

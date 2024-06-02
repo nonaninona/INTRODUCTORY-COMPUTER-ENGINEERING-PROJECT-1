@@ -258,7 +258,7 @@ def get_ticket_reservation_map(tickets, reservation_list):
         ret.append('O')
 
     for ticket in tickets:
-        (id, reservation_id, seat_id, schedule_id, coupon_price, seat) = ticket
+        (id, reservation_id, seat_id, schedule_id, ticket_price, seat) = ticket
         row = seat[0]
         row = (ord(row) - ord('A')) * 5
         column = int(seat[1])
