@@ -49,14 +49,6 @@ def get_ticket_list():
     return ticket_list
 
 
-def get_ticket_list2():  # chrin2 // 0 : 티켓아이디 1:예매아이디 2:좌석아이디 3:시간표아이디 4:티켓가격
-    ticket_list = []
-    file = file_r("ticket.txt")
-    for ticket_id, reservation_id, seat_id, timetable_id, ticket_price in file:
-        ticket_list.append([ticket_id, reservation_id, seat_id, timetable_id, ticket_price])
-    return ticket_list
-
-
 # reservation
 def add_reservation(reservation_id, user_id, num, cancel, coupon_price):
     file_a("reservation.txt", reservation_id + '/' + user_id + '/' + num + '/' + cancel + '/' + coupon_price + '\n')
@@ -67,14 +59,6 @@ def get_reservation_list():
     return ticket_list
 
 
-def get_reservation_list2():  # chrin2 // 0 : 예매아이디 1:예약자아이디 2: 예약인원수 3: 예약취소여부 4: 적용쿠폰가격
-    reservation_list = []
-    file = file_r("reservation.txt")
-    for reservation_id, user_id, num, cancel, coupon_price in file:
-        reservation_list.append([reservation_id, user_id, num, cancel, coupon_price])
-    return reservation_list
-
-
 # user
 def add_user(user_id, coupon_price, coupon_available):
     file_a("user.txt", user_id + '/' + coupon_price + '/' + coupon_available + '\n')
@@ -82,14 +66,6 @@ def add_user(user_id, coupon_price, coupon_available):
 
 def get_user_list():
     user_list = file_r("user.txt")
-    return user_list
-
-
-def get_user_list2():  # chrin2 //0 : user_id, 1 :  coupon_price, 2 : coupon_available
-    user_list = []
-    file = file_r("user.txt")
-    for user_id, coupon_price, coupon_available in file:
-        user_list.append([user_id, coupon_price, coupon_available])
     return user_list
 
 
@@ -112,6 +88,31 @@ def get_seat_from_ticket(reservation_id):
     for _, reservation_id_in_t, seat_id_in_t, schedule_id_in_t, _ in ticket_list:
         if reservation_id_in_t == reservation_id:
             return seat_id_in_t
+
+
+def get_last_reservation_list(month, user_id):
+    # user_id를 통해 지난달 사용자의 예매내역(reservation)을 출력하는 함수
+    last_reservation_list = []
+    if month == '12':
+        last_month = '11'
+    else:
+        last_month = str(int(month)-1)
+    print("[last_total_amount] 지난 달 : " + last_month)
+
+    # reservation 0 예매아이디 / 1 예약자아이디 / 2 예약인원수 / 3 예약취소여부 / 4 적용쿠폰가격(개행)
+    # ticket 0 티켓아이디 / 1 예매아이디 / 2 좌석아이디 / 3 시간표아이디 / 4 티켓가격(개행)
+    # schedule 0 시간표아이디 / 1 상영관아이디 / 2 영화아이디 / 3 날짜 / 4 시간(개행)
+
+    for reservation in get_reservation_list():
+        if reservation[1] == user_id and reservation[3] == 'X':  # 사용자 id가 같고, 예약취소여부가 X인 것
+            for ticket in get_ticket_list():
+                if ticket[1] == reservation[0]:
+                    for schedule in get_schedule_list():
+                        if schedule[0] == ticket[3] and schedule[3][4:6] == last_month:
+                            last_reservation_list.append(reservation)
+
+    print(last_reservation_list)
+    return last_reservation_list
 
 
 def file_a(path, content):
