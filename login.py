@@ -171,7 +171,7 @@ def is_user_id_exist(user_id):
     found = False
     # user.txt 무결성 검사 진행 to do
     user_list = data.get_user_list()
-    for (user_id1,) in user_list:
+    for user_id1, _, _ in user_list:
         if str(user_id1).strip() == str(user_id).strip():
             found = True
             break
