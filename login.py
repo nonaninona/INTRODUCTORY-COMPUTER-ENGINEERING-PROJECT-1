@@ -3,6 +3,7 @@ import administrator
 import reservation
 import data
 import sys
+import coupon
 
 
 # import data
@@ -60,6 +61,7 @@ def movie_theater_menu(date_time):
             if choice == 1:
                 print("로그인을 시작합니다.")
                 user_id = login()
+                coupon.publish_new_coupon(user_id, date_time)
                 reservation.print_reserve_menu(user_id, date_time)
             elif choice == 2:
                 print("관리자 모드를 시작합니다.")

@@ -2,6 +2,9 @@ import data
 
 """"
 print_my_coupon(user_id) : 해당 유저의 쿠폰 출력
+
+publish_new_coupon(user_id) : login 시 유저에게 해당하는 쿠폰 발급
+
 """
 
 def print_my_coupon(user_id):
@@ -13,6 +16,28 @@ def print_my_coupon(user_id):
         print("사용 가능 유무 : O")
     else: # 쿠폰 없는 경우 (임의로 작성)
         print("사용 가능한 쿠폰이 없습니다.")
+
+
+def publish_new_coupon(user_id, date_time):
+    # 현재 날짜 확인
+    current_month = int(date_time[4:6])
+    prev_month = 0
+    if current_month > 1: # 1월이 아닌 경우
+        prev_month = date_time - 1
+    else: #1월인 경우
+        prev_month = 12
+    reservation_list = data.get_reservation_list2() # 전체 resrvation list
+    ticket_list = data.get_ticket_list2() # 전체 ticket list
+
+    # TODO: user_id를 통해 지난달의 예매 내역 가져오기
+    # for r in reservation_list:
+    #     if r[1] == user_id: # 해당하는 유저의 경우
+    #         for t in ticket_list:
+    #             if t[1] == r[0]: # 해당하는 티켓의 경우
+    #                 schedule_list = data.get_schedule_list()
+    #         # 지난달 예매 누적액 계산 후 분기처리
+    #     else:
+    #         continue
     
 
 """"
