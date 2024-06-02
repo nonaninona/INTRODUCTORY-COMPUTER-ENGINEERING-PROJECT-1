@@ -374,7 +374,7 @@ def update_cinema():
                     # seat.txt 정보 업데이트
                     update_seat_layout(cinema_id, seat_layout)
                     print("정상적으로 수정되었습니다.")
-                    break
+                    return
 
                 except ValueError:
                     print("[오류] 올바른 형식으로 입력해주세요.")
