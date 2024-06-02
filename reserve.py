@@ -347,6 +347,9 @@ def check_maximum_inline(choice, seats):
 
 
 def validate_seat_number(choice):
+    if len(choice) != 2:
+        return False
+
     row = choice[0]
     column = choice[1]
 
