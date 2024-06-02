@@ -280,7 +280,7 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
     # 수정된 내용을 파일에 기록
     with open("data/" + "reservation.txt", 'w', encoding='utf-8') as f:
         for reservation in reservation_list:
-            f.write(f"{reservation[0]}/{reservation[1]}/{reservation[2]}/{reservation[3]}\n")
+            f.write(f"{reservation[0]}/{reservation[1]}/{reservation[2]}/{reservation[3]}/{reservation[4]}\n")
 
     # 해당 reservation에 해당하는 ticket을 ticket_list에서 찾아 ticket에서 삭제
     modified_ticket_list = []
@@ -291,7 +291,7 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
     # 수정된 내용을 파일에 기록
     with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
         for ticket in modified_ticket_list:
-            f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}\n")
+            f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}/{ticket[4]}\n")
 
     return True
 
@@ -336,7 +336,7 @@ def print_change_reservation_menu(user_id) :
     for ticket in ticket_list:
         if ticket[1] == choice:
             target_ticket_list.append(ticket)
-            before_cost = before_cost + ticket[4]
+            before_cost = before_cost + int(ticket[4])
 
     target_reservation_list = []
     reservation_list = data.get_reservation_list2()  # 기존 예약 리스트 읽어옴
@@ -344,7 +344,7 @@ def print_change_reservation_menu(user_id) :
     for reservation in reservation_list:
         if reservation[0] == choice:  # 해당 reservation 찾음
             target_reservation_list.append(reservation)
-            coupon_price = reservation[4]
+            coupon_price = int(reservation[4])
             break
 
     schedule_id = target_ticket_list[0][3]

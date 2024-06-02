@@ -253,12 +253,13 @@ def sort_tickets(tickets, seat_list):
 
 
 def get_ticket_reservation_map(tickets, reservation_list):
+    print(tickets)
     ret = []
     for i in range(25):
         ret.append('O')
 
     for ticket in tickets:
-        (id, reservation_id, seat_id, schedule_id, seat) = ticket
+        (id, reservation_id, seat_id, schedule_id, coupon_price, seat) = ticket
         row = seat[0]
         row = (ord(row) - ord('A')) * 5
         column = int(seat[1])
@@ -366,12 +367,13 @@ def make_reservation(reservation_list, user_id, people):
     else:
         max = 0
         for reservation in reservation_list:
-            (id, reserver_id, people, is_canceled) = reservation
+            (id, reserver_id, people, is_canceled, coupon_price) = reservation
             if max < int(id):
                 max = int(id)
         reservation_id = max + 1
 
-    data.add_reservation(str(reservation_id), str(user_id), str(people), 'X')
+    #coupon price 변경 필요
+    data.add_reservation(str(reservation_id), str(user_id), str(people), 'X', str(1000))
 
     return reservation_id
 
@@ -406,7 +408,7 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     else:
         max = 0
         for ticket in ticket_list:
-            (id, r_id, seat_id, s_id) = ticket
+            (id, r_id, seat_id, s_id, ticket_price) = ticket
             if max < int(id):
                 max = int(id)
         ticket_id = max + 1
@@ -415,7 +417,7 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
 
     # ticket 생성
     for seat_id in seat_ids:
-        data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id))
+        data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id), str(10000))
         ticket_id = ticket_id + 1
 
 def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, coupon_price):
@@ -465,11 +467,11 @@ def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, co
 
 
     # 결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
-    after_cost = people * 10000
-    cost_diff = after_cost - (before_cost - coupon_price)
+    after_cost = int(people) * 10000
+    cost_diff = int(after_cost) - (int(before_cost) - int(coupon_price))
 
     # 계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
-    check_resume()
+    check_resume(before_cost, after_cost, coupon_price, cost_diff)
 
     # 결제 후 예약하기 부분
     reservation_id = make_reservation(reservation_list, user_id, people)
