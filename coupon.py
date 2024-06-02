@@ -65,6 +65,16 @@ def is_coupon_used(current_month, user_id):
 data
 
 """
+
+def get_coupon_available(user_id):
+    # 해당 사용자의 쿠폰유효여부를 조회
+    for user in data.get_user_list():
+        if user[0] == user_id:
+            return user[2]
+    print("[get_coupon_available] 일치하는 예약자아이디가 없습니다")
+    return -1
+
+
 def get_user_coupon(user_id):
     # 사용자 리스트에서 해당 id에 대한 쿠폰을 조회 / 유효한 쿠폰이면 쿠폰값을 반환, 아니라면 오류 메시지 출력 후 -1 반환
     for user in data.get_user_list():
@@ -74,8 +84,7 @@ def get_user_coupon(user_id):
             else:
                 print("[get_user_coupon] 쿠폰이 유효하지 않습니다.")
                 return -1
-
-    print("[get_user_coupon] 일치하는 사용자아이디가 없습니다.")
+    print("[get_user_coupon] 일치하는 예약자아이디가 없습니다.")
     return -1
 
 
@@ -124,8 +133,8 @@ def delete_user(user_id):
     new_user_list = [user for user in data.get_user_list() if user[0] != user_id]
 
     with open("data/" + "user.txt", 'w', encoding='utf-8') as f:
-        for user_id, coupon_price, coupon_available in new_user_list:
-            f.write(f"{user_id}/{coupon_price}/{coupon_available}\n")
+        for new_user in new_user_list:
+            f.write(f"{new_user[0]}/{new_user[1]}/{new_user[2]}\n")
 
 def apply_coupon(user_id,people):
     coupon=get_user_coupon(user_id)

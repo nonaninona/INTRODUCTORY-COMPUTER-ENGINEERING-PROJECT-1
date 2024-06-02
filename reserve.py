@@ -59,28 +59,7 @@ def reserve(user_id, date_time):
         else:  # 문법 규칙에 부합하지 않는 경우
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
 
-    while True:
-        print("결제하실 금액은 다음과 같습니다")
-        print("결제 금액 : %d원\n" %10000*people) # 10000 * 인원수
-        print("[나의 쿠폰 목록]\n")
-        # TODO: 쿠폰 목록들 모두 가져오기
-        print("※ (쿠폰을 적용하시려면 '1', 적용하지 않으시려면 '2'를 입력해주세요)")
-        print("1. 쿠폰 적용하기\n2. 쿠폰 적용없이 결제하기")
-        coupon_choice = input("입력: ")
-        # TODO: coupon_choice 유효성 검증 잘 되었는지 확인 필요
-        if validate_input(coupon_choice): # 문법이 맞은 경우
-            # TODO: 쿠폰 없는 경우 처리 필요
-            if coupon_choice == '1':
-                print("쿠폰 적용 로직 추가")
-            elif coupon_choice == '2':
-                print('쿠폰 미적용 로직 추가')
-            else: # 문법은 맞았지만 1, 2 외의 숫자를 입력한 경우
-                print("1~2 사이 숫자 내에서 입력해주세요")
-        else:
-            print("1~2 사이 숫자 내에서 입력해주세요")
-        
-
-    reservation_id = make_reservation(reservation_list, user_id, people)
+    reservation_id = make_reservation(reservation_list, user_id, people, 1000)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
     print("예매가 완료되었습니다")
 
@@ -279,7 +258,7 @@ def get_ticket_reservation_map(tickets, reservation_list):
         ret.append('O')
 
     for ticket in tickets:
-        (id, reservation_id, seat_id, schedule_id, seat) = ticket
+        (id, reservation_id, seat_id, schedule_id, ticket_price, seat) = ticket
         row = seat[0]
         row = (ord(row) - ord('A')) * 5
         column = int(seat[1])
@@ -380,19 +359,20 @@ def check_seat_available(choice, seats, people):
     return True
 
 
-def make_reservation(reservation_list, user_id, people):
+def make_reservation(reservation_list, user_id, people, coupon_price):
     # reservation 추가
     if reservation_list == []:
         reservation_id = 1
     else:
         max = 0
         for reservation in reservation_list:
-            (id, reserver_id, people, is_canceled) = reservation
+            (id, reserver_id, people2, is_canceled, coupon_price2) = reservation
             if max < int(id):
                 max = int(id)
         reservation_id = max + 1
 
-    data.add_reservation(str(reservation_id), str(user_id), str(people), 'X')
+    #coupon price 변경 필요
+    data.add_reservation(str(reservation_id), str(user_id), str(people), 'X', str(coupon_price))
 
     return reservation_id
 
@@ -427,7 +407,7 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
     else:
         max = 0
         for ticket in ticket_list:
-            (id, r_id, seat_id, s_id) = ticket
+            (id, r_id, seat_id, s_id, ticket_price) = ticket
             if max < int(id):
                 max = int(id)
         ticket_id = max + 1
@@ -436,5 +416,159 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
 
     # ticket 생성
     for seat_id in seat_ids:
-        data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id))
+        data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id), str(10000))
         ticket_id = ticket_id + 1
+
+def reserve_change(user_id, schedule_id, before_cost, coupon_price):
+
+    # (추가)상영 스케쥴 출력
+    schedule_list = data.get_schedule_list()
+    # schedule_list = sort_schedule(schedule_list, date_time)
+    [movie_list, theater_list, seat_list, ticket_list, reservation_list] = get_lists()
+
+    schedule = get_schedule(schedule_id, schedule_list)
+    tickets = get_tickets(schedule, seat_list, ticket_list)
+    seats = get_ticket_reservation_map(tickets, reservation_list)
+    ###
+
+    # 좌석을 가져온 후 좌석 출력 코드
+    print_seats(seats)
+
+    # 예약 인원 입력 부분
+    while True:
+        print("예약인원수를 입력해주세요")
+        choice = input("예약인원수 입력: ")
+        if validate_seat_choice(choice):  # 문법이 맞은 경우
+            if check_maximum_inline(choice, seats):
+                break
+            else:  # 예약인원수를 만족하는 연속으로 배치된 좌석이 부족
+                print("예약인원수를 만족하는 연속으로 배치된 좌석이 부족합니다.")
+        else:
+            print("예약인원수는 1~5 사이 숫자로 이루어진 길이가 1인 문자열입니다.")
+
+    people = choice # 예약 인원
+    after_cost = 0
+
+    # 좌석 번호 선택 부분
+    while True:
+        print("예매할 좌석번호를 입력해주세요")
+        print("(좌석번호를 기준으로 오른쪽 방향으로 예약인원수 만큼 예매를 진행합니다.)")
+        choice = input("좌석번호 입력: ")
+        if validate_seat_number(choice):  # 문법이 맞은 경우
+            if check_seat_available(choice, seats, people):  # 오른쪽으로 예약인원수만큼 부족하거나 이미 예약된 좌석인 경우
+                # 결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
+                after_cost = int(people) * 10000
+                cost_diff = int(after_cost) - int(before_cost)
+
+                # 계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
+                isOver =check_resume(before_cost, after_cost, coupon_price, cost_diff)
+
+                if isOver:
+                    break
+                print_seats(seats)
+            else:
+                print("예약이 불가능한 좌석입니다.")
+        else:  # 문법 규칙에 부합하지 않는 경우
+            print("올바른 좌석번호를 입력해 주시기 바랍니다.")
+
+
+
+    # 결제 후 예약하기 부분
+    reservation_id = make_reservation(reservation_list, user_id, people, coupon_price)
+    add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
+    print("예매가 완료되었습니다")
+
+def check_resume(before_cost, after_cost, coupon_price, cost_diff):
+    if cost_diff > 0:
+        # 추가 결제
+        while True:
+            print_additional_charge_menu(before_cost, after_cost, coupon_price, cost_diff)
+            choice = input("입력 : ")
+            if validate_change_choice(choice):
+                break
+            else:
+                print("1~2 사이 숫자 내에서 입력해주세요.")
+
+        if int(choice) == 1:
+            print("예매 변경 및 추가 결제가 완료되었습니다.")
+            return True
+        elif int(choice) == 2:
+            print("좌석 선택 프롬프트로 돌아갑니다.")
+            return False
+
+    elif cost_diff < 0:
+        # 환불
+        while True:
+            print_refund_menu(before_cost, after_cost, coupon_price, cost_diff)
+            choice = input("입력 : ")
+            if validate_change_choice(choice):
+                break
+            else:
+                print("1~2 사이 숫자 내에서 입력해주세요.")
+
+        if int(choice) == 1:
+            print("예매 변경 및 환불이 완료되었습니다.")
+            return True
+        elif int(choice) == 2:
+            print("좌석 선택 프롬프트로 돌아갑니다.")
+            return False
+
+    else:
+        # 변동 없음
+        while True:
+            print_keep_menu()
+            choice = input("입력 : ")
+            if validate_change_choice(choice):
+                break
+            else:
+                print("1~2 사이 숫자 내에서 입력해주세요.")
+        
+        if int(choice) == 1:
+            print("예매 변경이 완료되었습니다.")
+            return True
+        elif int(choice) == 2:
+            print("좌석 선택 프롬프트로 돌아갑니다.")
+            return False
+
+def validate_change_choice(choice):
+    # 문법적 형식 검증
+    if len(choice) != 1 or not choice.isdigit():
+        # print("validate_date_syntax error")
+        return False
+    if int(choice) < 1 or int(choice) > 2:
+        return False
+    return True
+
+def print_additional_charge_menu(before_cost, after_cost, coupon_price, cost_diff):
+    print("변경한 좌석에 대한 결제를 진행합니다.")
+    print("**예매 변경**")
+    print("------------")
+    print("기존 결제 금액 : ", before_cost, "원")
+    print("변경된 결제 금액 : ", after_cost, "원")
+    if coupon_price > 0:
+        print("적용 쿠폰 목록 : ", coupon_price, "원 할인 쿠폰")
+    print("")
+    print("추가 결제 금액 : ", cost_diff, "원")
+    print("※ (예매 변경을 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+    print("1. 예매 변경하기")
+    print("2. 돌아가기")
+
+def print_refund_menu(before_cost, after_cost, coupon_price, cost_diff):
+    print("변경한 좌석에 대한 환불을 진행합니다.")
+    print("**예매 변경**")
+    print("------------")
+    print("기존 결제 금액 : ", before_cost, "원")
+    print("변경된 결제 금액 : ", after_cost, "원")
+    if coupon_price > 0:
+        print("적용 쿠폰 목록 : ", coupon_price, "원 할인 쿠폰")
+    print("")
+    print("환불 금액 : ", -1 * cost_diff, "원")
+    print("※ (예매 변경을 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+    print("1. 예매 변경하기")
+    print("2. 돌아가기")
+
+def print_keep_menu():
+    print("금액이 변경되지 않았습니다. 예매 변경을 완료하시겠습니까?")
+    print("※ (예매 변경을 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+    print("1. 예매 변경하기")
+    print("2. 돌아가기")
