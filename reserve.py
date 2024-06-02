@@ -59,7 +59,7 @@ def reserve(user_id, date_time):
         else:  # 문법 규칙에 부합하지 않는 경우
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
 
-    reservation_id = make_reservation(reservation_list, user_id, people)
+    reservation_id = make_reservation(reservation_list, user_id, people, 1000)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
     print("예매가 완료되었습니다")
 
@@ -359,20 +359,20 @@ def check_seat_available(choice, seats, people):
     return True
 
 
-def make_reservation(reservation_list, user_id, people):
+def make_reservation(reservation_list, user_id, people, coupon_price):
     # reservation 추가
     if reservation_list == []:
         reservation_id = 1
     else:
         max = 0
         for reservation in reservation_list:
-            (id, reserver_id, people2, is_canceled, coupon_price) = reservation
+            (id, reserver_id, people2, is_canceled, coupon_price2) = reservation
             if max < int(id):
                 max = int(id)
         reservation_id = max + 1
 
     #coupon price 변경 필요
-    data.add_reservation(str(reservation_id), str(user_id), str(people), 'X', str(1000))
+    data.add_reservation(str(reservation_id), str(user_id), str(people), 'X', str(coupon_price))
 
     return reservation_id
 
@@ -473,7 +473,7 @@ def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, co
     check_resume(before_cost, after_cost, coupon_price, cost_diff)
 
     # 결제 후 예약하기 부분
-    reservation_id = make_reservation(reservation_list, user_id, people)
+    reservation_id = make_reservation(reservation_list, user_id, people, coupon_price)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
     print("예매가 완료되었습니다")
 
