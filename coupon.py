@@ -53,6 +53,6 @@ def delete_user(user_id):
     new_user_list = [user for user in data.get_user_list() if user[0] != user_id]
 
     with open("data/" + "user.txt", 'w', encoding='utf-8') as f:
-        for user_id, coupon_price, coupon_available in new_user_list:
-            f.write(f"{user_id}/{coupon_price}/{coupon_available}\n")
+        for new_user in new_user_list:
+            f.write(f"{new_user[0]}/{new_user[1]}/{new_user[2]}\n")
 
