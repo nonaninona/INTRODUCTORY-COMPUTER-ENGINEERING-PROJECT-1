@@ -94,15 +94,9 @@ def get_seat_from_ticket(reservation_id):
     return -1
 
 
-def get_last_reservation_list(month, user_id):
-    # user_id를 통해 지난달 사용자의 예매내역(reservation)을 출력하는 함수
-    last_reservation_list = []
-    if month == '1':
-        last_month = '12'
-    else:
-        last_month = str(int(month)-1)
-    print("[last_total_amount] 지난 달 : " + last_month)
-
+def get_month_reservation_list(month, user_id):
+    # user_id를 통해 해당 달 사용자의 예매내역(reservation)을 출력하는 함수
+    month_reservation_list = []
     # reservation 0 예매아이디 / 1 예약자아이디 / 2 예약인원수 / 3 예약취소여부 / 4 적용쿠폰가격(개행)
     # ticket 0 티켓아이디 / 1 예매아이디 / 2 좌석아이디 / 3 시간표아이디 / 4 티켓가격(개행)
     # schedule 0 시간표아이디 / 1 상영관아이디 / 2 영화아이디 / 3 날짜 / 4 시간(개행)
@@ -112,11 +106,11 @@ def get_last_reservation_list(month, user_id):
             for ticket in get_ticket_list():
                 if ticket[1] == reservation[0]:
                     for schedule in get_schedule_list():
-                        if schedule[0] == ticket[3] and schedule[3][4:6] == last_month:
-                            last_reservation_list.append(reservation)
+                        if schedule[0] == ticket[3] and schedule[3][4:6] == month:
+                            month_reservation_list.append(reservation)
 
-    print(last_reservation_list)
-    return last_reservation_list
+    print(month_reservation_list)
+    return month_reservation_list
 
 
 def file_a(path, content):
