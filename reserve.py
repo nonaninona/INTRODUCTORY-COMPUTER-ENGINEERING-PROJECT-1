@@ -426,8 +426,6 @@ def reserve_change(user_id, schedule_id, before_cost, coupon_price):
     # schedule_list = sort_schedule(schedule_list, date_time)
     [movie_list, theater_list, seat_list, ticket_list, reservation_list] = get_lists()
 
-    table = get_schedule_table(schedule_list, movie_list, theater_list, seat_list, ticket_list, reservation_list)
-
     schedule = get_schedule(schedule_id, schedule_list)
     tickets = get_tickets(schedule, seat_list, ticket_list)
     seats = get_ticket_reservation_map(tickets, reservation_list)
