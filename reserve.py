@@ -458,19 +458,22 @@ def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, co
         choice = input("좌석번호 입력: ")
         if validate_seat_number(choice):  # 문법이 맞은 경우
             if check_seat_available(choice, seats, people):  # 오른쪽으로 예약인원수만큼 부족하거나 이미 예약된 좌석인 경우
-                break
+                # 결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
+                after_cost = int(people) * 10000
+                cost_diff = int(after_cost) - int(before_cost)
+
+                # 계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
+                isOver =check_resume(before_cost, after_cost, coupon_price, cost_diff)
+
+                if isOver:
+                    break
+                print_seats(seats)
             else:
                 print("예약이 불가능한 좌석입니다.")
         else:  # 문법 규칙에 부합하지 않는 경우
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
 
 
-    # 결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
-    after_cost = int(people) * 10000
-    cost_diff = int(after_cost) - int(before_cost)
-
-    # 계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
-    check_resume(before_cost, after_cost, coupon_price, cost_diff)
 
     # 결제 후 예약하기 부분
     reservation_id = make_reservation(reservation_list, user_id, people, coupon_price)
@@ -490,8 +493,10 @@ def check_resume(before_cost, after_cost, coupon_price, cost_diff):
 
         if int(choice) == 1:
             print("예매 변경 및 추가 결제가 완료되었습니다.")
+            return True
         elif int(choice) == 2:
             print("좌석 선택 프롬프트로 돌아갑니다.")
+            return False
 
     elif cost_diff < 0:
         # 환불
@@ -505,8 +510,10 @@ def check_resume(before_cost, after_cost, coupon_price, cost_diff):
 
         if int(choice) == 1:
             print("예매 변경 및 환불이 완료되었습니다.")
+            return True
         elif int(choice) == 2:
             print("좌석 선택 프롬프트로 돌아갑니다.")
+            return False
 
     else:
         # 변동 없음
@@ -520,8 +527,10 @@ def check_resume(before_cost, after_cost, coupon_price, cost_diff):
         
         if int(choice) == 1:
             print("예매 변경이 완료되었습니다.")
+            return True
         elif int(choice) == 2:
             print("좌석 선택 프롬프트로 돌아갑니다.")
+            return False
 
 def validate_change_choice(choice):
     # 문법적 형식 검증
