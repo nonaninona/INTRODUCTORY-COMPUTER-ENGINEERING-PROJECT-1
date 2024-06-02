@@ -24,14 +24,14 @@ def publish_new_coupon(user_id, date_time):
     current_date = int(date_time[6:8])
     # 현재 날짜가 16일 이상인 경우 쿠폰유효여부 변경
     if current_date >= 16:
-        # TODO: 쿠폰유효여부 X로 변경
+        change_coupon_unavailable(user_id)
         return
+    
     else: # 현재 날짜가 15일 이하인 경우
         is_used = is_coupon_used(current_month, user_id)
         if is_used == True: # 이번달에 쿠폰 사용한 경우
             return
         # 이번달에 쿠폰 사용하지 않은 경우
-        user_list = data.get_user_list()
         # 1. 쿠폰유효여부를 통해 쿠폰의 발급달 확인
         # 유효여부가 O라면 이미 쿠폰 발급되었다는 것 => 종료 // X라면 저번달 쿠폰 => 계속 진행
         coupon_available = get_coupon_available(user_id)
@@ -46,21 +46,22 @@ def publish_new_coupon(user_id, date_time):
             prev_month = 12
         last_reservation = data.get_month_reservation_list(prev_month)
         if last_reservation.length == 0:
-            # TODO: 0/X 쿠폰 발급
-            print()
+            # 0/X 쿠폰 발급
+            change_coupon(user_id, "0", "X")
         else:
             last_price = 0
             for r in last_reservation:
                 last_price += int(r[2]) * 10000
             if last_price >= 50000 and last_price < 60000:
-                # TODO: 1000/O 쿠폰 발급
-                print()
+                # 1000/O 쿠폰 발급
+                change_coupon(user_id, "1000", "O")
             elif last_price >= 60000 and last_price < 80000:
-                # TODO: 3000/O 쿠폰 발급
-                print()
+                # 3000/O 쿠폰 발급
+                change_coupon(user_id, "3000", "O")
             else:
-                # TODO: 5000/O 쿠폰 발급
-                print()
+                # 5000/O 쿠폰 발급
+                change_coupon(user_id, "5000", "O")
+
     
 def is_coupon_used(current_month, user_id):
     # 이번달의 예매내역
@@ -126,7 +127,6 @@ def pay_prompt(user_id,people,exist):
                             if int(choice)==1:
                                 print("\n결제 금액 : "+str(10000*people)+"원")
                                 print("성공적으로 예매가 완료되었습니다.\n")
-                                change_coupon_available(user_id)
                                 return 0
                             elif int(choice) == 2:
                                 print("\n쿠폰 적용 메뉴로 돌아갑니다.\n")
@@ -172,6 +172,11 @@ def coupon_exist(user_id):
     else: return True
 
 
+def change_coupon(user_id, price, available):
+    # 해당 사용자의 쿠폰가격, 쿠폰유효여부 변경
+    delete_user(user_id)
+    data.add_user(user_id, price, available)
+
 
 def change_coupon_available(user_id):
     # 쿠폰유효여부변경 O => X or X => O를 수행
@@ -189,6 +194,12 @@ def change_coupon_available(user_id):
                 exit()
     delete_user(user_id)
     data.add_user(user_id, get_user_coupon(user_id), new_available)
+
+
+def change_coupon_unavailable(user_id):
+    # 쿠폰유효여부를 X로 변경
+    delete_user(user_id)
+    data.add_user(user_id, get_user_coupon(user_id), "X")
 
 
 def get_used_coupon(type, id):
