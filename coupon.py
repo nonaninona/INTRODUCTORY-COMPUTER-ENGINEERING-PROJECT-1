@@ -82,7 +82,6 @@ def pay_prompt(user_id,people,exist):
     print("[나의 쿠폰 목록]\n")
     if exist==False:
         print("적용 가능한 쿠폰이 없습니다.")
-        print("결제금액 : "+str(10000*people)+"원")
         print("----------------")
         print("\n결제 금액 : "+str(10000*people)+"원")
         print("성공적으로 예매가 완료되었습니다.\n")
