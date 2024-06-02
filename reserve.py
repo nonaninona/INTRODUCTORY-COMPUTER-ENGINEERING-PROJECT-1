@@ -418,7 +418,7 @@ def add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, cho
         data.add_ticket(str(ticket_id), str(reservation_id), str(seat_id), str(schedule_id))
         ticket_id = ticket_id + 1
 
-def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost):
+def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost, coupon_price):
 
     # (추가)상영 스케쥴 출력
     schedule_list = data.get_schedule_list()
@@ -464,12 +464,103 @@ def reserve_change(user_id, choosed_reservation_id, schedule_id, before_cost):
             print("올바른 좌석번호를 입력해 주시기 바랍니다.")
 
 
-    # (추가)결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
+    # 결제 부분 : 매개변수 before_cost와 비교하여 결제가격을 계산
+    after_cost = people * 10000
+    cost_diff = after_cost - (before_cost - coupon_price)
 
-    # (추가)계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
-
+    # 계산한 결제 가격으로 재결재 : 같거나 낮을 시 결제 skip
+    check_resume()
 
     # 결제 후 예약하기 부분
     reservation_id = make_reservation(reservation_list, user_id, people)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
     print("예매가 완료되었습니다")
+
+def check_resume(before_cost, after_cost, coupon_price, cost_diff):
+    if cost_diff > 0:
+        # 추가 결제
+        while True:
+            print_additional_charge_menu(before_cost, after_cost, coupon_price, cost_diff)
+            choice = input("입력 : ")
+            if validate_change_choice(choice):
+                break
+            else:
+                print("1~2 사이 숫자 내에서 입력해주세요.")
+
+        if int(choice) == 1:
+            print("예매 변경 및 추가 결제가 완료되었습니다.")
+        elif int(choice) == 2:
+            print("좌석 선택 프롬프트로 돌아갑니다.")
+
+    elif cost_diff < 0:
+        # 환불
+        while True:
+            print_refund_menu(before_cost, after_cost, coupon_price, cost_diff)
+            choice = input("입력 : ")
+            if validate_change_choice(choice):
+                break
+            else:
+                print("1~2 사이 숫자 내에서 입력해주세요.")
+
+        if int(choice) == 1:
+            print("예매 변경 및 환불이 완료되었습니다.")
+        elif int(choice) == 2:
+            print("좌석 선택 프롬프트로 돌아갑니다.")
+
+    else:
+        # 변동 없음
+        while True:
+            print_keep_menu()
+            choice = input("입력 : ")
+            if validate_change_choice(choice):
+                break
+            else:
+                print("1~2 사이 숫자 내에서 입력해주세요.")
+        
+        if int(choice) == 1:
+            print("예매 변경이 완료되었습니다.")
+        elif int(choice) == 2:
+            print("좌석 선택 프롬프트로 돌아갑니다.")
+
+def validate_change_choice(choice):
+    # 문법적 형식 검증
+    if len(choice) != 1 or not choice.isdigit():
+        # print("validate_date_syntax error")
+        return False
+    if int(choice) < 1 or int(choice) > 2:
+        return False
+    return True
+
+def print_additional_charge_menu(before_cost, after_cost, coupon_price, cost_diff):
+    print("변경한 좌석에 대한 결제를 진행합니다.")
+    print("**예매 변경**")
+    print("------------")
+    print("기존 결제 금액 : ", before_cost, "원")
+    print("변경된 결제 금액 : ", after_cost, "원")
+    if coupon_price > 0:
+        print("적용 쿠폰 목록 : ", coupon_price, "원 할인 쿠폰")
+    print("")
+    print("추가 결제 금액 : ", cost_diff, "원")
+    print("※ (예매 변경을 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+    print("1. 예매 변경하기")
+    print("2. 돌아가기")
+
+def print_refund_menu(before_cost, after_cost, coupon_price, cost_diff):
+    print("변경한 좌석에 대한 환불을 진행합니다.")
+    print("**예매 변경**")
+    print("------------")
+    print("기존 결제 금액 : ", before_cost, "원")
+    print("변경된 결제 금액 : ", after_cost, "원")
+    if coupon_price > 0:
+        print("적용 쿠폰 목록 : ", coupon_price, "원 할인 쿠폰")
+    print("")
+    print("환불 금액 : ", -1 * cost_diff, "원")
+    print("※ (예매 변경을 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+    print("1. 예매 변경하기")
+    print("2. 돌아가기")
+
+def print_keep_menu():
+    print("금액이 변경되지 않았습니다. 예매 변경을 완료하시겠습니까?")
+    print("※ (예매 변경을 원하면 '1', 이전 단계로 돌아가려면 '2'을 입력해주세요.)")
+    print("1. 예매 변경하기")
+    print("2. 돌아가기")

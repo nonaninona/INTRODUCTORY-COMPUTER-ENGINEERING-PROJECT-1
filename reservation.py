@@ -324,6 +324,7 @@ def print_change_reservation_menu(user_id) :
             break
 
     before_cost = 0 # 변경 전 총 가격
+    coupon_price = 0 # 취소하는 예매의 쿠폰 가격
 
     # (추가)예매 번호로 티켓에서 예매한 영화의 좌석을 가져오는 코드 : 현재 코드는 임시 : 추가 함수로 대체
 
@@ -340,11 +341,11 @@ def print_change_reservation_menu(user_id) :
     for reservation in reservation_list:
         if reservation[0] == choice:  # 해당 reservation 찾음
             target_reservation_list.append(reservation)
-            before_cost = before_cost - reservation[4]
+            coupon_price = reservation[4]
             break
 
     schedule_id = target_ticket_list[0][3]
 
     # 결제 부분 추가 후 예매한 가격을 가져오는 코드
     cancel_reservation(choice, ticket_list)  # 변경을 위한 예매 취소
-    reserve.reserve_change(user_id, choice, schedule_id, before_cost) # 취소 후 좌석을 기준으로 예매 변경하기
+    reserve.reserve_change(user_id, choice, schedule_id, before_cost, coupon_price) # 취소 후 좌석을 기준으로 예매 변경하기
