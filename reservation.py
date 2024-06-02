@@ -65,7 +65,8 @@ def print_check_reservation_menu(user_id):
     while True:
         print("※(예매 취소를 원할 시 '1', 이전 화면으로 돌아가려면 '2'를 눌러주세요)")
         print("1. 영화 예매 취소")
-        print("2. 돌아가기")
+        print("2. 영화 예매 변경")
+        print("3. 돌아가기")
         choice = input("입력: ")
 
         if not validate_choice_syntax(choice):  # 문법 규칙 위배
@@ -76,6 +77,9 @@ def print_check_reservation_menu(user_id):
                 print_cancel_reservation_menu(user_id)
                 break
             elif int(choice) == 2:
+                print_change_reservation_menu(user_id)
+                break
+            elif int(choice) == 3:
                 print("메인메뉴로 돌아갑니다.")
                 break
 
@@ -261,7 +265,7 @@ def validate_choice_syntax(choice):
     # 문법 규칙 검증
     if not choice.isdigit():
         return False
-    if (int(choice) < 1 or int(choice) > 2) or len(choice) != 1:
+    if (int(choice) < 1 or int(choice) > 3) or len(choice) != 1:
         return False
     return True
 
@@ -277,7 +281,7 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
     # 수정된 내용을 파일에 기록
     with open("data/" + "reservation.txt", 'w', encoding='utf-8') as f:
         for reservation in reservation_list:
-            f.write(f"{reservation[0]}/{reservation[1]}/{reservation[2]}/{reservation[3]}\n")
+            f.write(f"{reservation[0]}/{reservation[1]}/{reservation[2]}/{reservation[3]}/{reservation[4]}\n")
 
     # 해당 reservation에 해당하는 ticket을 ticket_list에서 찾아 ticket에서 삭제
     modified_ticket_list = []
@@ -288,6 +292,59 @@ def cancel_reservation(choosed_reservation_id, ticket_list):
     # 수정된 내용을 파일에 기록
     with open("data/" + "ticket.txt", 'w', encoding='utf-8') as f:
         for ticket in modified_ticket_list:
-            f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}\n")
+            f.write(f"{ticket[0]}/{ticket[1]}/{ticket[2]}/{ticket[3]}/{ticket[4]}\n")
 
     return True
+
+
+# 영화 예매 변경 함수
+def print_change_reservation_menu(user_id) :
+
+    # 예매내역 출력을 위한 데이터 불러오기
+    reservation_list = data.get_reservation_list()
+    ticket_list = data.get_ticket_list()
+    movie_list = data.get_movie_list()
+    theater_list = data.get_theater_list()
+    seat_list = data.get_seat_list()
+    schedule_list = data.get_schedule_list()
+    reservation_table = get_user_reservation_table(user_id, reservation_list, ticket_list, movie_list, theater_list,
+                                                   seat_list, schedule_list)
+
+    # 예매내역 출력
+    print_reservation_table(reservation_table)
+
+    # 예매 변경을 위한 예매 아이디 추출
+    reservation_id_list = [reservation[0] for reservation in reservation_table]
+
+    while True:
+        print("예매변경할 예매아이디를 입력해주세요")
+        choice = input("예매아이디 입력: ")
+
+        if not validate_cancel_syntax(choice):  # 문법 규칙 위배
+            print("올바른 예매아이디를 입력해 주시기 바랍니다.")
+        elif not validate_cancel_semantics(choice, reservation_id_list):  # 의미 규칙 위배 (없는 아이디)
+            print("예매한 올바른 예매아이디를 입력해주시기 바랍니다.")
+        else:
+            break
+
+    before_cost = 0 # 변경 전 총 가격
+    coupon_price = 0 # 취소하는 예매의 쿠폰 가격
+
+    # (추가)예매 번호로 티켓에서 예매한 영화의 좌석을 가져오는 코드 : 현재 코드는 임시 : 추가 함수로 대체
+
+    target_ticket_list = []
+    for ticket in ticket_list:
+        if ticket[1] == choice:
+            target_ticket_list.append(ticket)
+            before_cost = before_cost + int(ticket[4])
+
+    for reservation in reservation_list:
+        if reservation[0] == choice:  # 해당 reservation 찾음
+            coupon_price = int(reservation[4])
+            break
+
+    schedule_id = target_ticket_list[0][3]
+
+    # 결제 부분 추가 후 예매한 가격을 가져오는 코드
+    cancel_reservation(choice, ticket_list)  # 변경을 위한 예매 취소
+    reserve.reserve_change(user_id, schedule_id, before_cost, coupon_price) # 취소 후 좌석을 기준으로 예매 변경하기
