@@ -12,7 +12,7 @@ def print_my_coupon(user_id):
     # 유효성 검사
     result = get_user_coupon(user_id)
     if result != -1: # 쿠폰 있는 경우
-        print("쿠폰 : %d원 할인 쿠폰" %result)
+        print("쿠폰 : "+result+"원 할인 쿠폰")
         print("사용 가능 유무 : O")
     else: # 쿠폰 없는 경우 (임의로 작성)
         print("사용 가능한 쿠폰이 없습니다.")
@@ -20,10 +20,10 @@ def print_my_coupon(user_id):
 
 def publish_new_coupon(user_id, date_time):
     # 현재 날짜에서 월/일 저장
-    current_month = int(date_time[4:6])
-    current_date = int(date_time[6:8])
+    current_month = date_time[4:6]
+    current_date = date_time[6:8]
     # 현재 날짜가 16일 이상인 경우 쿠폰유효여부 변경
-    if current_date >= 16:
+    if int(current_date) >= 16:
         change_coupon_unavailable(user_id)
         return
     
@@ -39,13 +39,13 @@ def publish_new_coupon(user_id, date_time):
             return
         
         # 2. 지난달 실적 확인
-        prev_month = 0
-        if current_month > 1: # 1월이 아닌 경우
-            prev_month = current_month - 1
+        prev_month = ""
+        if int(current_month) > 1: # 1월이 아닌 경우
+            prev_month = str(int(current_month) - 1)
         else: #1월인 경우
-            prev_month = 12
-        last_reservation = data.get_month_reservation_list(prev_month)
-        if last_reservation.length == 0:
+            prev_month = str(12)
+        last_reservation = data.get_month_reservation_list(prev_month, user_id)
+        if last_reservation == []:
             # 0/X 쿠폰 발급
             change_coupon(user_id, "0", "X")
         else:
@@ -75,6 +75,7 @@ def is_coupon_used(current_month, user_id):
     return False
 
 def pay_prompt(user_id,people,exist):
+    people = int(people)
     coupon=get_user_coupon(user_id)
     print("결제하실 금액은 다음과 같습니다")
     print("결제 금액 : %d원\n" %10000*people) # 10000 * 인원수
