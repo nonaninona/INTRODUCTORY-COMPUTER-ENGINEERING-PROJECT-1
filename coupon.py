@@ -129,9 +129,7 @@ def print_coupon_menu(coupon, people, user_id):
             
     elif int(choice)==2:
         while True:
-            print("쿠폰 미적용 시 금액은 다음과 같습니다.")
-            print("총 결제금액 : " + str(10000*int(people)) + "원\n")
-
+            print("결제 금액 : " + str(10000*int(people)) + "원\n")
             print("성공적으로 예매가 완료되었습니다.\n")
             return 0
 
