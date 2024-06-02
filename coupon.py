@@ -21,11 +21,16 @@ def print_my_coupon(user_id):
 def publish_new_coupon(user_id, date_time):
     # 현재 날짜 확인
     current_month = int(date_time[4:6])
+    current_date = int(date_time[6:8])
     prev_month = 0
     if current_month > 1: # 1월이 아닌 경우
-        prev_month = date_time - 1
+        prev_month = current_month - 1
+        print(prev_month)
+        print(current_date)
     else: #1월인 경우
         prev_month = 12
+        print(prev_month)
+        print(current_date)
     reservation_list = data.get_reservation_list2() # 전체 resrvation list
     ticket_list = data.get_ticket_list2() # 전체 ticket list
 
