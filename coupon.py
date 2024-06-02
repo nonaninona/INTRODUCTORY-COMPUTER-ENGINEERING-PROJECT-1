@@ -35,7 +35,7 @@ def publish_new_coupon(user_id, date_time):
         # 1. 쿠폰유효여부를 통해 쿠폰의 발급달 확인
         # 유효여부가 O라면 이미 쿠폰 발급되었다는 것 => 종료 // X라면 저번달 쿠폰 => 계속 진행
         coupon_available = get_coupon_available(user_id)
-        if coupon_available == True:
+        if coupon_available == "O":
             return
         
         # 2. 지난달 실적 확인
@@ -44,16 +44,23 @@ def publish_new_coupon(user_id, date_time):
             prev_month = current_month - 1
         else: #1월인 경우
             prev_month = 12
-
-        # TODO: user_id를 통해 지난달의 예매 내역 가져오기
-        # for r in reservation_list:
-        #     if r[1] == user_id: # 해당하는 유저의 경우
-        #         for t in ticket_list:
-        #             if t[1] == r[0]: # 해당하는 티켓의 경우
-        #                 schedule_list = data.get_schedule_list()
-        #         # 지난달 예매 누적액 계산 후 분기처리
-        #     else:
-        #         continue
+        last_reservation = data.get_month_reservation_list(prev_month)
+        if last_reservation.length == 0:
+            # TODO: 0/X 쿠폰 발급
+            print()
+        else:
+            last_price = 0
+            for r in last_reservation:
+                last_price += int(r[2]) * 10000
+            if last_price >= 50000 and last_price < 60000:
+                # TODO: 1000/O 쿠폰 발급
+                print()
+            elif last_price >= 60000 and last_price < 80000:
+                # TODO: 3000/O 쿠폰 발급
+                print()
+            else:
+                # TODO: 5000/O 쿠폰 발급
+                print()
     
 def is_coupon_used(current_month, user_id):
     # 이번달의 예매내역
