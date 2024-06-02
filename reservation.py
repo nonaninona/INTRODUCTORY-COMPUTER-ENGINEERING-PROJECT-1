@@ -65,7 +65,8 @@ def print_check_reservation_menu(user_id):
     while True:
         print("※(예매 취소를 원할 시 '1', 이전 화면으로 돌아가려면 '2'를 눌러주세요)")
         print("1. 영화 예매 취소")
-        print("2. 돌아가기")
+        print("2. 영화 예매 변경")
+        print("3. 돌아가기")
         choice = input("입력: ")
 
         if not validate_choice_syntax(choice):  # 문법 규칙 위배
@@ -76,6 +77,8 @@ def print_check_reservation_menu(user_id):
                 print_cancel_reservation_menu(user_id)
                 break
             elif int(choice) == 2:
+                print_change_reservation_menu(user_id)
+            elif int(choice) == 3:
                 print("메인메뉴로 돌아갑니다.")
                 break
 
