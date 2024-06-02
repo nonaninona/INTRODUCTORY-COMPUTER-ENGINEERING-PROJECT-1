@@ -1,6 +1,6 @@
 # theater
-def add_theater(id, name, seat):
-    file_a("theater.txt", id + '/' + name + '/' + seat + '\n')
+def add_theater(id, seat):
+    file_a("theater.txt", id + '/' + seat + '\n')
 
 
 def get_theater_list():
