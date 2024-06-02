@@ -93,6 +93,27 @@ def get_user_list2():  # chrin2 //0 : user_id, 1 :  coupon_price, 2 : coupon_ava
     return user_list
 
 
+def get_movie_from_ticket(reservation_id):
+    # 예매 id를 통해 해당 영화 id 반환 | in_t: ticket_list에서 가져온 변수 | in_s:schedule_list에서 가져온 변수
+    ticket_list = get_ticket_list()
+    schedule_list = get_schedule_list()
+
+    for _, reservation_id_in_t, _, schedule_id_in_t, _ in ticket_list:
+        if reservation_id_in_t == reservation_id:
+            for schedule_id_in_s, _, movie_id_in_s, _, _ in schedule_list:
+                if schedule_id_in_s == schedule_id_in_t:
+                    return movie_id_in_s
+
+
+def get_seat_from_ticket(reservation_id):
+    # 예매 id를 통해 해당 좌석 id 반환 | in_t: ticket_list에서 가져온 변수 | in_s:schedule_list에서 가져온 변수
+    ticket_list = get_ticket_list()
+
+    for _, reservation_id_in_t, seat_id_in_t, schedule_id_in_t, _ in ticket_list:
+        if reservation_id_in_t == reservation_id:
+            return seat_id_in_t
+
+
 def file_a(path, content):
     f = open("data/" + path, 'a', encoding='utf-8')
     f.write(content)
