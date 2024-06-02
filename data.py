@@ -78,6 +78,10 @@ def get_movie_from_ticket(reservation_id):
             for schedule in get_schedule_list():
                 if schedule[0] == ticket[3]:
                     return schedule[2]
+            print("[get_movie_from_ticket] 일치하는 시간표 아이디가 없습니다.")
+            return -1
+    print("[get_movie_from_ticket] 일치하는 예매아이디가 없습니다.")
+    return -1
 
 
 def get_seat_from_ticket(reservation_id):
@@ -86,6 +90,8 @@ def get_seat_from_ticket(reservation_id):
     for ticket in get_ticket_list():
         if ticket[1] == reservation_id:
             return ticket[2]
+    print("[get_seat_from_ticket] 일치하는 예매아이디가 없습니다.")
+    return -1
 
 
 def get_last_reservation_list(month, user_id):
