@@ -93,7 +93,7 @@ def delete_seat(theater_id):
         print("파일을 찾을 수 없습니다.")
 
 # 상영관 좌석배치 수정 시 : theater.txt 파일 수정함수
-def get_change_theater_structure(cinema_id, new_seat_layout):
+def update_theater2(cinema_id, new_seat_layout):
     # 변경할 내용을 저장할 임시 리스트 생성
     updated_lines = []
     found = False
@@ -164,26 +164,16 @@ def update_theater(theater_id, new_theater_id):
 
 # 상영관 삭제함수
 def delete_theater(theater_id):
-    # # seat.txt에서 해당 theater_id 줄 삭제
-    # try:
-    #     with open("data/" + "seat.txt", "r", encoding="utf-8") as file:
-    #         lines = file.readlines()
-    #     with open("data/" + "seat.txt", "w", encoding="utf-8") as file:
-    #         for line in lines:
-    #             if int(line.split('/')[1]) != theater_id:
-    #                 file.write(line)
-    # except FileNotFoundError:
-    #     print("seat.txt 파일을 찾을 수 없습니다.")
-
-    # theater.txt에서 해당 theater_id 줄 삭제
     try:
         with open("data/" + "theater.txt", "r", encoding="utf-8") as file:
             lines = file.readlines()
         with open("data/" + "theater.txt", "w", encoding="utf-8") as file:
             for line in lines:
-                line = line.strip()
-                if int(line) != theater_id:
-                    file.write(line)
+                id_str, theater_seat = line.strip().split("/")
+                if int(id_str) != theater_id:
+                    # id_str과 theater_seat를 "/"로 구분하여 다시 결합
+                    new_line = id_str + "/" + theater_seat + "\n"
+                    file.write(new_line)
     except FileNotFoundError:
         print("theater.txt 파일을 찾을 수 없습니다.")
 
@@ -379,7 +369,7 @@ def update_cinema():
                         continue
                     
                     # 좌석정보 가져오기
-                    get_change_theater_structure(cinema_id, seat_layout)
+                    update_theater2(cinema_id, seat_layout)
                     
                     # seat.txt 정보 업데이트
                     update_seat_layout(cinema_id, seat_layout)
