@@ -3,7 +3,7 @@ import data
 """"
 print_my_coupon(user_id) : 해당 유저의 쿠폰 출력
 
-publish_new_coupon(user_id) : login 시 유저에게 해당하는 쿠폰 발급
+publish_new_coupon(user_id, date_time) : login 시 유저에게 해당하는 쿠폰 발급
 
 """
 
