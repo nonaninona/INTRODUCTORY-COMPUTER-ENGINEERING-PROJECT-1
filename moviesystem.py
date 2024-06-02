@@ -26,16 +26,19 @@ def validate_theater():
             print('theater.txt id(길이)저장 형식 오류')
             exit()
         id = arr[0]
-        # print(id)
         if int(id[0]) < 0 or not str.isdigit(id[0]):
             print('theater_id 오류')
         # chrin2 ====== start ==== 좌석구조 검사
         seat = arr[1]
-        if len(seat) != 25:
+        if len(seat) != 26:
             print('thearter.txt seat(길이)저장 형식 오류')
             exit()
+        cnt = 0
         for s in seat:
-            if s != 'S' or s != 'E':
+            cnt += 1
+            if cnt == 26:
+                break
+            if not (s == 'S' or s == 'E'):
                 print('seat(값) 형식 오류')
                 exit()
         # chrin2 ====== end
@@ -120,10 +123,10 @@ def validate_schedule():
             print('theater_id 오류')
             exit()
         if int(timetable_ID) < 0 or not str.isdigit(timetable_ID):
-            print('timetable_ID 오류')
+            print('schedule.txt | timetable_ID 오류')
             exit()
         if prev_id == int(timetable_ID):
-            print('schedule.txt movie ID 중복')
+            print('schedule.txt | movie ID 중복')
             exit()
         else:
             prev_id = int(timetable_ID)
@@ -157,9 +160,8 @@ def validate_ticket():
         if int(seat_id) < 0 or not str.isdigit(seat_id):
             print('seat_id 오류')
             exit()
-        if int(timetable_id) < 0 or not str.isdigit(timetable_id[:-1]):
-            print('timetable_ID 오류')
-            print(timetable_id)
+        if int(timetable_id) < 0 or not str.isdigit(timetable_id[:1]):
+            print('2 timetable_ID 오류')
             exit()
         if int(ticket_id) < 0 or not str.isdigit(ticket_id):
             print('ticket_ID 오류')
@@ -241,12 +243,12 @@ def validate_user():
         # id_to_arr = [char for char in user_id]
         # chrin2 == == == start
         if validate_coupon_price(coupon_price) == -1:
-            print('reservation.txt | coupon_price 오류')
+            print('user.txt | coupon_price 오류')
             exit()
         # if not (coupon_available == 'O' or coupon_available == 'X'):
         #     print('reservation.txt 예약최소여부 형식 오류')
         if validate_available(coupon_available) == -1:
-            print('reservation.txt | coupon_available 오류')
+            print('user.txt | coupon_available 오류')
             exit()
         if coupon_available[-1] != '\n':
             # chrin2 == == == end
@@ -255,11 +257,12 @@ def validate_user():
 
 
 def validate_coupon_price(price):  # chrin2 쿠폰 가격 확인 (오류면 -1 반환)
-    price_length = len(price)
-    if not (price_length == 0 or price_length == 4):
+    only_price = price[:4]
+    price_length = len(only_price)
+    if not (price_length == 1 or price_length == 4):
         print('[coupon_price] 쿠폰 가격의 길이가 유효하지 않습니다.')
         return -1
-    if price.isdigit():
+    if only_price.isdigit():
         int_price = int(price)
         if not (int_price == 0 or (int_price >= 1000 & int_price <= 5000)):
             print('[coupon_price] 쿠폰 가격의 유효범위가 일치하지 않습니다.')
@@ -271,13 +274,14 @@ def validate_coupon_price(price):  # chrin2 쿠폰 가격 확인 (오류면 -1 �
 
 def validate_available(available):
     # chrin2 O,X의 값이 입력 되었는 지 확인 (오류면 -1 반환)
+    available = available[:1]
     if not (available == 'O' or available == 'X'):
         print("[오류] O 또는 X 이외의 값이 입력 되어 있습니다.")
         return -1
 
 
 def check_coupon_date_available(date):
-    #15일이 지났는지 아닌지 판별 // date는 '일'만 받음 ex) 04, 25
+    # 15일이 지났는지 아닌지 판별 // date는 '일'만 받음 ex) 04, 25
     if int(date) >= 16:
         print('')
 
