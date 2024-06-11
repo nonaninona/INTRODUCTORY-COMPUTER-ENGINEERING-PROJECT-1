@@ -65,7 +65,7 @@ def reserve(user_id, date_time):
     
     reservation_id = make_reservation(reservation_list, user_id, people, used_coupon_price)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
-    print("예매가 완료되었습니다")
+    # print("예매가 완료되었습니다")
 
 
 ### reserve 짜잘이 함수들 ###
@@ -494,7 +494,7 @@ def reserve_change(user_id, schedule_id, before_cost, coupon_price):
     # 결제 후 예약하기 부분
     reservation_id = make_reservation(reservation_list, user_id, people, coupon_price)
     add_ticket_reservation(ticket_list, seat_list, schedule, reservation_id, choice, people)
-    print("예매가 완료되었습니다")
+    # print("예매가 완료되었습니다")
 
 def check_resume(before_cost, after_cost, coupon_price, cost_diff):
     if cost_diff > 0:
