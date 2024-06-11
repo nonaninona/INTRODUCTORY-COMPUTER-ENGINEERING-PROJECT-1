@@ -121,7 +121,7 @@ def print_cancel_reservation_menu(user_id):
             break
 
     cancel_reservation(user_id,choice, ticket_list)
-    print("영화 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
+    print("영화 환불 및 예매취소가 완료되었습니다. 메인메뉴로 돌아갑니다.")
 
 
 ##### 여기서부턴 짜잘이 함수들 #####
