@@ -98,13 +98,14 @@ def print_coupon_menu(coupon, people, user_id):
     print("1. 쿠폰 적용하기\n2. 쿠폰 적용없이 결제하기")
     while True:
         choice = input("입력 : ")
-        if not (choice.isdigit() and (int(choice) ==1 or 2)):
-            print("다시 입력해주세요\n")          
+        if not (choice.isdigit() and (int(choice) == 1 or int(choice) == 2)):
+            print("1~2 사이 숫자 내에서 입력해주세요.\n")          
         else:
             break
 
     if int(choice)==1:
         while True:
+            print("쿠폰 적용시 금액은 다음과 같습니다.\n")
             print("결제금액 : " + str(10000*int(people)) + "원")
             print("적용쿠폰 : " + coupon + "원 할인 쿠폰")
             print("----------------")
@@ -113,8 +114,8 @@ def print_coupon_menu(coupon, people, user_id):
             print("1.결제진행하기")
             print("2.돌아가기\n")
             choice=input("입력 : ")
-            if not choice.isdigit():
-                print("다시 입력해주세요.\n")   
+            if not (choice.isdigit() and (int(choice) == 1 or int(choice) == 2)):
+                print("1~2 사이 숫자 내에서 입력해주세요.\n")   
             else:
                 break
 
@@ -125,7 +126,8 @@ def print_coupon_menu(coupon, people, user_id):
             return int(coupon)
         elif int(choice) == 2:
             print("\n쿠폰 적용 메뉴로 돌아갑니다.\n")
-            return print_coupon_menu(coupon, people, user_id)
+            pay_prompt(user_id, people, coupon_exist(user_id))
+            # return print_coupon_menu(coupon, people, user_id)
             
     elif int(choice)==2:
         while True:
@@ -152,7 +154,6 @@ def get_user_coupon(user_id):
     # 사용자 리스트에서 해당 id에 대한 쿠폰을 조회 / 유효한 쿠폰이면 쿠폰값을 반환, 아니라면 오류 메시지 출력 후 -1 반환
     for user in data.get_user_list():
         if user[0] == user_id:
-            print(user[2])
             if user[2] == "O":
                 return user[1]
             else:
@@ -191,7 +192,6 @@ def change_coupon_available(user_id):
             else:
                 print("[change_coupon_available] 잘못된 쿠폰유효여부가 들어있습니다.")
                 exit()
-    print(user_coupon)
     delete_user(user_id)
     data.add_user(user_id, user_coupon, new_available)
 
