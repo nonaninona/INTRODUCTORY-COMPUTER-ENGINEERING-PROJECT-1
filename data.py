@@ -109,7 +109,7 @@ def get_month_reservation_list(month, user_id):
                         if schedule[0] == ticket[3] and schedule[3][4:6] == month:
                             month_reservation_list.append(reservation)
 
-    print(month_reservation_list)
+    # print(month_reservation_list)
     return month_reservation_list
 
 

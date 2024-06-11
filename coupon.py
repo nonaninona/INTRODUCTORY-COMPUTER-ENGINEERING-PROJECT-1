@@ -13,9 +13,9 @@ def print_my_coupon(user_id):
     result = get_user_coupon(user_id)
     if result != -1: # 쿠폰 있는 경우
         print("쿠폰 : "+result+"원 할인 쿠폰")
-        print("사용 가능 유무 : O")
+        print("사용 가능 유무 : O\n")
     else: # 쿠폰 없는 경우 (임의로 작성)
-        print("사용 가능한 쿠폰이 없습니다.")
+        print("사용 가능한 쿠폰이 없습니다.\n")
 
 
 def publish_new_coupon(user_id, date_time):
@@ -157,7 +157,7 @@ def get_user_coupon(user_id):
             if user[2] == "O":
                 return user[1]
             else:
-                print("[get_user_coupon] 쿠폰이 유효하지 않습니다.")
+                # print("[get_user_coupon] 쿠폰이 유효하지 않습니다.")
                 return -1
     print("[get_user_coupon] 일치하는 예약자아이디가 없습니다.")
     return -1
