@@ -126,7 +126,7 @@ def validate_schedule():
             print('schedule.txt | timetable_ID 오류')
             exit()
         if prev_id == int(timetable_ID):
-            print('schedule.txt | movie ID 중복')
+            print('schedule.txt | timetable_ID 중복')
             exit()
         else:
             prev_id = int(timetable_ID)

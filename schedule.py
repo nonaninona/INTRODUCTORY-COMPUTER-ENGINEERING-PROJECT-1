@@ -314,10 +314,10 @@ def check_schedule_id(user_input, schedule_table):
 
 def check_schedule_reservation_empty(timetable_id):
     # 해당 스케줄에 예약자가 있는지 검사하는 함수
-    ticket_list = data.get_ticket_list()  # 티켓아이디 예매아이디 좌석아이디 시간표아이디
+    ticket_list = data.get_ticket_list()  # 티켓아이디 예매아이디 좌석아이디 시간표아이디 티켓가격
     reservation_list = data.get_reservation_list()  # 예매아이디 예약자아이디 예약인원수 예약취소여부
 
-    for _, reserv_id, _, time_id in ticket_list:
+    for _, reserv_id, _, time_id, _ in ticket_list:
         if timetable_id == time_id:
             for id, _, _, cancel in reservation_list:
                 if reserv_id == id and cancel == "X":
