@@ -1,5 +1,5 @@
 import data
-
+from functools import reduce
 """"
 print_my_coupon(user_id) : 해당 유저의 쿠폰 출력
 
@@ -48,6 +48,7 @@ def publish_new_coupon(user_id, date_time):
             prev_month = str(int(current_month) - 1)
             
         last_reservation = data.get_month_reservation_list(prev_month, user_id)
+        last_reservation = reduce(lambda acc, cur: acc if cur in acc else acc+[cur], last_reservation, [])
         if last_reservation == []:
             # 0/X 쿠폰 발급
             change_coupon(user_id, "0", "X")
