@@ -257,7 +257,7 @@ def validate_user():
 
 
 def validate_coupon_price(price):  # chrin2 쿠폰 가격 확인 (오류면 -1 반환)
-    only_price = price[:4]
+    only_price = price.strip()
     price_length = len(only_price)
     if not (price_length == 1 or price_length == 4):
         print('[coupon_price] 쿠폰 가격의 길이가 유효하지 않습니다.')
