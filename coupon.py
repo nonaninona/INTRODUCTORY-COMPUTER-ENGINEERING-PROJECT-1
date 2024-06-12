@@ -40,10 +40,13 @@ def publish_new_coupon(user_id, date_time):
         
         # 2. 지난달 실적 확인
         prev_month = ""
-        if int(current_month) > 1: # 1월이 아닌 경우
-            prev_month = str(int(current_month) - 1)
-        else: #1월인 경우
+        if int(current_month) > 1 and int(current_month) < 11: # 2월 ~ 10월인 경우
+            prev_month = '0' + str(int(current_month) - 1)
+        elif int(current_month) == 1: #1월인 경우
             prev_month = str(12)
+        else: # 11, 12월인 경우
+            prev_month = str(int(current_month) - 1)
+            
         last_reservation = data.get_month_reservation_list(prev_month, user_id)
         if last_reservation == []:
             # 0/X 쿠폰 발급
