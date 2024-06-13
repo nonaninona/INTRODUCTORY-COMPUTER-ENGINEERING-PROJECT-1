@@ -561,8 +561,8 @@ def print_additional_charge_menu(before_cost, after_cost, coupon_price, cost_dif
     print("변경한 좌석에 대한 결제를 진행합니다.")
     print("**예매 변경**")
     print("------------")
-    print("기존 결제 금액 : ", before_cost, "원")
-    print("변경된 결제 금액 : ", after_cost, "원")
+    print("기존 쿠폰 적용 전 결제 금액 : ", before_cost, "원")
+    print("변경된 쿠폰 적용 전 결제 금액 : ", after_cost, "원")
     if coupon_price > 0:
         print("적용 쿠폰 목록 : ", coupon_price, "원 할인 쿠폰")
     print("")
@@ -575,8 +575,8 @@ def print_refund_menu(before_cost, after_cost, coupon_price, cost_diff):
     print("변경한 좌석에 대한 환불을 진행합니다.")
     print("**예매 변경**")
     print("------------")
-    print("기존 결제 금액 : ", before_cost, "원")
-    print("변경된 결제 금액 : ", after_cost, "원")
+    print("기존 쿠폰 적용 전 결제 금액 : ", before_cost, "원")
+    print("변경된 쿠폰 적용 전 결제 금액 : ", after_cost, "원")
     if coupon_price > 0:
         print("적용 쿠폰 목록 : ", coupon_price, "원 할인 쿠폰")
     print("")
