@@ -34,9 +34,9 @@ def reserve(user_id, date_time):
     tickets = get_tickets(schedule, seat_list, ticket_list)
     theater = get_theater(schedule[1], theater_list)
     seats = get_ticket_reservation_map(tickets, reservation_list, theater)
-    print_seats(seats)
 
     while True:
+        print_seats(seats)
         print("예약인원수를 입력해주세요")
         choice = input("예약인원수 입력: ")
         if validate_seat_choice(choice):  # 문법이 맞은 경우
