@@ -290,7 +290,7 @@ def get_ticket_reservation_map(tickets, reservation_list, theater):
 def print_seats(seats):
     alphabet = ['A', 'B', 'C', 'D', 'E']
 
-    print("좌석 입력")
+    # print("좌석 입력")
     print("  | 0 1 2 3 4")
     print("  -----------")
 
