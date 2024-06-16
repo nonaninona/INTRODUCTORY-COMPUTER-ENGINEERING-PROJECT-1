@@ -50,6 +50,7 @@ def reserve(user_id, date_time):
     people = choice
 
     while True:
+        print_seats(seats)
         print("예매할 좌석번호를 입력해주세요")
         print("(좌석번호를 기준으로 오른쪽 방향으로 예약인원수 만큼 예매를 진행합니다.)")
         choice = input("좌석번호 입력: ")
@@ -469,6 +470,7 @@ def reserve_change(user_id, schedule_id, before_cost, coupon_price):
 
     # 좌석 번호 선택 부분
     while True:
+        print_seats(seats)
         print("예매할 좌석번호를 입력해주세요")
         print("(좌석번호를 기준으로 오른쪽 방향으로 예약인원수 만큼 예매를 진행합니다.)")
         choice = input("좌석번호 입력: ")
@@ -483,7 +485,6 @@ def reserve_change(user_id, schedule_id, before_cost, coupon_price):
 
                 if isOver:
                     break
-                print_seats(seats)
             else:
                 print("예약이 불가능한 좌석입니다.")
         else:  # 문법 규칙에 부합하지 않는 경우
