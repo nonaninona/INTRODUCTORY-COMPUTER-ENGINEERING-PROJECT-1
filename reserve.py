@@ -303,7 +303,7 @@ def print_seats(seats):
         str = str + " " + seats[i]
         if i % 5 == 4:
             if i == 24:
-                str = str + "\t\t※(X : 예매불가능 / O 예매가능)"
+                str = str + "\t\t※(X : 예매불가능 / O : 예매가능)"
             str = str + "\n"
             print(str)
     # 좌석 입력
