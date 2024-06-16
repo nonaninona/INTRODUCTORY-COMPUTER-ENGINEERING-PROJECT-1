@@ -450,10 +450,10 @@ def reserve_change(user_id, schedule_id, before_cost, coupon_price):
     ###
 
     # 좌석을 가져온 후 좌석 출력 코드
-    print_seats(seats)
 
     # 예약 인원 입력 부분
     while True:
+        print_seats(seats)
         print("예약인원수를 입력해주세요")
         choice = input("예약인원수 입력: ")
         if validate_seat_choice(choice):  # 문법이 맞은 경우
